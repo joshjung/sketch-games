@@ -1,0 +1,15 @@
+{
+  "introduction": "Hello, welcome to the Ringa JS Application Template",
+  "header": {
+    "title": "SuperMini Games",
+    "shortTitle": "SuperMini"
+  },
+  "misc": {
+    "version": "Version",
+    "built": "Built"
+  },
+  "i18n": {
+    "en": "English",
+    "sv": "Swedish"
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "name": "ringa-app-template",
+  "version": "0.1.2",
+  "description": "Ringa JS React Application Template",
+  "scripts": {
+    "reinstallNPM": "rm -rf node_modules && npm i",
+    "clean": "rm -rf dist",
+    "dev": "`npm bin`/webpack-dev-server --config ./config/webpack.config.dev.js",
+    "prod": "npm run reinstallNPM && `rm -rf dist && npm bin`/webpack --progress --colors --config ./config/webpack.config.prod.js",
+    "prod:test": "npm run reinstallNPM && npm run prod && cd dist && nws -z",
+    "prod:analyze": "npm run reinstallNPM && `rm -rf dist && npm bin`/webpack --progress --colors --config ./config/webpack.config.prod.analyze.js",
+    "start": "npm run dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:ringa-js/ringa-app-template.git"
+  },
+  "keywords": [],
+  "authors": [
+    "Joshua Jung <joshua.p.jung@gmail.com> (https://github.com/joshjung)",
+    "Thomas Yarnall <corragon@gmail.com> (https://github.com/corragon)"
+  ],
+  "dependencies": {
+    "classnames": "^2.2.5",
+    "flag-icon-css": "^2.8.0",
+    "moment": "^2.19.1",
+    "react": "^16.1.0",
+    "react-dom": "^16.1.0",
+    "react-ringa": "^0.5.0",
+    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2",
+    "ringa": "^0.4.3",
+    "ringa-fw-react": "^0.5.3"
+  },
+  "devDependencies": {
+    "babel-core": "^6.7.6",
+    "babel-eslint": "^5.0.0",
+    "babel-jest": "^19.0.0",
+    "babel-loader": "^7.1.2",
+    "babel-polyfill": "^6.0.0",
+    "babel-preset-env": "^1.4.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "css-loader": "^0.23.1",
+    "extract-text-webpack-plugin": "3.0.0",
+    "file-loader": "^0.8.5",
+    "html-webpack-plugin": "2.30.1",
+    "imports-loader": "^0.6.5",
+    "node-sass": "^4.5.0",
+    "optimize-css-assets-webpack-plugin": "^3.2.0",
+    "postcss-loader": "^2.0.6",
+    "raw-loader": "^0.5.1",
+    "sass-loader": "^6.0.6",
+    "sass-module-importer": "^1.4.0",
+    "style-loader": "^0.13.2",
+    "uglifyjs-webpack-plugin": "^1.0.1",
+    "url-loader": "^0.5.8",
+    "webpack": "^3.6.0",
+    "webpack-bundle-analyzer": "^2.9.1",
+    "webpack-dev-server": "^2.4.1"
+  },
+  "jest": {
+    "verbose": true,
+    "globals": {
+      "__DEV__": true
+    }
+  }
+}

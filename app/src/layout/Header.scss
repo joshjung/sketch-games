@@ -1,0 +1,42 @@
+@import '../styles/variables';
+
+.app-header {
+  width: calc(100%);
+
+  position: relative;
+
+  background: $ringa-color;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  color: $white;
+
+  .title {
+    padding-left: $pad3;
+    font-size: 28px;
+    font-weight: bold;
+    height: 60px;
+    flex: 0 0 auto;
+    cursor: pointer;
+    color: $ringa-color-text;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    position: relative;
+
+    @media screen and (max-width: $break-small) {
+      height: 30px;
+      width: 120px;
+    }
+
+    @media screen and (max-width: $break-small) {
+      font-size: 14px;
+    }
+  }
+
+  .i18n-switcher {
+    margin-right: 40px;
+  }
+}

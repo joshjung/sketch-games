@@ -1,0 +1,28 @@
+@import '../styles/variables';
+
+body, html {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+
+  font-family: 'Lato', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background: white;
+
+  .container {
+    width: calc(100% - #{$pad3 * 2});
+    height: calc(100% - 100px);
+    position: relative;
+    overflow: auto;
+    padding: $pad3;
+
+    @media screen and (max-width: $break-small) {
+      height: calc(100% - 52px);
+    }
+  }
+}

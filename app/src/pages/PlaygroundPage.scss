@@ -1,0 +1,17 @@
+.playground {
+  display: flex;
+  flex-direction: row;
+
+  .editor {
+    flex: 1 1 auto;
+    width: 50%;
+    max-width: 500px;
+    margin-right: 1em;
+  }
+
+  .canvas {
+    flex: 1 1 auto;
+    width: 40%;
+    margin-left: 1em;
+  }
+}

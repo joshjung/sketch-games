@@ -1,0 +1,47 @@
+import { success, notFound } from '../../services/response/'
+import { Game } from '.'
+import { sign } from '../../services/jwt'
+
+export const index = ({ querymen: { query, select, cursor } }, res, next) =>
+  Game.count(query)
+    .then(count => Game.find(query, select, cursor)
+      .then(games => ({
+        rows: games.map(game => game.view()),
+        count
+      }))
+    )
+    .then(success(res))
+    .catch(next)
+
+export const show = ({ params }, res, next) =>
+  Game.findById(params.id)
+    .then(notFound(res))
+    .then(game => game ? game.view() : null)
+    .then(success(res))
+    .catch(next)
+
+export const showMe = ({ game }, res) =>
+  res.json(game.view(true))
+
+export const create = ({ bodymen: { body } }, res, next) =>
+  Game.create(body)
+    .then(game => {
+      sign(game.id)
+        .then((token) => ({ token, game: game.view(true) }))
+        .then(success(res, 201))
+    })
+
+export const update = ({ bodymen: { body }, params, game }, res, next) =>
+  Game.findById(params.id === 'me' ? game.id : params.id)
+    .then(notFound(res))
+    .then((game) => game ? Object.assign(game, body).save() : null)
+    .then((game) => game ? game.view(true) : null)
+    .then(success(res))
+    .catch(next)
+
+export const destroy = ({ params }, res, next) =>
+  User.findById(params.id)
+    .then(notFound(res))
+    .then((game) => game ? game.remove() : null)
+    .then(success(res, 204))
+    .catch(next)
