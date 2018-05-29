@@ -1,11 +1,10 @@
-import mongoose, { Schema } from 'mongoose'
-import { env } from '../../config'
+import mongoose, { Schema } from 'mongoose';
+import { env } from '../../config';
 
 const gameSchema = new Schema({
   title: {
     type: String,
     required: true,
-    unique: true,
     trim: true
   },
   gameLoopFnText: {
@@ -16,24 +15,24 @@ const gameSchema = new Schema({
   }
 }, {
   timestamps: true
-})
+});
 
 gameSchema.methods = {
   view (full) {
-    let view = {}
-    let fields = ['id', 'title', 'gameLoopFnText', 'ownerUserId']
+    let view = {};
+    let fields = ['id', 'title', 'gameLoopFnText', 'ownerUserId'];
 
     if (full) {
       fields = [...fields, 'createdAt']
-    }
+    };
 
-    fields.forEach((field) => { view[field] = this[field] })
+    fields.forEach((field) => { view[field] = this[field] });
 
-    return view
+    return view;
   }
-}
+};
 
-const model = mongoose.model('Game', gameSchema)
+const model = mongoose.model('Game', gameSchema);
 
-export const schema = model.schema
-export default model
+export const schema = model.schema;
+export default model;

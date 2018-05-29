@@ -2,7 +2,7 @@ const webpack = require('webpack');
 const path = require('path');
 const build = require('./util/buildInfo');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 const buildInfo = require('./util/buildInfo');
 
 const config = require('./config.json');
@@ -11,7 +11,7 @@ const ROOT_PATH = path.resolve(process.env.PWD);
 
 const baseConfig = require('./webpack.config.base.js');
 
-baseConfig.module.loaders.push({
+baseConfig.module.rules.push({
   test: /\.s?css$/,
   loaders: [
     'style-loader',
@@ -31,6 +31,7 @@ baseConfig.module.loaders.push({
 });
 
 const finalConfig = Object.assign({
+  mode: 'development',
   devtool: 'cheap-module-eval-source-map',
   output: {
     path: path.join(ROOT_PATH, 'dist'),
@@ -47,6 +48,7 @@ const finalConfig = Object.assign({
     disableHostCheck: true
   },
   plugins: [
+    new MonacoWebpackPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.optimize.OccurrenceOrderPlugin(),
     new HtmlWebpackPlugin({

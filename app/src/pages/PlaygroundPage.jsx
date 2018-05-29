@@ -10,6 +10,7 @@ import Editor from '../components/editor/Editor';
 import Canvas from '../components/game/Canvas';
 
 import './PlaygroundPage.scss';
+
 export default class PlaygroundPage extends RingaComponent {
   //-----------------------------------
   // Constructor
@@ -19,7 +20,7 @@ export default class PlaygroundPage extends RingaComponent {
 
     this.depend(
       dependency(I18NModel, 'language'),
-      dependency(AppModel, 'curGame')
+      dependency(AppModel, ['curGame', 'token'])
     );
   }
 
@@ -31,6 +32,8 @@ export default class PlaygroundPage extends RingaComponent {
       let { id } = this.props.match.params;
       if (id) {
         this.dispatch(AppController.GET_GAME_AND_SET_CURRENT, { id, playgroundComponent: this });
+      } else {
+        this.dispatch(AppController.CREATE_GAME_AND_SET_CURRENT, { playgroundComponent: this });
       }
     } catch (error) {
       console.error(error);

@@ -29,5 +29,13 @@ export default class AppController extends Controller {
           playgroundComponent.attach(this.appModel.curGameController);
         }
       }]);
+
+    this.addListener('createGameAndSetCurrent', [
+      (playgroundComponent) => {
+        this.appModel.curGame = new GameModel(undefined, {id: ''});
+        this.appModel.curGameController = GameController.fromGameModel(this.appModel.curGame);
+
+        playgroundComponent.attach(this.appModel.curGameController);
+      }]);
   }
 }

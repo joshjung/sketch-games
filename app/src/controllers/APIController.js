@@ -16,9 +16,6 @@ export default class APIController extends Controller {
     //---------------------------------
     // AuthController.LOGIN
     //---------------------------------
-    /**
-     * Login to Tipster with email and password
-     */
     this.addListener('login', [
       event(RESTController.POST, {
         url: '/auth',
@@ -29,14 +26,38 @@ export default class APIController extends Controller {
           appModel.token = $lastPromiseResult.token;
           setCookie('smg_auth_token', appModel.token);
           $detail.success = true;
+          this.dispatch(APIController.ME);
         } else {
           $detail.success = false;
         }
       }]);
 
+    this.addListener('createUser', [
+      event(RESTController.POST, {
+        url: '/users',
+        bodyParam: 'body'
+      }),
+      ($lastPromiseResult, $detail) => {
+        if ($lastPromiseResult && $lastPromiseResult.token) {
+          appModel.token = $lastPromiseResult.token;
+          setCookie('smg_auth_token', appModel.token);
+          $detail.success = true;
+          this.dispatch(APIController.ME);
+        } else {
+          $detail.success = false;
+        }
+      }]);
+
+    this.addListener('logout', [
+      () => {
+        appModel.token = appModel.user = undefined;
+        setCookie('smg_auth_token', undefined);
+      }]);
+
     this.addListener('me', [
       event(RESTController.GET, {
-        url: '/users/me'
+        url: '/users/me',
+        credentials: true
       }),
       ($lastPromiseResult, $detail) => {
         $detail.success = true;
@@ -82,9 +103,7 @@ export default class APIController extends Controller {
     if (token) {
       this.appModel.token = token;
 
-      this.dispatch(APIController.ME, {
-        credentials: true
-      }).then((success) => {
+      this.dispatch(APIController.ME).then((success) => {
         console.log('Logged in?', success);
       });
     }

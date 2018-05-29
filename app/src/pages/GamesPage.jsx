@@ -25,6 +25,7 @@ export default class GamesPage extends RingaComponent {
   // Lifecycle
   //-----------------------------------
   componentDispatchReady() {
+    console.log('props', this.props);
     this.dispatch(APIController.GET_GAMES);
   }
 
@@ -41,7 +42,7 @@ export default class GamesPage extends RingaComponent {
   // Events
   //-----------------------------------
   newGame_onClickHandler() {
-    history.replace('/games/new');
+    history.push('/games/new');
   }
 
   list_onChangeHandler(item) {

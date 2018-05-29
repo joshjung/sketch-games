@@ -3,6 +3,7 @@ import {RingaComponent, I18NModel, I18NSwitcher, ScreenModel, Button} from 'ring
 import {depend, dependency} from 'react-ringa';
 
 import AppModel from '../models/AppModel';
+import APIController from '../controllers/APIController';
 
 import history from '../global/history';
 
@@ -30,13 +31,15 @@ class Header extends RingaComponent {
 
     return <header className="app-header">
       <div className="title">
-        <span>
+        <a onClick={this.home_onClickHandler}>
           {i18NModel.i18n(curBreakpointIx < 1 ? 'header.shortTitle' : 'header.title')}
-        </span>
+        </a>
       </div>
-      {user ? user.email : 'Not Logged In'}
-      <Button label="Home" onClick={this.home_onClickHandler} />
-      <I18NSwitcher />
+      <div>
+        {user ? <span>{user.email}<Button label="Logout" onClick={this.logout_onClickHandler} /></span> :
+          <Button label="Login" onClick={this.login_onClickHandler} />}
+        <Button label="New User" onClick={this.newUser_onClickHandler} />
+      </div>
     </header>;
   }
 
@@ -44,7 +47,21 @@ class Header extends RingaComponent {
   // Events
   //-----------------------------------
   home_onClickHandler() {
-    history.replace('/');
+    history.push('/');
+  }
+
+  logout_onClickHandler() {
+    this.dispatch(APIController.LOGOUT).then(() => {
+      history.push('/login');
+    });
+  }
+
+  newUser_onClickHandler() {
+    history.push('/user/create');
+  }
+
+  login_onClickHandler() {
+    history.push('/login');
   }
 }
 

@@ -34,10 +34,6 @@ const userSchema = new Schema({
     type: String,
     enum: roles,
     default: 'user'
-  },
-  picture: {
-    type: String,
-    trim: true
   }
 }, {
   timestamps: true

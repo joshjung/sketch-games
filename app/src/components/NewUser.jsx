@@ -9,15 +9,18 @@ import history from '../global/history';
 
 import APIController from '../controllers/APIController';
 
-const LoginModel = Model.construct('LoginModel', [{
+const NewUserModel = Model.construct('NewUserModel', [{
+  name: 'name',
+  default: ''
+},{
   name: 'email',
-  default: 'joshua.p.jung@gmail.com'
+  default: ''
 }, {
   name: 'password',
-  default: '123456'
+  default: ''
 }]);
 
-export default class Login extends RingaComponent {
+export default class NewUser extends RingaComponent {
   //-----------------------------------
   // Constructor
   //-----------------------------------
@@ -28,35 +31,38 @@ export default class Login extends RingaComponent {
       dependency(I18NModel, 'language')
     );
 
-    this.login = new LoginModel();
+    this.newUser = new NewUserModel();
   }
 
   //-----------------------------------
   // Lifecycle
   //-----------------------------------
   render() {
-    return <div className="editor">
+    return <div className="newUser">
+      Name:
+      <TextInput model={this.newUser} modelField="name"/>
       Email:
-      <TextInput model={this.login} modelField="email"/>
+      <TextInput model={this.newUser} modelField="email"/>
       Password:
-      <TextInput model={this.login} modelField="password" type="password"/>
-      <Button label="Login" onClick={this.login_onClickHandler} />
+      <TextInput model={this.newUser} modelField="password" type="password"/>
+      <Button label="Create" onClick={this.newUser_onClickHandler} />
     </div>;
   }
 
   //-----------------------------------
   // Events
   //-----------------------------------
-  login_onClickHandler() {
-    this.dispatch(APIController.LOGIN, {
+  newUser_onClickHandler() {
+    this.dispatch(APIController.CREATE_USER, {
       body: {
-        email: this.login.email,
-        password: this.login.password,
+        email: this.newUser.email,
+        password: this.newUser.password,
+        name: this.newUser.name,
         access_token: 'QiW54Gu0IqrYE6v8zHOSzqVdbIeiHknn'
       }
     }).then(success => {
       if (success) {
-        history.replace('/playground');
+        history.replace('/');
       }
     });
   }

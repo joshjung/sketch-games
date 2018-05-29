@@ -6,8 +6,8 @@ import { index, showMe, show, create, update, updatePassword, destroy } from './
 import { schema } from './model'
 export Game, { schema } from './model'
 
-const router = new Router()
-const { title, gameLoopFnText } = schema.tree
+const router = new Router();
+const { title, gameLoopFnText } = schema.tree;
 
 /**
  * @api {get} /games Retrieve games
@@ -23,7 +23,7 @@ const { title, gameLoopFnText } = schema.tree
 router.get('/',
   token({ required: true }),
   query(),
-  index)
+  index);
 
 /**
  * @api {get} /games/:id Retrieve game
@@ -34,7 +34,7 @@ router.get('/',
  * @apiError 404 User not found.
  */
 router.get('/:id',
-  show)
+  show);
 
 /**
  * @api {post} /games Create game
@@ -55,7 +55,7 @@ router.get('/:id',
 router.post('/',
   token({ required: true }),
   body({ title, gameLoopFnText }),
-  create)
+  create);
 
 /**
  * @api {put} /games/:id Update game
@@ -73,7 +73,7 @@ router.post('/',
 router.put('/:id',
   token({ required: true }),
   body({ title, gameLoopFnText }),
-  update)
+  update);
 
 /**
  * @api {delete} /games/:id Delete game
@@ -87,6 +87,6 @@ router.put('/:id',
  */
 router.delete('/:id',
   token({ required: true, roles: ['admin'] }),
-  destroy)
+  destroy);
 
-export default router
+export default router;

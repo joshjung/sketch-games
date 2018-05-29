@@ -25,7 +25,7 @@ export default class Canvas extends RingaComponent {
   //-----------------------------------
   componentDidMount() {
     this.renderer = new GraphicRenderer(this.refs.canvas, {
-      debug: true,
+      debug: false,
       canvasAutoClear: true,
       resizeToCanvas: false
     });
@@ -36,7 +36,7 @@ export default class Canvas extends RingaComponent {
   render() {
     return <div className="canvas">
       <h1>Game</h1>
-      <canvas ref="canvas" width={1200} height={800} />
+      <canvas ref="canvas" />
     </div>;
   }
 }

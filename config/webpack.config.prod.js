@@ -23,6 +23,7 @@ baseConfig.module.loaders.push({
 });
 
 const finalConfig = Object.assign({
+  mode: 'production',
   devtool: false,
   output: {
     path: path.join(ROOT_PATH, 'dist/'),

@@ -26,7 +26,7 @@ module.exports = {
     }
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.(md|txt)$/,
         loader: 'raw-loader'

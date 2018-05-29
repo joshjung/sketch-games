@@ -36,7 +36,7 @@ export default class HomePage extends RingaComponent {
 
     return <div>
       <Markdown markdown={i18NModel.i18n('home.content')} />
-      <Button label="Login" onClick={this.login_onClickHandler} />
+      {!token && <Button label="Login" onClick={this.login_onClickHandler} />}
       {loginMenu}
     </div>;
   }
