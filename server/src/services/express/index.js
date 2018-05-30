@@ -20,20 +20,20 @@ export default (apiRoot, routes) => {
     // app.use(forceSSL)
   }
 
-  var corsOptions = {
-    origin: function (origin, callback) {
-      if (['http://localhost:8080', 'http://www.supermini.games'].indexOf(origin) !== -1) {
-        callback(null, true)
-      } else {
-        callback(new Error(`Not allowed by CORS: ${origin}`))
-      }
-    },
-    credentials: true
-  }
+  // var corsOptions = {
+  //   origin: function (origin, callback) {
+  //     if (['http://localhost:8080', 'http://www.supermini.games'].indexOf(origin) !== -1) {
+  //       callback(null, true)
+  //     } else {
+  //       callback(new Error(`Not allowed by CORS: ${origin}`))
+  //     }
+  //   },
+  //   credentials: true
+  // }
 
   /* istanbul ignore next */
   if (env === 'production' || env === 'development') {
-    app.use(cors(corsOptions))
+    //app.use(cors(corsOptions))
     app.use(compression())
     app.use(morgan('dev'))
   }
