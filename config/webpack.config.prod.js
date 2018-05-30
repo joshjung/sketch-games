@@ -1,9 +1,7 @@
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const UglifyJSPlugin = require("uglifyjs-webpack-plugin");
-
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const config = require('./config.json');
 
 const buildInfo = require('./util/buildInfo');
@@ -13,7 +11,7 @@ const baseConfig = require('./webpack.config.base.js');
 const path = require('path');
 const ROOT_PATH = path.resolve(process.env.PWD);
 
-baseConfig.module.loaders.push({
+baseConfig.module.rules.push({
   test: /\.s?css$/,
   loader: ExtractTextPlugin.extract({
     fallback: 'style-loader',
@@ -41,12 +39,12 @@ const finalConfig = Object.assign({
       filename: config.artifactRoot + '.css',
       allChunks: true
     }),
-    new OptimizeCssAssetsPlugin({
-      assetNameRegExp: new RegExp(config.artifactRoot + '.css$'),
-      cssProcessor: require('cssnano'),
-      cssProcessorOptions: { discardComments: {removeAll: true } },
-      canPrint: true
-    }),
+    // new OptimizeCssAssetsPlugin({
+    //   assetNameRegExp: new RegExp(config.artifactRoot + '.css$'),
+    //   cssProcessor: require('cssnano'),
+    //   cssProcessorOptions: { discardComments: {removeAll: true } },
+    //   canPrint: true
+    // }),
     new UglifyJSPlugin({
       sourceMap: false,
       uglifyOptions: {
@@ -55,12 +53,6 @@ const finalConfig = Object.assign({
           keep_fnames: true,
           reserved: require('./uglifyMangleWhitelist.json')
         }
-      }
-    }),
-    new webpack.DefinePlugin({
-      __DEV__: false,
-      'process.env': {
-        NODE_ENV: '"production"'
       }
     })
   ]
@@ -72,6 +64,8 @@ module.exports = new Promise(resolve => {
       __DEV__: false,
       __BUILD__: JSON.stringify(build),
       __BUILD_EPOCH__: new Date().getTime(),
+      RINGA_CURRENT_WHITELIST: JSON.stringify(require('./uglifyMangleWhitelist.json')),
+      API_ROOT: `'http://supermini.games/api'`,
       'process.env': {
         NODE_ENV: '"production"'
       }

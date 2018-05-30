@@ -9,8 +9,6 @@ import history from '../../global/history';
 
 import './Editor.scss';
 
-import * as monaco from 'monaco-editor';
-
 global.MonacoEnvironment = {
   getWorkerUrl: function (moduleId, label) {
     if (label === 'json') {

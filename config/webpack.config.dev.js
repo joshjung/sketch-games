@@ -2,7 +2,6 @@ const webpack = require('webpack');
 const path = require('path');
 const build = require('./util/buildInfo');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 const buildInfo = require('./util/buildInfo');
 
 const config = require('./config.json');
@@ -48,7 +47,6 @@ const finalConfig = Object.assign({
     disableHostCheck: true
   },
   plugins: [
-    new MonacoWebpackPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.optimize.OccurrenceOrderPlugin(),
     new HtmlWebpackPlugin({
