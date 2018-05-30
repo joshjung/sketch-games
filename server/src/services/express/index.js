@@ -1,5 +1,5 @@
 import express from 'express'
-import forceSSL from 'express-force-ssl'
+//import forceSSL from 'express-force-ssl'
 import cors from 'cors'
 import compression from 'compression'
 import morgan from 'morgan'
@@ -13,11 +13,11 @@ export default (apiRoot, routes) => {
 
   /* istanbul ignore next */
   if (env === 'production') {
-    app.set('forceSSLOptions', {
-      enable301Redirects: false,
-      trustXFPHeader: true
-    })
-    app.use(forceSSL)
+    // app.set('forceSSLOptions', {
+    //   enable301Redirects: false,
+    //   trustXFPHeader: true
+    // })
+    // app.use(forceSSL)
   }
 
   var corsOptions = {
