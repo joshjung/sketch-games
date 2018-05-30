@@ -29,11 +29,11 @@
     "monaco-editor-webpack-plugin": "^1.2.0",
     "react": "^16.1.0",
     "react-dom": "^16.1.0",
-    "react-ringa": "^0.5.0",
+    "react-ringa": "^0.3.1",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
-    "ringa": "^0.4.3",
-    "ringa-fw-react": "^0.5.3",
+    "ringa": "^0.4.4",
+    "ringa-fw-react": "^0.6.0",
     "webpack-cli": "^2.1.4"
   },
   "devDependencies": {
