@@ -41,6 +41,8 @@ export default class GameModel extends Model {
     this.paused = false;
     this.startTime = new Date().getTime();
     this.timePlayed = 0;
+
+    this.notify('reset');
   }
 
   setGameFunctionFromString(gameLoopFnString) {

@@ -55,10 +55,8 @@ export default class GamesPage extends RingaComponent {
       <div className="title">{game.title}</div>
       {game.owner && <div className="author">Author: {game.owner.name}</div>}
       <div className="actions">
-        {(user && user.id === game.ownerUserId) || !game.ownerUserId ? <div>
-          <Button label="Develop" onClick={this.list_developButtonClickHandler.bind(this, game)} />
-          <Button label="Delete" onClick={this.list_deleteClickHandler.bind(this, game)} />
-        </div> : undefined}
+        {(user || !game.ownerUserId) ? <Button label="Develop" onClick={this.list_developButtonClickHandler.bind(this, game)} /> : undefined}
+        {(user && user.id === game.ownerUserId) || !game.ownerUserId ? <Button label="Delete" onClick={this.list_deleteClickHandler.bind(this, game)} /> : undefined}
         {user && <Button label="Duplicate" onClick={this.duplicate_clickHandler.bind(this, game)} />}
         {!user && <div>Login for more actions</div>}
       </div>

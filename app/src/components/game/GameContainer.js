@@ -10,6 +10,12 @@ export default class GameContainer extends GraphicContainer {
     this.gameController = gameController;
 
     this.keyboard = new Keyboard();
+
+    gameController.gameModel.watch(signal => {
+      if (signal === 'reset') {
+        this.keyboard = new Keyboard();
+      }
+    })
   }
 
   text(text, x, y, color, font, baseline) {

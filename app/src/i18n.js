@@ -3,6 +3,7 @@ import ENGLISH_LANGUAGE_PACK from './assets/i18n/en/pack.json';
 
 import EN_HOME_PAGE_CONTENT from './assets/i18n/en/home.md';
 import EN_GAMES_PAGE_CONTENT from './assets/i18n/en/gamesPage.md';
+import EN_API from './assets/i18n/en/api.md';
 //import SV_HOME_PAGE_CONTENT from './assets/i18n/sv/home.md';
 
 const EN = 'en';
@@ -26,5 +27,6 @@ export function setup(i18NModel) {
   // than we would want in a single key in a JSON file.
   i18NModel.addLanguageKey(EN, 'home.content', EN_HOME_PAGE_CONTENT);
   i18NModel.addLanguageKey(EN, 'games.content', EN_GAMES_PAGE_CONTENT);
+  i18NModel.addLanguageKey(EN, 'api', EN_API);
   //i18NModel.addLanguageKey(SV, 'home.content', SV_HOME_PAGE_CONTENT);
 }

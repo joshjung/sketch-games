@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {RingaComponent, TextInput, Button, TabNavigator, Tab} from 'ringa-fw-react';
+import {RingaComponent, TextInput, Button, TabNavigator, Tab, Alert, Markdown, I18NModel} from 'ringa-fw-react';
 import {dependency} from 'react-ringa';
 import GameController from '../../controllers/GameController';
 import APIController from '../../controllers/APIController';
@@ -37,7 +37,7 @@ export default class Editor extends RingaComponent {
       instructions: 'Enter your instructions using Markdown syntax'
     };
 
-    this.depend(dependency(AppModel, ['user']));
+    this.depend(dependency(AppModel, ['user']), dependency(I18NModel, 'language'));
 
     if (this.props.game) {
       this.state.code = this.props.game.gameLoopFnText;
@@ -76,7 +76,7 @@ export default class Editor extends RingaComponent {
   }
 
   render() {
-    const {editingGameTitle, code, instructions} = this.state;
+    const {editingGameTitle, code, instructions, user, i18NModel} = this.state;
     const {title, syntaxError, runError} = this.props.game;
     const codeLength = code.length;
     return <div className="editor">
@@ -89,15 +89,22 @@ export default class Editor extends RingaComponent {
         <Tab label="Code">
           <textarea onChange={this.code_onChangeHandler} value={code} wrap="soft" />
         </Tab>
-        <Tab label="Instructions">
+        <Tab label="Game Instructions">
           <textarea onChange={this.instructions_onChangeHandler} value={instructions} wrap="soft" />
+        </Tab>
+        <Tab label="Instructions Preview">
+          <Markdown markdown={instructions}/>
+        </Tab>
+        <Tab label="API">
+          <Markdown markdown={i18NModel.i18n('api')}/>
         </Tab>
       </TabNavigator>
       <div className="error">{syntaxError ? 'Syntax Error: ' + syntaxError : undefined}</div>
       <div className="error">{runError ? 'Run Error: ' + runError : undefined}</div>
-      <Button label="Save" onClick={this.saveJavascript_onClickHandler} />
-      <Button label="Reset" onClick={this.reset_onClickHandler} />
+      <Button label={user && this.props.game.ownerUserId === user.id ? 'Save and Reset' : 'Commit Code'} onClick={this.saveJavascript_onClickHandler} />
+      <Button label="Restart Game" onClick={this.reset_onClickHandler} />
       <Button label={this.props.game.paused ? 'Resume' : 'Pause' } onClick={this.pausePlay_onClickHandler} />
+      {(user && user.id !== this.props.game.ownerUserId) && <Button label="Duplicate to my account" onClick={this.duplicate_clickHandler} />}
     </div>;
   }
 
@@ -159,5 +166,23 @@ export default class Editor extends RingaComponent {
     this.setState({
       instructions: event.target.value
     });
+  }
+
+  duplicate_clickHandler() {
+    const {game} = this.props;
+
+    Alert.show(`Do you want to completely copy ${game.title} into your account?`, Alert.YES_NO, {}, this.rootDomNode).then(result => {
+      if (result.id === 'yes') {
+        this.dispatch(APIController.CLONE_GAME, {
+          id: game.id
+        }).then($lastPromiseResult => {
+          if ($lastPromiseResult._id) {
+            history.push(`/games/playground/${$lastPromiseResult._id}`);
+          } else {
+            console.error('An error occurred', $lastPromiseResult);
+          }
+        });
+      }
+    })
   }
 }

@@ -28,15 +28,12 @@ export default class PlaygroundPage extends RingaComponent {
   // Lifecycle
   //-----------------------------------
   componentDispatchReady() {
-    try {
-      let { id } = this.props.match.params;
-      if (id) {
-        this.dispatch(AppController.GET_GAME_AND_SET_CURRENT, { id, playgroundComponent: this });
-      } else {
-        console.error('No ID provided to get the game!');
-      }
-    } catch (error) {
-      console.error(error);
+    this.refreshGame(this.props.match.params.id);
+  }
+
+  componentWillUpdate(nextProps) {
+    if (nextProps.match.params.id !== this.props.match.params.id) {
+      this.refreshGame(nextProps.match.params.id);
     }
   }
 
@@ -53,6 +50,19 @@ export default class PlaygroundPage extends RingaComponent {
         <GameCanvas game={curGame}/>
       </div>
     </div>;
+  }
+
+  refreshGame(id) {
+    try {
+      this.setState({curGame: undefined});
+      if (id) {
+        this.dispatch(AppController.GET_GAME_AND_SET_CURRENT, { id, playgroundComponent: this });
+      } else {
+        console.error('No ID provided to get the game!');
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 }
 
