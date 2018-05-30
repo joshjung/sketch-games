@@ -3,26 +3,33 @@
 The SuperMini Games API has been designed so that you can write compact games very quickly. The goal is that
 once you know the API you should be able to write a simple game in less than 1 hour.
 
-Almost every video has at least these two stages:
+Almost every video has these two stages:
 
 1. Initialization
-2) Game Loop
+2. Game Loop
 
 Initialization is where you create all your "starting state" of the game. Typically you will use this to setup things like
 sprites, characters, resetting the score, etc.
 
-**All the code you edit in SuperMini Games is contained within a single game loop function.**
+The game loop is a special function that runs all your AI, rendering, and game logic.
 
-## The Game Loop
+**All the code you edit in SuperMini Games is contained within the game loop function.**
+
+## Game Loop
+
+When you click **Code** when in the developer playground and edit the code you can then click "Save and Reset" or "Commit Code" (if it is not your game) to
+test out changes.
 
 Every line of you code you write is contained within the game loop function. When the game is displayed, this
 function is called every frame.
 
-The game loop function is called like this:
+The game loop function is called something like this:
 
 ```
-gameLoopFn(E, R, C, G, I, T) {
-  // All the code you write goes here.
+loop(E, R, C, G, I, T) {
+  //
+  // All the code you write runs in this context!
+  //
 }
 ```
 
@@ -121,25 +128,29 @@ R.text(G.counter, 10, 10);
 
 ## `I`
 
-The `I` object is used for input. Right now it just can be used to track keyboard presses.
+The `I` object is used for keyboard and mouse input.
 
 Coming soon:
 
-* Mouse events
 * Touch events (mobile)
 
 [Live Example Here](http://www.supermini.games/games/playground/5b0ef6f80268512aee29951b)
 
 ```
 if (I.keyDown(I.DOWN)) R.text('DOWN is pressed', 0, 0);
-if (I.keyDown(I.UP)) R.text('UP is pressed', 0, 0);
-if (I.keyDown(I.RIGHT)) R.text('RIGHT is pressed', 0, 0);
+if (I.keyDown(I.UP))   R.text('UP is pressed', 0, 0);
+if (I.keyDown(I.RIGHT))R.text('RIGHT is pressed', 0, 0);
 if (I.keyDown(I.LEFT)) R.text('LEFT is pressed', 0, 0);
-if (I.keyDown(I.SPACE)) R.text('SPACE is pressed', 0, 0);
-if (I.keyDown(I.ENTER)) R.text('ENTER is pressed', 0, 0);
-if (I.keyDown(I.A)) R.text('A is pressed', 0, 0);
+if (I.keyDown(I.SPACE))R.text('SPACE is pressed', 0, 0);
+if (I.keyDown(I.ENTER))R.text('ENTER is pressed', 0, 0);
+if (I.keyDown(I.A))    R.text('A is pressed', 0, 0);
 if (I.keyDown(I['3'])) R.text('3 is pressed', 0, 0);
 // You can also access I.B, I.C, I['3'], etc.
+
+if (I.mouseX >= 0) {
+  R.text(`Mouse: ${I.mouseX}, ${I.mouseY}`);
+}
+
 ```
 
 ## `T`

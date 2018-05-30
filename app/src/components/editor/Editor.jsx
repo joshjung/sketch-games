@@ -86,16 +86,20 @@ export default class Editor extends RingaComponent {
                    onEnterKey={this.title_onEnterKeyHandler} /> :
         <h1 onClick={this.title_onClickHandler}>{title} ({codeLength} bytes)</h1>}
       <TabNavigator>
-        <Tab label="Code">
+        <Tab label="Game Code">
           <textarea onChange={this.code_onChangeHandler} value={code} wrap="soft" />
         </Tab>
         <Tab label="Game Instructions">
-          <textarea onChange={this.instructions_onChangeHandler} value={instructions} wrap="soft" />
+          <TabNavigator>
+            <Tab label="Edit">
+            <textarea onChange={this.instructions_onChangeHandler} value={instructions} wrap="soft" />
+            </Tab>
+            <Tab label="Preview">
+              <Markdown markdown={instructions}/>
+            </Tab>
+          </TabNavigator>
         </Tab>
-        <Tab label="Instructions Preview">
-          <Markdown markdown={instructions}/>
-        </Tab>
-        <Tab label="API">
+        <Tab label="Code API">
           <Markdown markdown={i18NModel.i18n('api')}/>
         </Tab>
       </TabNavigator>

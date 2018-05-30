@@ -1,6 +1,7 @@
 import GraphicContainer from '../../core/GraphicContainer';
 
 import Keyboard from '../../input/Keyboard';
+import Mouse from '../../input/Mouse';
 
 export default class GameContainer extends GraphicContainer {
   constructor(gameController, options, id) {
@@ -85,6 +86,10 @@ export default class GameContainer extends GraphicContainer {
   }
 
   onFrameHandler(elapsed) {
+    if (!this.mouse) {
+      this.mouse = new Mouse(this.renderer.canvas);
+    }
+
     const E = elapsed;
     const R = {
       text: this.text.bind(this),
@@ -96,6 +101,8 @@ export default class GameContainer extends GraphicContainer {
     const I = Object.assign({
       keyDown: this.keyboard.keyDown,
       keyCodes: this.keyboard.keyCodes,
+      mouseX: this.mouse.mouseX,
+      mouseY: this.mouse.mouseY
     }, this.keyboard.keyCodes);
 
     const T = {
