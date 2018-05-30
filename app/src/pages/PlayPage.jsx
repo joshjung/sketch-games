@@ -10,6 +10,8 @@ import GameTimer from '../components/GameTimer';
 
 import GameCanvas from '../components/game/GameCanvas';
 
+import history from '../global/history';
+
 import './PlayPage.scss';
 
 export default class PlaygroundPage extends RingaComponent {
@@ -19,7 +21,7 @@ export default class PlaygroundPage extends RingaComponent {
   constructor(props) {
     super(props);
 
-    this.depend(dependency(AppModel, ['curGame', 'token']));
+    this.depend(dependency(AppModel, ['curGame', 'token', 'user']));
   }
 
   //-----------------------------------
@@ -39,7 +41,7 @@ export default class PlaygroundPage extends RingaComponent {
   }
 
   render() {
-    const {curGame} = this.state;
+    const {curGame, user} = this.state;
 
     if (!curGame) {
       return <div>Loading...</div>;
@@ -52,6 +54,7 @@ export default class PlaygroundPage extends RingaComponent {
           <GameTimer game={curGame} />
           <Button label="Restart" onClick={this.restart_onClickHandler} />
           <Button label={curGame.paused ? 'Resume' : 'Pause' } onClick={this.pausePlay_onClickHandler} />
+          {curGame.ownerUserId === user.id ? <Button label="Develop" onClick={this.develop_onClickHandler} /> : undefined}
         </div>
       </div>
       <div className="game-instructions-container">
@@ -65,6 +68,10 @@ export default class PlaygroundPage extends RingaComponent {
     this.state.curGame.paused = !this.state.curGame.paused;
 
     this.forceUpdate();
+  }
+
+  develop_onClickHandler() {
+    history.push(`/games/playground/${this.state.curGame.id}`);
   }
 
   restart_onClickHandler() {

@@ -5,10 +5,14 @@ import { sign } from '../../services/jwt'
 export const index = ({ querymen: { query, select, cursor } }, res, next) =>
   Game.count(query)
     .then(count => Game.find(query, select, cursor)
-      .then(games => ({
-        rows: games.map(game => game.view()),
-        count
-      }))
+      .then(games => {
+        return Promise.all(games.map(game => game.view())).then(rows => {
+          return {
+            rows,
+            count
+          };
+        });
+      })
     )
     .then(success(res))
     .catch(next);
@@ -27,9 +31,21 @@ export const create = ({ bodymen: { body } }, res, next) =>
   Game.create(body)
     .then(game => {
       sign(game.id)
-        .then((token) => ({ token, game: game.view(true) }))
+        .then((token) => {
+          return game.view(true).then(game => ({token, game}));
+        })
         .then(success(res, 201))
         .catch(next);
+    })
+    .catch(next);
+
+export const clone = ({ bodymen: { body } }, res, next) =>
+  Game.findById(body.id)
+    .then(notFound(res))
+    .then(game => {
+      return game.clone(body.userId)
+                 .then(success(res, 201))
+                 .catch(next);
     })
     .catch(next);
 

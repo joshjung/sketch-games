@@ -22,6 +22,7 @@ export default class GameModel extends Model {
     this.addProperty('exposedState', {});
     this.addProperty('paused', false);
     this.addProperty('ownerUserId', undefined);
+    this.addProperty('owner', undefined);
     this.addProperty('startTime', 0);
     this.addProperty('timePlayed', 0);
 

@@ -49,10 +49,14 @@ export default class GamesPage extends RingaComponent {
     return <div className="item-renderer game-item"
                 onClick={itemClickHandler}
                 key={game.id}>
-      {game.title}
-      <div>
-        {user && <Button label="Develop" onClick={this.list_developButtonClickHandler.bind(this, game)} />}
-        {user && <Button label="Delete" onClick={this.list_deleteClickHandler.bind(this, game)} />}
+      <div className="title">{game.title}</div>
+      {game.owner && <div className="author">Author: {game.owner.name}</div>}
+      <div className="actions">
+        {(user && user.id === game.ownerUserId) || !game.ownerUserId ? <div>
+          <Button label="Develop" onClick={this.list_developButtonClickHandler.bind(this, game)} />
+          <Button label="Delete" onClick={this.list_deleteClickHandler.bind(this, game)} />
+        </div> : undefined}
+        <Button label="Duplicate" onClick={this.duplicate_clickHandler.bind(this, game)} />
       </div>
       </div>;
   }
@@ -81,6 +85,20 @@ export default class GamesPage extends RingaComponent {
     Alert.show(`Are you sure you want to permanently delete ${game.title}`, Alert.YES_NO, {}, this.rootDomNode).then(result => {
       if (result.id === 'yes') {
         this.dispatch(APIController.DELETE_GAME, {
+          id: game.id
+        }).then(() => {
+          this.dispatch(APIController.GET_GAMES);
+        });
+      }
+    });
+  }
+
+  duplicate_clickHandler(game, event) {
+    event.stopPropagation();
+
+    Alert.show(`Do you want to completely copy ${game.title} into your account?`, Alert.YES_NO, {}, this.rootDomNode).then(result => {
+      if (result.id === 'yes') {
+        this.dispatch(APIController.CLONE_GAME, {
           id: game.id
         }).then(() => {
           this.dispatch(APIController.GET_GAMES);

@@ -82,6 +82,20 @@ export default class APIController extends Controller {
         }
       }]);
 
+    this.addListener('cloneGame', [
+      event(RESTController.POST, id => ({
+        url: '/games/clone',
+        bodyParam: 'body',
+        body: {
+          id,
+          userId: this.appModel.user.id
+        },
+        credentials: true
+      })),
+      ($lastPromiseResult, $detail) => {
+        $detail.success = !!$lastPromiseResult.game;
+      }]);
+
     this.addListener('getGames', [
       event(RESTController.GET, {
         url: '/games',

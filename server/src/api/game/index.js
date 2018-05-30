@@ -2,12 +2,12 @@ import { Router } from 'express'
 import { middleware as query } from 'querymen'
 import { middleware as body } from 'bodymen'
 import { token, master } from '../../services/passport'
-import { index, showMe, show, create, update, updatePassword, destroy } from './controller'
+import { index, showMe, show, create, clone, update, updatePassword, destroy } from './controller'
 import { schema } from './model'
 export Game, { schema } from './model'
 
 const router = new Router();
-const { title, gameLoopFnText, ownerUserId, instructions } = schema.tree;
+const { title, gameLoopFnText, ownerUserId, instructions, originalGameId, clonedFromGameId } = schema.tree;
 
 /**
  * @api {get} /games Retrieve games
@@ -53,8 +53,29 @@ router.get('/:id',
  */
 router.post('/',
   token({ required: true }),
-  body({ title, gameLoopFnText, ownerUserId, instructions }),
+  body({ title, gameLoopFnText, ownerUserId, instructions, originalGameId, clonedFromGameId }),
   create);
+
+/**
+ * @api {post} /games Create game
+ * @apiName CreateUser
+ * @apiGroup User
+ * @apiPermission master
+ * @apiParam {String} access_token Master access_token.
+ * @apiParam {String} email User's email.
+ * @apiParam {String{6..}} password User's password.
+ * @apiParam {String} [name] User's name.
+ * @apiParam {String} [picture] User's picture.
+ * @apiParam {String=game,admin} [role=game] User's role.
+ * @apiSuccess (Sucess 201) {Object} game User's data.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ * @apiError 401 Master access only.
+ * @apiError 409 Email already registered.
+ */
+router.post('/clone',
+  token({ required: true }),
+  body({ id: {type: String}, userId: {type: String} }),
+  clone);
 
 /**
  * @api {put} /games/:id Update game
