@@ -24,6 +24,26 @@ export default class GameContainer extends GraphicContainer {
     ctx.fillText(text, x, y);
   }
 
+  circle(center, radius, stroke, fill) {
+    let ctx = this.renderer.ctx;
+
+    if (fill) {
+      ctx.fillStyle = fill;
+    }
+
+    ctx.beginPath();
+    ctx.arc(center[0], center[1], radius, 0, 2 * Math.PI);
+    ctx.closePath();
+
+    if (fill) {
+      ctx.fill();
+    }
+
+    if (stroke) {
+      ctx.stroke();
+    }
+  }
+
   poly(poly, {fill = undefined, angle = 0, center = [0, 0]} = {}) {
     let ctx = this.renderer.ctx;
 
@@ -62,7 +82,8 @@ export default class GameContainer extends GraphicContainer {
     const E = elapsed;
     const R = {
       text: this.text.bind(this),
-      poly: this.poly.bind(this)
+      poly: this.poly.bind(this),
+      circle: this.circle.bind(this)
     };
     const C = this.renderer.ctx;
     const G = this.gameModel.exposedState;
@@ -71,7 +92,13 @@ export default class GameContainer extends GraphicContainer {
       keyCodes: this.keyboard.keyCodes,
     }, this.keyboard.keyCodes);
 
-    const args = [E, R, C, G, I];
+    const T = {
+      elapsed,
+      now: new Date().getTime(),
+      total: this.gameModel.timePlayed
+    };
+
+    const args = [E, R, C, G, I, T];
 
     if (this.gameModel.paused) {
       args[0] = 0; // elapsed to 0
@@ -82,7 +109,7 @@ export default class GameContainer extends GraphicContainer {
       try {
         this.gameModel.gameLoopFn.apply(this.gameModel.gameLoopFn, args);
       } catch (error) {
-        this.gameModel.runError = error.toString();
+        this.gameModel.runError = error;
       }
     }
   }

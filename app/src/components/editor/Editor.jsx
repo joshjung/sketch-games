@@ -42,6 +42,12 @@ export default class Editor extends RingaComponent {
     if (this.props.game) {
       this.state.code = this.props.game.gameLoopFnText;
       this.state.instructions = this.props.game.instructions;
+      this.props.game.watch(signal => {
+        if (signal === 'syntaxError' || signal === 'runError') {
+          //console.error('ERROR', this.props.game.syntaxError, this.props.game.runError);
+          this.forceUpdate();
+        }
+      })
     }
   }
 
@@ -81,16 +87,16 @@ export default class Editor extends RingaComponent {
         <h1 onClick={this.title_onClickHandler}>{title} ({codeLength} bytes)</h1>}
       <TabNavigator>
         <Tab label="Code">
-          <textarea onChange={this.code_onChangeHandler} value={code} />
+          <textarea onChange={this.code_onChangeHandler} value={code} wrap="soft" />
         </Tab>
         <Tab label="Instructions">
-          <textarea onChange={this.instructions_onChangeHandler} value={instructions} />
+          <textarea onChange={this.instructions_onChangeHandler} value={instructions} wrap="soft" />
         </Tab>
       </TabNavigator>
+      <div className="error">{syntaxError ? 'Syntax Error: ' + syntaxError : undefined}</div>
+      <div className="error">{runError ? 'Run Error: ' + runError : undefined}</div>
       <Button label="Save" onClick={this.saveJavascript_onClickHandler} />
       <Button label={this.props.game.paused ? 'Resume' : 'Pause' } onClick={this.pausePlay_onClickHandler} />
-      <div>{syntaxError ? 'Syntax Error' + syntaxError : undefined}</div>
-      <div>{runError ? 'Run Error' + runError : undefined}</div>
     </div>;
   }
 
@@ -132,6 +138,8 @@ export default class Editor extends RingaComponent {
 
   pausePlay_onClickHandler() {
     this.props.game.paused = !this.props.game.paused;
+
+    this.forceUpdate();
   }
 
   code_onChangeHandler(event) {

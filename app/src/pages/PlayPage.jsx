@@ -75,18 +75,9 @@ export default class PlaygroundPage extends RingaComponent {
   }
 
   restart_onClickHandler() {
-    const wasPaused = this.state.curGame.paused;
-    this.state.curGame.paused = true;
+    this.state.curGame.reset();
 
-    Alert.show('Are you sure you want to reset this game?', Alert.YES_NO, {}, this.rootDomNode).then(result => {
-      if (result.id === 'yes') {
-        this.state.curGame.reset();
-      }
-
-      this.state.curGame.paused = wasPaused;
-
-      this.forceUpdate();
-    });
+    this.forceUpdate();
   }
 }
 
