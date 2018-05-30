@@ -36,7 +36,7 @@ class Header extends RingaComponent {
         </a>
       </div>
       <div>
-        <Button label="Games" onClick={this.games_onClickHandler} />
+        <Button label="All Games" onClick={this.games_onClickHandler} />
         {user && <Button label="New Game" onClick={this.newGame_onClickHandler} />}
       </div>
       <div>

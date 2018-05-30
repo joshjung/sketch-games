@@ -1,11 +1,13 @@
 import React from 'react';
 
-import {RingaComponent, I18NModel, List, Button, Alert} from 'ringa-fw-react';
+import {RingaComponent, I18NModel, List, Button, Alert, Markdown} from 'ringa-fw-react';
 import {dependency} from 'react-ringa';
 
 import AppModel from '../models/AppModel';
 import APIController from '../controllers/APIController';
 import AppController from '../controllers/AppController';
+
+import history from '../global/history';
 
 import './GamesPage.scss';
 
@@ -30,9 +32,10 @@ export default class GamesPage extends RingaComponent {
   }
 
   render() {
-    const { games = [] } = this.state;
+    const { games = [], i18NModel } = this.state;
 
     return <div className="games">
+      <Markdown markdown={i18NModel.i18n('games.content')} />
       <List items={games}
             labelField="title"
             onChange={this.list_onChangeHandler}
@@ -56,7 +59,8 @@ export default class GamesPage extends RingaComponent {
           <Button label="Develop" onClick={this.list_developButtonClickHandler.bind(this, game)} />
           <Button label="Delete" onClick={this.list_deleteClickHandler.bind(this, game)} />
         </div> : undefined}
-        <Button label="Duplicate" onClick={this.duplicate_clickHandler.bind(this, game)} />
+        {user && <Button label="Duplicate" onClick={this.duplicate_clickHandler.bind(this, game)} />}
+        {!user && <div>Login for more actions</div>}
       </div>
       </div>;
   }
@@ -100,8 +104,12 @@ export default class GamesPage extends RingaComponent {
       if (result.id === 'yes') {
         this.dispatch(APIController.CLONE_GAME, {
           id: game.id
-        }).then(() => {
-          this.dispatch(APIController.GET_GAMES);
+        }).then($lastPromiseResult => {
+          if ($lastPromiseResult._id) {
+            history.push(`/games/playground/${$lastPromiseResult._id}`);
+          } else {
+            console.error('An error occurred', $lastPromiseResult);
+          }
         });
       }
     })

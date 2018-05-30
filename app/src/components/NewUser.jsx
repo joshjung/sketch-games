@@ -62,7 +62,7 @@ export default class NewUser extends RingaComponent {
       }
     }).then(success => {
       if (success) {
-        history.replace('/');
+        history.replace('/games');
       }
     });
   }

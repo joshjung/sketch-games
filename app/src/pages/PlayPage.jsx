@@ -54,7 +54,7 @@ export default class PlaygroundPage extends RingaComponent {
           <GameTimer game={curGame} />
           <Button label="Restart" onClick={this.restart_onClickHandler} />
           <Button label={curGame.paused ? 'Resume' : 'Pause' } onClick={this.pausePlay_onClickHandler} />
-          {curGame.ownerUserId === user.id ? <Button label="Develop" onClick={this.develop_onClickHandler} /> : undefined}
+          {user && curGame.ownerUserId === user.id ? <Button label="Develop" onClick={this.develop_onClickHandler} /> : undefined}
         </div>
       </div>
       <div className="game-instructions-container">
