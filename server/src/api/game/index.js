@@ -7,7 +7,7 @@ import { schema } from './model'
 export Game, { schema } from './model'
 
 const router = new Router();
-const { title, gameLoopFnText } = schema.tree;
+const { title, gameLoopFnText, ownerUserId } = schema.tree;
 
 /**
  * @api {get} /games Retrieve games
@@ -53,7 +53,7 @@ router.get('/:id',
  */
 router.post('/',
   token({ required: true }),
-  body({ title, gameLoopFnText }),
+  body({ title, gameLoopFnText, ownerUserId }),
   create);
 
 /**
@@ -71,7 +71,7 @@ router.post('/',
  */
 router.put('/:id',
   token({ required: true }),
-  body({ title, gameLoopFnText }),
+  body({ title, gameLoopFnText, ownerUserId }),
   update);
 
 /**

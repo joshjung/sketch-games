@@ -22,7 +22,7 @@ baseConfig.module.rules.push({
 
 const finalConfig = Object.assign({
   mode: 'production',
-  devtool: false,
+  devtool: 'eval-source-map',
   output: {
     path: path.join(ROOT_PATH, 'dist/'),
     filename: config.artifactRoot + '.[name].[hash].js',
@@ -38,22 +38,6 @@ const finalConfig = Object.assign({
     new ExtractTextPlugin({
       filename: config.artifactRoot + '.css',
       allChunks: true
-    }),
-    // new OptimizeCssAssetsPlugin({
-    //   assetNameRegExp: new RegExp(config.artifactRoot + '.css$'),
-    //   cssProcessor: require('cssnano'),
-    //   cssProcessorOptions: { discardComments: {removeAll: true } },
-    //   canPrint: true
-    // }),
-    new UglifyJSPlugin({
-      sourceMap: false,
-      uglifyOptions: {
-        mangle: {
-          keep_classnames: true,
-          keep_fnames: true,
-          reserved: require('./uglifyMangleWhitelist.json')
-        }
-      }
     })
   ]
 }, baseConfig);
@@ -65,7 +49,7 @@ module.exports = new Promise(resolve => {
       __BUILD__: JSON.stringify(build),
       __BUILD_EPOCH__: new Date().getTime(),
       RINGA_CURRENT_WHITELIST: JSON.stringify(require('./uglifyMangleWhitelist.json')),
-      API_ROOT: `'http://supermini.games/api'`,
+      API_ROOT: `'http://www.supermini.games/api'`,
       'process.env': {
         NODE_ENV: '"production"'
       }
