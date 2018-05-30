@@ -7,6 +7,20 @@ import GraphicRenderer from '../../core/GraphicRenderer';
 import './GameCanvas.scss';
 
 class GameCanvasRenderer extends GraphicRenderer {
+  constructor(game, canvas, options) {
+    super(canvas, options);
+
+    this.game = game;
+  }
+
+  _onFrameHandler(timestamp) {
+    super._onFrameHandler(timestamp);
+
+    if (!this.game.paused) {
+      this.game.timePlayed += this.elapsed;
+    }
+  }
+
   resizeHandler() {
     super.resizeHandler();
 
@@ -32,7 +46,9 @@ export default class Canvas extends RingaComponent {
   // Lifecycle
   //-----------------------------------
   componentDidMount() {
-    this.renderer = new GameCanvasRenderer(this.refs.canvas, {
+    this.props.game.reset();
+
+    this.renderer = new GameCanvasRenderer(this.props.game, this.refs.canvas, {
       debug: false,
       canvasAutoClear: true,
       resetPixelSizeToCanvas: false,
@@ -45,7 +61,6 @@ export default class Canvas extends RingaComponent {
   }
 
   componentWillUpdate(nextProps) {
-    console.log('UPDATING');
     if (nextProps.game && nextProps.game.gameContainer) {
       this.addGameContainer(nextProps.game.gameContainer);
     }

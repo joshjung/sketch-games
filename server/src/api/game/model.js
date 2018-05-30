@@ -10,6 +10,9 @@ const gameSchema = new Schema({
   gameLoopFnText: {
     type: String
   },
+  instructions: {
+    type: String
+  },
   ownerUserId: {
     type: String,
     required: true
@@ -21,7 +24,7 @@ const gameSchema = new Schema({
 gameSchema.methods = {
   view (full) {
     let view = {};
-    let fields = ['id', 'title', 'gameLoopFnText', 'ownerUserId'];
+    let fields = ['id', 'title', 'instructions', 'gameLoopFnText', 'ownerUserId'];
 
     if (full) {
       fields = [...fields, 'createdAt']

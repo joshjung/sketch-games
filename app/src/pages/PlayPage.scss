@@ -1,0 +1,15 @@
+.play-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.game-instructions-container {
+  display: flex;
+
+  .instructions {
+    max-width: 600px;
+    min-width: 300px;
+    padding: 0px 20px;
+  }
+}

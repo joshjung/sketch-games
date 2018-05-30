@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {RingaComponent, TextInput, Button} from 'ringa-fw-react';
+import {RingaComponent, TextInput, Button, TabNavigator, Tab} from 'ringa-fw-react';
 import {dependency} from 'react-ringa';
 import GameController from '../../controllers/GameController';
 import APIController from '../../controllers/APIController';
@@ -33,13 +33,15 @@ export default class Editor extends RingaComponent {
 
     this.state = {
       editingGameTitle: false,
-      code: ''
+      code: '',
+      instructions: 'Enter your instructions using Markdown syntax'
     };
 
     this.depend(dependency(AppModel, ['user']));
 
     if (this.props.game) {
       this.state.code = this.props.game.gameLoopFnText;
+      this.state.instructions = this.props.game.instructions;
     }
   }
 
@@ -49,7 +51,8 @@ export default class Editor extends RingaComponent {
   componentWillUpdate(nextProps) {
     if (nextProps.game !== this.props.game) {
       this.setState({
-        code: nextProps.game ? nextProps.game.gameLoopFnText : ''
+        code: nextProps.game ? nextProps.game.gameLoopFnText : '',
+        instructions: nextProps.game ? nextProps.game.instructions : ''
       });
     }
   }
@@ -67,7 +70,7 @@ export default class Editor extends RingaComponent {
   }
 
   render() {
-    const {editingGameTitle, code} = this.state;
+    const {editingGameTitle, code, instructions} = this.state;
     const {title, syntaxError, runError} = this.props.game;
     const codeLength = code.length;
     return <div className="editor">
@@ -75,12 +78,17 @@ export default class Editor extends RingaComponent {
         <TextInput model={this.props.game} modelField="title"
                    focusOnMount={true}
                    onEnterKey={this.title_onEnterKeyHandler} /> :
-        <h1 onClick={this.title_onClickHandler}>{title}</h1>}
-      <textarea ref="loopFn" onChange={this.code_onChangeHandler} value={code} />
-      <div id="monaco-editor-container" />
+        <h1 onClick={this.title_onClickHandler}>{title} ({codeLength} bytes)</h1>}
+      <TabNavigator>
+        <Tab label="Code">
+          <textarea onChange={this.code_onChangeHandler} value={code} />
+        </Tab>
+        <Tab label="Instructions">
+          <textarea onChange={this.instructions_onChangeHandler} value={instructions} />
+        </Tab>
+      </TabNavigator>
       <Button label="Save" onClick={this.saveJavascript_onClickHandler} />
       <Button label={this.props.game.paused ? 'Resume' : 'Pause' } onClick={this.pausePlay_onClickHandler} />
-      <div>{codeLength} bytes</div>
       <div>{syntaxError ? 'Syntax Error' + syntaxError : undefined}</div>
       <div>{runError ? 'Run Error' + runError : undefined}</div>
     </div>;
@@ -91,7 +99,7 @@ export default class Editor extends RingaComponent {
   //-----------------------------------
   saveJavascript_onClickHandler(event) {
     this.dispatch(GameController.SET_LOOP_FN, {
-      gameLoopFn: this.refs.loopFn.value
+      gameLoopFn: this.state.code
     }).then(success => {
       if (success) {
         const {game} = this.props;
@@ -99,6 +107,8 @@ export default class Editor extends RingaComponent {
         if (!game.ownerUserId) {
           game.ownerUserId = this.state.user.id;
         }
+
+        game.instructions = this.state.instructions;
 
         const body = game.serialize();
 
@@ -127,6 +137,12 @@ export default class Editor extends RingaComponent {
   code_onChangeHandler(event) {
     this.setState({
       code: event.target.value
+    });
+  }
+
+  instructions_onChangeHandler(event) {
+    this.setState({
+      instructions: event.target.value
     });
   }
 }

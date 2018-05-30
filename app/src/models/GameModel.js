@@ -12,6 +12,7 @@ export default class GameModel extends Model {
 
     this.addProperty('gameLoopFn', '');
     this.addProperty('gameLoopFnText', '// Javascript here');
+    this.addProperty('instructions', 'Enter your game instructions using Markdown syntax');
     this.addProperty('syntaxError', undefined);
     this.addProperty('runError', undefined);
     this.addProperty('title', 'My Game');
@@ -21,6 +22,8 @@ export default class GameModel extends Model {
     this.addProperty('exposedState', {});
     this.addProperty('paused', false);
     this.addProperty('ownerUserId', undefined);
+    this.addProperty('startTime', 0);
+    this.addProperty('timePlayed', 0);
 
     if (this.gameLoopFnText) {
       this.setGameFunctionFromString(this.gameLoopFnText);
@@ -28,7 +31,15 @@ export default class GameModel extends Model {
   }
 
   get serializeProperties() {
-    return ['title', 'gameLoopFnText', 'ownerUserId'];
+    return ['title', 'gameLoopFnText', 'ownerUserId', 'instructions'];
+  }
+
+  reset() {
+    this.syntaxError = this.runError = undefined;
+    this.exposedState = {};
+    this.paused = false;
+    this.startTime = new Date().getTime();
+    this.timePlayed = 0;
   }
 
   setGameFunctionFromString(gameLoopFnString) {

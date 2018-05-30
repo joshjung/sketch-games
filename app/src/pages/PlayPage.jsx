@@ -1,10 +1,12 @@
 import React from 'react';
 
-import {RingaComponent} from 'ringa-fw-react';
+import {RingaComponent, Button, Alert, Markdown} from 'ringa-fw-react';
 import {dependency} from 'react-ringa';
 
 import AppController from '../controllers/AppController';
 import AppModel from '../models/AppModel';
+
+import GameTimer from '../components/GameTimer';
 
 import GameCanvas from '../components/game/GameCanvas';
 
@@ -44,9 +46,40 @@ export default class PlaygroundPage extends RingaComponent {
     }
 
     return <div className="play">
-      <h1>{curGame.title}</h1>
-      <GameCanvas game={curGame}/>
+      <div className="play-header">
+        <h1>{curGame.title}</h1>
+        <div>
+          <GameTimer game={curGame} />
+          <Button label="Restart" onClick={this.restart_onClickHandler} />
+          <Button label={curGame.paused ? 'Resume' : 'Pause' } onClick={this.pausePlay_onClickHandler} />
+        </div>
+      </div>
+      <div className="game-instructions-container">
+        <GameCanvas game={curGame}/>
+        <Markdown markdown={curGame.instructions} classes="instructions" />
+      </div>
     </div>;
+  }
+
+  pausePlay_onClickHandler() {
+    this.state.curGame.paused = !this.state.curGame.paused;
+
+    this.forceUpdate();
+  }
+
+  restart_onClickHandler() {
+    const wasPaused = this.state.curGame.paused;
+    this.state.curGame.paused = true;
+
+    Alert.show('Are you sure you want to reset this game?', Alert.YES_NO, {}, this.rootDomNode).then(result => {
+      if (result.id === 'yes') {
+        this.state.curGame.reset();
+      }
+
+      this.state.curGame.paused = wasPaused;
+
+      this.forceUpdate();
+    });
   }
 }
 
