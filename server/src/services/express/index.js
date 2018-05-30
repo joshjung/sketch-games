@@ -25,7 +25,7 @@ export default (apiRoot, routes) => {
       if (['http://localhost:8080', 'http://www.supermini.games'].indexOf(origin) !== -1) {
         callback(null, true)
       } else {
-        callback(new Error('Not allowed by CORS'))
+        callback(new Error(`Not allowed by CORS: ${origin}`))
       }
     },
     credentials: true
