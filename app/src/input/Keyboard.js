@@ -43,7 +43,8 @@ export default class Keyboard {
       '6': 54,
       '7': 55,
       '8': 56,
-      '9': 57
+      '9': 57,
+      ENTER: 13
     };
 
     window.addEventListener('keydown', this.keydownHandler.bind(this));

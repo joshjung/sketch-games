@@ -96,6 +96,7 @@ export default class Editor extends RingaComponent {
       <div className="error">{syntaxError ? 'Syntax Error: ' + syntaxError : undefined}</div>
       <div className="error">{runError ? 'Run Error: ' + runError : undefined}</div>
       <Button label="Save" onClick={this.saveJavascript_onClickHandler} />
+      <Button label="Reset" onClick={this.reset_onClickHandler} />
       <Button label={this.props.game.paused ? 'Resume' : 'Pause' } onClick={this.pausePlay_onClickHandler} />
     </div>;
   }
@@ -138,6 +139,12 @@ export default class Editor extends RingaComponent {
 
   pausePlay_onClickHandler() {
     this.props.game.paused = !this.props.game.paused;
+
+    this.forceUpdate();
+  }
+
+  reset_onClickHandler() {
+    this.props.game.reset();
 
     this.forceUpdate();
   }
