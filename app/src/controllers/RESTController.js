@@ -77,12 +77,8 @@ export default class RESTController extends Ringa.Controller {
     // APIController.DELETE
     this.addListener('DELETE', [
       startRequest,
-      ($ringaEvent, url, idParam) => {
-        if (!$ringaEvent.detail[idParam]) {
-          throw new Error(`DELETE Parameter '${idParam}' was not provided on RingaEvent detail!`);
-        }
-
-        return this.request({url, type: 'DELETE', id: $ringaEvent.detail[idParam], headers: $ringaEvent.detail.headers});
+      ($ringaEvent, url) => {
+        return this.request({url, type: 'DELETE', headers: $ringaEvent.detail.headers});
       },
       finRequest
     ]);

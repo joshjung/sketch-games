@@ -42,7 +42,7 @@ export const update = ({ bodymen: { body }, params, game }, res, next) =>
     .catch(next);
 
 export const destroy = ({ params }, res, next) =>
-  User.findById(params.id)
+  Game.findById(params.id)
     .then(notFound(res))
     .then((game) => game ? game.remove() : null)
     .then(success(res, 204))

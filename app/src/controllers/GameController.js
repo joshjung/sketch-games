@@ -14,10 +14,6 @@ export default class GameController extends Controller {
     });
   }
 
-  busMounted(bus) {
-    console.log('Game controller has been mounted', bus);
-  }
-
   //-----------------------------------
   // Statics
   //-----------------------------------

@@ -7,6 +7,9 @@ import GameController from '../controllers/GameController';
 
 import {event} from 'ringa';
 
+import history from '../global/history';
+import APIController from "./APIController";
+
 export default class AppController extends Controller {
   //-----------------------------------
   // Constructor
@@ -16,7 +19,22 @@ export default class AppController extends Controller {
 
     this.appModel = this.addModel(new AppModel());
 
+    this.addListener('editGame', id => {
+      this.appModel.curGame = this.appModel.curGameController = undefined;
+      history.push(`/games/playground/${id}`);
+    });
+
+    this.addListener('playGame', id => {
+      this.appModel.curGame = this.appModel.curGameController = undefined;
+      history.push(`/games/play/${id}`);
+    });
+
     this.addListener('getGameAndSetCurrent', [
+      () => {
+        this.appModel.curGame = undefined;
+        this.appModel.curGameController = undefined;
+      },
+      250,
       event(RESTController.GET, id => ({
         url: `/games/${id}`,
         credentials: true
@@ -28,14 +46,6 @@ export default class AppController extends Controller {
 
           playgroundComponent.attach(this.appModel.curGameController);
         }
-      }]);
-
-    this.addListener('createGameAndSetCurrent', [
-      (playgroundComponent) => {
-        this.appModel.curGame = new GameModel(undefined, {id: ''});
-        this.appModel.curGameController = GameController.fromGameModel(this.appModel.curGame);
-
-        playgroundComponent.attach(this.appModel.curGameController);
       }]);
   }
 }

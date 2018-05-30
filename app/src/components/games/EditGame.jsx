@@ -1,11 +1,9 @@
 import React from 'react';
 
-import {Model} from 'ringa';
-
-import {RingaComponent, I18NModel, TextInput, Button} from 'ringa-fw-react';
+import {RingaComponent, TextInput, Button} from 'ringa-fw-react';
 import {dependency} from 'react-ringa';
-
 import APIController from '../../controllers/APIController';
+import AppModel from '../../models/AppModel';
 
 import GameModel from '../../models/GameModel';
 
@@ -18,11 +16,8 @@ export default class EditGame extends RingaComponent {
   constructor(props) {
     super(props);
 
-    this.depend(
-      dependency(I18NModel, 'language')
-    );
-
     this.gameModel = new GameModel();
+    this.depend(dependency(AppModel, 'user'));
   }
 
   //-----------------------------------
@@ -30,7 +25,7 @@ export default class EditGame extends RingaComponent {
   //-----------------------------------
   render() {
     return <div className="editor">
-      Title:
+      Game Title:
       <TextInput model={this.gameModel} modelField="title"/>
       <Button label="Save" onClick={this.save_onClickHandler} />
     </div>;
@@ -42,11 +37,13 @@ export default class EditGame extends RingaComponent {
   save_onClickHandler() {
     this.dispatch(APIController.SAVE_GAME, {
       body: {
-        title: this.gameModel.title
+        title: this.gameModel.title,
+        ownerUserId: this.state.user.id
       }
-    }).then(success => {
+    }).then((success, $lastPromiseResult) => {
+      console.log($lastPromiseResult);
       if (success) {
-        history.replace('/games');
+        history.replace(`/games/playground/${$lastPromiseResult.game.id}`);
       }
     });
   }

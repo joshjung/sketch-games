@@ -19,7 +19,8 @@ export default class GameModel extends Model {
     this.addProperty('backgroundColor', 0x000000);
     this.addProperty('gameContainer');
     this.addProperty('exposedState', {});
-    this.addProperty('paused', true);
+    this.addProperty('paused', false);
+    this.addProperty('ownerUserId', undefined);
 
     if (this.gameLoopFnText) {
       this.setGameFunctionFromString(this.gameLoopFnText);
@@ -27,7 +28,7 @@ export default class GameModel extends Model {
   }
 
   get serializeProperties() {
-    return ['title', 'gameLoopFnText'];
+    return ['title', 'gameLoopFnText', 'ownerUserId'];
   }
 
   setGameFunctionFromString(gameLoopFnString) {

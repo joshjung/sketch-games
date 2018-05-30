@@ -1,15 +1,14 @@
 import React from 'react';
 
-import {RingaComponent, I18NModel} from 'ringa-fw-react';
-import {dependency, attach} from 'react-ringa';
+import {RingaComponent} from 'ringa-fw-react';
+import {dependency} from 'react-ringa';
 
 import AppController from '../controllers/AppController';
 import AppModel from '../models/AppModel';
 
-import Editor from '../components/editor/Editor';
 import GameCanvas from '../components/game/GameCanvas';
 
-import './PlaygroundPage.scss';
+import './PlayPage.scss';
 
 export default class PlaygroundPage extends RingaComponent {
   //-----------------------------------
@@ -18,10 +17,7 @@ export default class PlaygroundPage extends RingaComponent {
   constructor(props) {
     super(props);
 
-    this.depend(
-      dependency(I18NModel, 'language'),
-      dependency(AppModel, ['curGame', 'token'])
-    );
+    this.depend(dependency(AppModel, ['curGame', 'token']));
   }
 
   //-----------------------------------
@@ -47,11 +43,9 @@ export default class PlaygroundPage extends RingaComponent {
       return <div>Loading...</div>;
     }
 
-    return <div className="playground">
-      <Editor game={curGame} />
-      <div className="game-canvas-editor-container">
-        <GameCanvas game={curGame}/>
-      </div>
+    return <div className="play">
+      <h1>{curGame.title}</h1>
+      <GameCanvas game={curGame}/>
     </div>;
   }
 }

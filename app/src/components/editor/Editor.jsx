@@ -1,11 +1,10 @@
 import React from 'react';
 
-import {RingaComponent, TextInput, I18NModel, Button} from 'ringa-fw-react';
-import {dependency, watch} from 'react-ringa';
-
+import {RingaComponent, TextInput, Button} from 'ringa-fw-react';
+import {dependency} from 'react-ringa';
 import GameController from '../../controllers/GameController';
 import APIController from '../../controllers/APIController';
-
+import AppModel from '../../models/AppModel';
 import history from '../../global/history';
 
 import './Editor.scss';
@@ -35,19 +34,28 @@ export default class Editor extends RingaComponent {
     super(props);
 
     this.state = {
-      editingGameTitle: false
+      editingGameTitle: false,
+      code: ''
     };
 
-    this.watchProps('game');
+    this.depend(dependency(AppModel, ['user']));
 
-    this.depend(
-      dependency(I18NModel, 'language'),
-    );
+    if (this.props.game) {
+      this.state.code = this.props.game.gameLoopFnText;
+    }
   }
 
   //-----------------------------------
   // Lifecycle
   //-----------------------------------
+  componentWillUpdate(nextProps) {
+    if (nextProps.game !== this.props.game) {
+      this.setState({
+        code: nextProps.game ? nextProps.game.gameLoopFnText : ''
+      });
+    }
+  }
+
   componentDidMount() {
     super.componentDidMount();
     // monaco.editor.create(document.getElementById('monaco-editor-container'), {
@@ -61,19 +69,20 @@ export default class Editor extends RingaComponent {
   }
 
   render() {
-    const {editingGameTitle} = this.state;
-    const {title, gameLoopFnText, syntaxError, runError} = this.props.game;
-
+    const {editingGameTitle, code} = this.state;
+    const {title, syntaxError, runError} = this.props.game;
+    const codeLength = code.length;
     return <div className="editor">
       {editingGameTitle ?
         <TextInput model={this.props.game} modelField="title"
                    focusOnMount={true}
                    onEnterKey={this.title_onEnterKeyHandler} /> :
         <h1 onClick={this.title_onClickHandler}>{title}</h1>}
-      <textarea ref="loopFn" change={this.textInput_onChangeHandler}>{gameLoopFnText}</textarea>
+      <textarea ref="loopFn" onChange={this.code_onChangeHandler} value={code} />
       <div id="monaco-editor-container" />
       <Button label="Save" onClick={this.saveJavascript_onClickHandler} />
       <Button label={this.props.game.paused ? 'Resume' : 'Pause' } onClick={this.pausePlay_onClickHandler} />
+      <div>{codeLength} bytes</div>
       <div>{syntaxError ? 'Syntax Error' + syntaxError : undefined}</div>
       <div>{runError ? 'Run Error' + runError : undefined}</div>
     </div>;
@@ -88,7 +97,13 @@ export default class Editor extends RingaComponent {
     }).then(success => {
       if (success) {
         const {game} = this.props;
+
+        if (!game.ownerUserId) {
+          game.ownerUserId = this.state.user.id;
+        }
+
         const body = game.serialize();
+
         if (!game.id) {
           delete body.id;
         }
@@ -112,6 +127,8 @@ export default class Editor extends RingaComponent {
   }
 
   code_onChangeHandler(event) {
-    console.log('CHANGE', arguments);
+    this.setState({
+      code: event.target.value
+    });
   }
 }

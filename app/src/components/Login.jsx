@@ -10,11 +10,9 @@ import history from '../global/history';
 import APIController from '../controllers/APIController';
 
 const LoginModel = Model.construct('LoginModel', [{
-  name: 'email',
-  default: 'joshua.p.jung@gmail.com'
+  name: 'email'
 }, {
-  name: 'password',
-  default: '123456'
+  name: 'password'
 }]);
 
 export default class Login extends RingaComponent {
@@ -56,7 +54,7 @@ export default class Login extends RingaComponent {
       }
     }).then(success => {
       if (success) {
-        history.replace('/playground');
+        history.replace('/games');
       }
     });
   }

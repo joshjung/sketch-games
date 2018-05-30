@@ -21,7 +21,6 @@ const { title, gameLoopFnText } = schema.tree;
  * @apiError 401 Admin access only.
  */
 router.get('/',
-  token({ required: true }),
   query(),
   index);
 
@@ -86,7 +85,7 @@ router.put('/:id',
  * @apiError 404 User not found.
  */
 router.delete('/:id',
-  token({ required: true, roles: ['admin'] }),
+  token({ required: true }),
   destroy);
 
 export default router;

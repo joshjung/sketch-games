@@ -36,6 +36,10 @@ class Header extends RingaComponent {
         </a>
       </div>
       <div>
+        <Button label="Games" onClick={this.games_onClickHandler} />
+        {user && <Button label="New Game" onClick={this.newGame_onClickHandler} />}
+      </div>
+      <div>
         {user ? <span>{user.email}<Button label="Logout" onClick={this.logout_onClickHandler} /></span> :
           <Button label="Login" onClick={this.login_onClickHandler} />}
         <Button label="New User" onClick={this.newUser_onClickHandler} />
@@ -62,6 +66,14 @@ class Header extends RingaComponent {
 
   login_onClickHandler() {
     history.push('/login');
+  }
+
+  games_onClickHandler() {
+    history.push('/games');
+  }
+
+  newGame_onClickHandler() {
+    history.push('/games/new');
   }
 }
 

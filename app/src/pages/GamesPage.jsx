@@ -1,12 +1,13 @@
 import React from 'react';
 
-import {RingaComponent, I18NModel, List, Button} from 'ringa-fw-react';
-import {dependency, attach} from 'react-ringa';
+import {RingaComponent, I18NModel, List, Button, Alert} from 'ringa-fw-react';
+import {dependency} from 'react-ringa';
 
 import AppModel from '../models/AppModel';
 import APIController from '../controllers/APIController';
+import AppController from '../controllers/AppController';
 
-import history from '../global/history';
+import './GamesPage.scss';
 
 export default class GamesPage extends RingaComponent {
   //-----------------------------------
@@ -17,7 +18,7 @@ export default class GamesPage extends RingaComponent {
 
     this.depend(
       dependency(I18NModel, 'language'),
-      dependency(AppModel, 'games')
+      dependency(AppModel, ['games', 'user'])
     );
   }
 
@@ -25,7 +26,6 @@ export default class GamesPage extends RingaComponent {
   // Lifecycle
   //-----------------------------------
   componentDispatchReady() {
-    console.log('props', this.props);
     this.dispatch(APIController.GET_GAMES);
   }
 
@@ -33,19 +33,59 @@ export default class GamesPage extends RingaComponent {
     const { games = [] } = this.state;
 
     return <div className="games">
-      <Button label="New Game" onClick={this.newGame_onClickHandler} />
-      <List items={games} labelField="title" onChange={this.list_onChangeHandler} />
+      <List items={games}
+            labelField="title"
+            onChange={this.list_onChangeHandler}
+            itemRenderer={this.gameListItemRenderer}/>
     </div>;
+  }
+
+  //-----------------------------------
+  // Methods
+  //-----------------------------------
+  gameListItemRenderer(itemClickHandler, game) {
+    const {user} = this.state;
+
+    return <div className="item-renderer game-item"
+                onClick={itemClickHandler}
+                key={game.id}>
+      {game.title}
+      <div>
+        {user && <Button label="Develop" onClick={this.list_developButtonClickHandler.bind(this, game)} />}
+        {user && <Button label="Delete" onClick={this.list_deleteClickHandler.bind(this, game)} />}
+      </div>
+      </div>;
   }
 
   //-----------------------------------
   // Events
   //-----------------------------------
-  newGame_onClickHandler() {
-    history.push('/games/new');
+  list_onChangeHandler(game) {
+    console.log(arguments);
+    this.dispatch(AppController.PLAY_GAME, {
+      id: game.id
+    });
   }
 
-  list_onChangeHandler(item) {
-    history.push(`/games/playground/${item.id}`);
+  list_developButtonClickHandler(game, event) {
+    event.stopPropagation();
+
+    this.dispatch(AppController.EDIT_GAME, {
+      id: game.id
+    });
+  }
+
+  list_deleteClickHandler(game, event) {
+    event.stopPropagation();
+
+    Alert.show(`Are you sure you want to permanently delete ${game.title}`, Alert.YES_NO, {}, this.rootDomNode).then(result => {
+      if (result.id === 'yes') {
+        this.dispatch(APIController.DELETE_GAME, {
+          id: game.id
+        }).then(() => {
+          this.dispatch(APIController.GET_GAMES);
+        });
+      }
+    })
   }
 }

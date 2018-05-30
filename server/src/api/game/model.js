@@ -11,7 +11,8 @@ const gameSchema = new Schema({
     type: String
   },
   ownerUserId: {
-    type: String
+    type: String,
+    required: true
   }
 }, {
   timestamps: true

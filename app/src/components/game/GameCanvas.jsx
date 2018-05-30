@@ -1,7 +1,6 @@
 import React from 'react';
 
-import {RingaComponent, Markdown, I18NModel} from 'ringa-fw-react';
-import {dependency} from 'react-ringa';
+import {RingaComponent} from 'ringa-fw-react';
 
 import GraphicRenderer from '../../core/GraphicRenderer';
 
@@ -27,12 +26,6 @@ export default class Canvas extends RingaComponent {
   //-----------------------------------
   constructor(props) {
     super(props);
-
-    this.watchProps('game');
-
-    this.depend(
-      dependency(I18NModel, 'language')
-    );
   }
 
   //-----------------------------------
@@ -46,13 +39,38 @@ export default class Canvas extends RingaComponent {
       heightToWidthRatio: 600 / 800
     });
 
-    this.renderer.addChild(this.props.game.gameContainer);
+    if (this.props.game && this.props.game.gameContainer) {
+      this.addGameContainer(this.props.game.gameContainer);
+    }
+  }
+
+  componentWillUpdate(nextProps) {
+    console.log('UPDATING');
+    if (nextProps.game && nextProps.game.gameContainer) {
+      this.addGameContainer(nextProps.game.gameContainer);
+    }
   }
 
   render() {
     return <div className="canvas">
-      <h1>Game</h1>
       <canvas ref="canvas" />
     </div>;
+  }
+
+  //-----------------------------------
+  // Methods
+  //-----------------------------------
+  addGameContainer(gameContainer) {
+    if (gameContainer === this.curGameContainer) {
+      return;
+    }
+
+    if (this.curGameContainer) {
+      this.renderer.removeChild(this.curGameContainer);
+    }
+
+    this.renderer.addChild(gameContainer);
+
+    this.curGameContainer = gameContainer;
   }
 }

@@ -75,8 +75,6 @@ export default class APIController extends Controller {
         credentials: true
       })),
       ($lastPromiseResult, $detail) => {
-        console.log($lastPromiseResult);
-
         if ($lastPromiseResult.game) {
           $detail.success = true;
         } else {
@@ -90,10 +88,18 @@ export default class APIController extends Controller {
         credentials: true
       }),
       ($lastPromiseResult) => {
-        console.log($lastPromiseResult);
         if ($lastPromiseResult.rows) {
           appModel.games = $lastPromiseResult.rows;
         }
+      }]);
+
+    this.addListener('deleteGame', [
+      event(RESTController.DELETE, id => ({
+        url: `/games/${id}`,
+        credentials: true
+      })),
+      ($lastPromiseResult) => {
+        console.log($lastPromiseResult);
       }]);
   }
 
@@ -103,9 +109,7 @@ export default class APIController extends Controller {
     if (token) {
       this.appModel.token = token;
 
-      this.dispatch(APIController.ME).then((success) => {
-        console.log('Logged in?', success);
-      });
+      this.dispatch(APIController.ME);
     }
   }
 }
