@@ -5,7 +5,22 @@ import {dependency} from 'react-ringa';
 
 import GraphicRenderer from '../../core/GraphicRenderer';
 
-import './Canvas.scss';
+import './GameCanvas.scss';
+
+class GameCanvasRenderer extends GraphicRenderer {
+  resizeHandler() {
+    super.resizeHandler();
+
+    const canvasScreenWidth = this.canvas.clientWidth;
+    const canvasPixelWidth = this.canvas.width;
+    const canvasPixelHeight = this.canvas.height;
+    const widthHeightRatio = canvasPixelHeight / canvasPixelWidth;
+    const targetCanvasScreenHeight = canvasScreenWidth * widthHeightRatio;
+
+    this.canvas.style.height = `${targetCanvasScreenHeight}px`;
+  }
+}
+
 export default class Canvas extends RingaComponent {
   //-----------------------------------
   // Constructor
@@ -24,10 +39,11 @@ export default class Canvas extends RingaComponent {
   // Lifecycle
   //-----------------------------------
   componentDidMount() {
-    this.renderer = new GraphicRenderer(this.refs.canvas, {
+    this.renderer = new GameCanvasRenderer(this.refs.canvas, {
       debug: false,
       canvasAutoClear: true,
-      resizeToCanvas: false
+      resetPixelSizeToCanvas: false,
+      heightToWidthRatio: 600 / 800
     });
 
     this.renderer.addChild(this.props.game.gameContainer);

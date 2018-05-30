@@ -57,7 +57,7 @@ class GraphicRenderer extends GraphicComponent {
 
     let o = this.options = options || {};
     o.canvasAutoClear = o.canvasAutoClear !== undefined ? o.canvasAutoClear : true;
-    o.resizeToCanvas = o.resizeToCanvas === true ? true : false;
+    o.resetPixelSizeToCanvas = o.resetPixelSizeToCanvas === true ? true : false;
 
     o.debugPosX = o.debugPosX || 10;
     o.debugPosY = o.debugPosY || 10;
@@ -208,13 +208,13 @@ class GraphicRenderer extends GraphicComponent {
     let prevWidth = this.canvas.width;
     let prevHeight = this.canvas.height;
 
-    if (this.options.resizeToCanvas) {
+    if (this.options.resetPixelSizeToCanvas) {
       this.canvas.setAttribute('width', this.canvas.clientWidth);
     } else {
       this.canvas.setAttribute('width', this.canvasTargetWidth);
     }
 
-    let r = parseFloat(this.canvas.clientHeight) / parseFloat(this.canvas.clientWidth);
+    let r = this.options.heightToWidthRatio || (parseFloat(this.canvas.clientHeight) / parseFloat(this.canvas.clientWidth));
 
     this.canvas.setAttribute('height', this.canvas.width * r);
 
