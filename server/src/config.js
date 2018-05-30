@@ -62,5 +62,8 @@ const config = {
   }
 }
 
-module.exports = Object.assign(config.all, config[config.all.env])
+const export = Object.assign(config.all, config[config.all.env]);
+
+console.log('Startup with Settings', JSON.stringify(export));
+module.exports = export;
 export default module.exports
