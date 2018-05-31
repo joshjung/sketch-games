@@ -16,7 +16,7 @@ import moment from 'moment';
 
 import './PlayPage.scss';
 
-export default class PlaygroundPage extends RingaComponent {
+export default class PlayPage extends RingaComponent {
   //-----------------------------------
   // Constructor
   //-----------------------------------

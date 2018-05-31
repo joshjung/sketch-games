@@ -64,7 +64,7 @@ export default class GameModel extends Model {
       'publishedTitle',
       'publishedInstructions',
       'publishedDescription',
-      'publishedGameLoopFn'
+      'publishedGameLoopFnText'
     ];
   }
 

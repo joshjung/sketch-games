@@ -64,7 +64,9 @@ export default class Editor extends RingaComponent {
     if (nextProps.game !== this.props.game) {
       this.setState({
         code: nextProps.game ? nextProps.game.gameLoopFnText : '',
-        instructions: nextProps.game ? nextProps.game.instructions : ''
+        instructions: nextProps.game ? nextProps.game.instructions : '',
+        title: nextProps.game ? nextProps.game.title : '',
+        description: nextProps.game ? nextProps.game.description : ''
       });
     }
   }
@@ -84,7 +86,7 @@ export default class Editor extends RingaComponent {
   render() {
     const {title, code, instructions, user, i18NModel} = this.state;
     const {owner, syntaxError, runError, published, ownerUserId, publishedDate, description} = this.props.game;
-    const codeLength = code.length;
+    const codeLength = code ? code.length : 0;
 
     return <div className="editor">
       <div className="header">
@@ -147,6 +149,7 @@ export default class Editor extends RingaComponent {
       game.ownerUserId = this.state.user.id;
     }
 
+    game.title = this.state.title;
     game.instructions = this.state.instructions;
     game.description = this.state.description;
 
