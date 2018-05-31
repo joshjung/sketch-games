@@ -1,7 +1,13 @@
 import React from 'react';
 
-import {RingaComponent, Markdown, I18NModel} from 'ringa-fw-react';
+import {RingaComponent, Markdown, I18NModel, List, Button} from 'ringa-fw-react';
 import {dependency} from 'react-ringa';
+
+import AppModel from '../models/AppModel';
+import APIController from '../controllers/APIController';
+import AppController from '../controllers/AppController';
+
+import './HomePage.scss';
 
 export default class HomePage extends RingaComponent {
   //-----------------------------------
@@ -12,16 +18,51 @@ export default class HomePage extends RingaComponent {
 
     this.depend(
       dependency(I18NModel, 'language'),
+      dependency(AppModel, ['games', 'user'])
     );
   }
 
   //-----------------------------------
   // Lifecycle
   //-----------------------------------
+  componentDispatchReady() {
+    this.dispatch(APIController.GET_GAMES);
+  }
+
   render() {
-    const {i18NModel} = this.state;
-    return <div>
-      <Markdown markdown={i18NModel.i18n('home.content')} />
+    let {games = [], i18NModel} = this.state;
+
+    games = games.filter(game => game.published);
+
+    return <div className="home">
+      <List items={games}
+            labelField="title"
+            onChange={this.list_onChangeHandler}
+            itemRenderer={this.gameListItemRenderer}/>
     </div>;
+  }
+
+  //-----------------------------------
+  // Methods
+  //-----------------------------------
+  gameListItemRenderer(itemClickHandler, game) {
+    const {user} = this.state;
+
+    return <div className="item-renderer game-item"
+                onClick={itemClickHandler}
+                key={game.id}>
+      <div className="title">{game.title}</div>
+      <div className="description">{game.description}</div>
+      {game.owner && <div className="author">Author: {game.owner.name}</div>}
+    </div>;
+  }
+
+  //-----------------------------------
+  // Events
+  //-----------------------------------
+  list_onChangeHandler(game) {
+    this.dispatch(AppController.PLAY_GAME, {
+      id: game.id
+    });
   }
 }

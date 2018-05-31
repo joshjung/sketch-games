@@ -18,6 +18,10 @@ export default class GamesPage extends RingaComponent {
   constructor(props) {
     super(props);
 
+    this.state = {
+      filter: 'all'
+    };
+
     this.depend(
       dependency(I18NModel, 'language'),
       dependency(AppModel, ['games', 'user'])
@@ -31,21 +35,82 @@ export default class GamesPage extends RingaComponent {
     this.dispatch(APIController.GET_GAMES);
   }
 
+  componentWillUpdate(nextProps) {
+    if (nextProps.match.params.filter && nextProps.match.params.filter !== this.state.filter) {
+      this.setState({filter: nextProps.match.params.filter});
+    }
+  }
+
   render() {
-    const { games = [], i18NModel } = this.state;
+    let { filter, user } = this.state;
+
+    if (this.props.match.params.filter) {
+      filter = this.props.match.params.filter;
+    }
+
+    const renderedGames = this.getFilteredGames();
 
     return <div className="games">
-      <Markdown markdown={i18NModel.i18n('games.content')} />
-      <List items={games}
-            labelField="title"
-            onChange={this.list_onChangeHandler}
-            itemRenderer={this.gameListItemRenderer}/>
+      <div className="header">
+        <h1>Games</h1>
+        <div className="actions">
+          <Button label="All"
+                  selected={filter === 'all'}
+                  onClick={() => this.setFilter('all')} />
+          <Button label="Published"
+                  selected={filter === 'published'}
+                  onClick={() => this.setFilter('published')} />
+          <Button label="Development"
+                  selected={filter === 'development'}
+                  onClick={() => this.setFilter('development')} />
+          {user && <Button label="Mine"
+                  selected={filter === 'mine'}
+                  onClick={() => this.setFilter('mine')} />}
+          {user && <Button label="My Published"
+                  selected={filter === 'mine-published'}
+                  onClick={() => this.setFilter('mine-published')} />}
+          {user && <Button label="My Development"
+                  selected={filter === 'mine-development'}
+                  onClick={() => this.setFilter('mine-development')} />}
+        </div>
+      </div>
+      {renderedGames.length ? <List items={renderedGames}
+                                    labelField="title"
+                                    onChange={this.list_onChangeHandler}
+                                    itemRenderer={this.gameListItemRenderer}/> : <div>There are no games available for this filter.</div>}
     </div>;
   }
 
   //-----------------------------------
   // Methods
   //-----------------------------------
+  setFilter(filter) {
+    history.push(`/games/${filter}`);
+
+    this.setState({
+      filter
+    });
+  }
+
+  getFilteredGames() {
+    const { games = [], filter, user } = this.state;
+
+    switch (filter) {
+      case 'all':
+        return games;
+      case 'published':
+        return games.filter(game => !!game.published);
+      case 'development':
+        return games.filter(game => !game.published);
+      case 'mine':
+        return games.filter(game => user.id === game.ownerUserId);
+      case 'mine-published':
+        return games.filter(game => user.id === game.ownerUserId && game.published);
+      case 'mine-development':
+        return games.filter(game => user.id === game.ownerUserId && !game.published);
+    }
+  }
+
   gameListItemRenderer(itemClickHandler, game) {
     const {user} = this.state;
 
@@ -53,10 +118,12 @@ export default class GamesPage extends RingaComponent {
                 onClick={itemClickHandler}
                 key={game.id}>
       <div className="title">{game.title}</div>
+      {game.published ? <span className="published-card">Published</span> : <span className="unpublished-card">UnPublished</span>}
       {game.owner && <div className="author">Author: {game.owner.name}</div>}
       <div className="actions">
-        {(user || !game.ownerUserId) ? <Button label="Develop" onClick={this.list_developButtonClickHandler.bind(this, game)} /> : undefined}
-        {(user && user.id === game.ownerUserId) || !game.ownerUserId ? <Button label="Delete" onClick={this.list_deleteClickHandler.bind(this, game)} /> : undefined}
+        <Button label="Play" onClick={this.list_playClickHandler.bind(this, game)} />
+        <Button label="Develop" onClick={this.list_developButtonClickHandler.bind(this, game)} />
+        {(user && user.id === game.ownerUserId) ? <Button label="Delete" onClick={this.list_deleteClickHandler.bind(this, game)} /> : undefined}
         {user && <Button label="Duplicate" onClick={this.duplicate_clickHandler.bind(this, game)} />}
         {!user && <div>Login for more actions</div>}
       </div>
@@ -67,7 +134,12 @@ export default class GamesPage extends RingaComponent {
   // Events
   //-----------------------------------
   list_onChangeHandler(game) {
-    console.log(arguments);
+    this.dispatch(AppController.PLAY_GAME, {
+      id: game.id
+    });
+  }
+
+  list_playClickHandler(game) {
     this.dispatch(AppController.PLAY_GAME, {
       id: game.id
     });

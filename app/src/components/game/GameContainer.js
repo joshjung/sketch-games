@@ -19,6 +19,21 @@ export default class GameContainer extends GraphicContainer {
     })
   }
 
+  seed(i) {
+    this.randSeed = i;
+  }
+
+  random() {
+    const x = Math.sin(this.randSeed++) * 10000;
+    return x - Math.floor(x);
+  }
+
+  background(fill) {
+    let ctx = this.renderer.ctx;
+    ctx.fillStyle = fill;
+    ctx.fillRect(0, 0, 800, 600);
+  }
+
   text(text, x, y, color, font, baseline) {
     let ctx = this.renderer.ctx;
 
@@ -94,7 +109,8 @@ export default class GameContainer extends GraphicContainer {
     const R = {
       text: this.text.bind(this),
       poly: this.poly.bind(this),
-      circle: this.circle.bind(this)
+      circle: this.circle.bind(this),
+      bg: this.background.bind(this)
     };
     const C = this.renderer.ctx;
     const G = this.gameModel.exposedState;
@@ -111,7 +127,12 @@ export default class GameContainer extends GraphicContainer {
       total: this.gameModel.timePlayed
     };
 
-    const args = [E, R, C, G, I, T];
+    const M = {
+      seed: this.seed.bind(this),
+      rand: this.random.bind(this)
+    };
+
+    const args = [E, R, C, G, I, T, M];
 
     if (this.gameModel.paused) {
       args[0] = 0; // elapsed to 0

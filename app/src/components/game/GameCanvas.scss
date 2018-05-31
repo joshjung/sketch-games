@@ -1,4 +1,8 @@
 .canvas {
+  display: flex;
+  align-items: center;
+  height: 100%;
+
   canvas {
     width: 100%;
     border: 1px solid lightgrey;

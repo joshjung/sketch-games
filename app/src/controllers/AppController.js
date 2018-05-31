@@ -34,14 +34,22 @@ export default class AppController extends Controller {
         this.appModel.curGame = undefined;
         this.appModel.curGameController = undefined;
       },
-      250,
       event(RESTController.GET, id => ({
         url: `/games/${id}`,
         credentials: true
       })),
-      ($lastPromiseResult, playgroundComponent) => {
+      ($lastPromiseResult, playgroundComponent, $detail) => {
         if ($lastPromiseResult.id) {
           this.appModel.curGame = new GameModel($lastPromiseResult);
+
+          if ($detail.mode === 'published' && this.appModel.curGame.published) {
+            this.appModel.curGame.mode = 'published';
+          } else {
+            this.appModel.curGame.mode = 'development';
+          }
+
+          this.appModel.curGame.reset();
+
           this.appModel.curGameController = GameController.fromGameModel(this.appModel.curGame);
 
           playgroundComponent.attach(this.appModel.curGameController);

@@ -1,15 +1,44 @@
-.play-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+.play {
+  h3 {
+    color: darkgrey;
+    margin: 0;
+  }
 
-.game-instructions-container {
-  display: flex;
+  .description {
+    color: darkgrey;
+    margin-bottom: 10px;
+  }
 
-  .instructions {
-    max-width: 600px;
-    min-width: 300px;
-    padding: 0px 20px;
+  .beta-card {
+    background: darkred;
+    color: white;
+    padding: 5px;
+    border-radius: 7px;
+    font-size: 11px;
+    margin-left: 10px;
+  }
+
+  .play-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 5px 0;
+
+    h1 {
+      margin: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+
+  .game-instructions-container {
+    display: flex;
+
+    .instructions {
+      max-width: 600px;
+      min-width: 300px;
+      padding: 0px 20px;
+    }
   }
 }

@@ -7,7 +7,6 @@ import AppController from '../controllers/AppController';
 import AppModel from '../models/AppModel';
 
 import Editor from '../components/editor/Editor';
-import GameCanvas from '../components/game/GameCanvas';
 
 import './PlaygroundPage.scss';
 
@@ -46,9 +45,6 @@ export default class PlaygroundPage extends RingaComponent {
 
     return <div className="playground">
       <Editor game={curGame} />
-      <div className="game-canvas-editor-container">
-        <GameCanvas game={curGame}/>
-      </div>
     </div>;
   }
 

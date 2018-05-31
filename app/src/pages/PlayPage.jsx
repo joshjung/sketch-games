@@ -12,6 +12,8 @@ import GameCanvas from '../components/game/GameCanvas';
 
 import history from '../global/history';
 
+import moment from 'moment';
+
 import './PlayPage.scss';
 
 export default class PlaygroundPage extends RingaComponent {
@@ -31,7 +33,7 @@ export default class PlaygroundPage extends RingaComponent {
     try {
       let { id } = this.props.match.params;
       if (id) {
-        this.dispatch(AppController.GET_GAME_AND_SET_CURRENT, { id, playgroundComponent: this });
+        this.dispatch(AppController.GET_GAME_AND_SET_CURRENT, { id, playgroundComponent: this, mode: 'published' });
       } else {
         console.error('No ID provided to get the game!');
       }
@@ -49,7 +51,9 @@ export default class PlaygroundPage extends RingaComponent {
 
     return <div className="play">
       <div className="play-header">
-        <h1>{curGame.title}</h1>
+        <h1>{curGame.activeTitle} {!curGame.published && <span className="beta-card">Beta</span>}</h1>
+        <h3>By {curGame.owner.name}</h3>
+        {curGame.published && <h3>Published: {moment(curGame.publishedDate).format('MMMM Do YYYY')}</h3>}
         <div>
           <GameTimer game={curGame} />
           <Button label="Restart" onClick={this.restart_onClickHandler} />
@@ -57,9 +61,10 @@ export default class PlaygroundPage extends RingaComponent {
           {user ? <Button label="Develop" onClick={this.develop_onClickHandler} /> : undefined}
         </div>
       </div>
+      <div className="description">{curGame.activeDescription}</div>
       <div className="game-instructions-container">
         <GameCanvas game={curGame}/>
-        <Markdown markdown={curGame.instructions} classes="instructions" />
+        <Markdown markdown={curGame.activeInstructions} classes="instructions" />
       </div>
     </div>;
   }

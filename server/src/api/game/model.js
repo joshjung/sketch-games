@@ -15,6 +15,9 @@ const gameSchema = new Schema({
   instructions: {
     type: String
   },
+  description: {
+    type: String
+  },
   ownerUserId: {
     type: String,
     required: true
@@ -24,6 +27,27 @@ const gameSchema = new Schema({
   },
   clonedFromGameId: {
     type: String
+  },
+  published: {
+    type: Boolean
+  },
+  publishedDate: {
+    type: Date
+  },
+  publishedTitle: {
+    type: String
+  },
+  publishedInstructions: {
+    type: String
+  },
+  publishedDescription: {
+    type: String
+  },
+  publishedGameLoopFnText: {
+    type: String
+  },
+  history: {
+    type: [{}]
   }
 }, {
   timestamps: true
@@ -32,11 +56,26 @@ const gameSchema = new Schema({
 gameSchema.methods = {
   view (full) {
     let view = {};
-    let fields = ['id', 'title', 'instructions', 'gameLoopFnText', 'ownerUserId', 'originalGameId', 'clonedFromGameId'];
+    let fields = [
+      'id',
+      'title',
+      'instructions',
+      'description',
+      'published',
+      'publishedDate',
+      'publishedTitle',
+      'publishedInstructions',
+      'publishedDescription',
+      'publishedGameLoopFnText',
+      'gameLoopFnText',
+      'ownerUserId',
+      'originalGameId',
+      'clonedFromGameId'
+    ];
 
     if (full) {
-      fields = [...fields, 'createdAt']
-    };
+      fields = [...fields, 'history', 'createdAt']
+    }
 
     fields.forEach(field => view[field] = this[field]);
 
@@ -57,10 +96,14 @@ gameSchema.methods = {
         let body = {
           title: this.title + '(duplicated)',
           instructions: this.instructions,
+          description: this.description,
+          history: this.history,
           gameLoopFnText: this.gameLoopFnText,
           originalGameId: this.originalGameId || this.id,
           clonedFromGameId: this.id,
-          ownerUserId: userId
+          ownerUserId: userId,
+          published: false,
+          publishedDate: undefined
         };
 
         Game.create(body).then(clonedGame => {

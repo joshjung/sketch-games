@@ -27,7 +27,7 @@ export default class APIController extends Controller {
           setCookie('smg_auth_token', appModel.token);
           $detail.success = true;
           this.dispatch(APIController.ME);
-        } else {
+        } else if ($lastPromiseResult.message) {
           $detail.success = false;
         }
       }]);

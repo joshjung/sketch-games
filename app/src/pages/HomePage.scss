@@ -1,0 +1,28 @@
+.home {
+  .game-item {
+    width: calc(100% - 20px);
+    height: 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .title {
+      font-size: 30px;
+    }
+
+    .description {
+      font-size: 16px;
+      color: darkgrey;
+    }
+
+    .title, .author, .description {
+      width: 33%;
+    }
+
+    .author {
+      text-align: center;
+      font-size: 10px;
+      color: grey;
+    }
+  }
+}

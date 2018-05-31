@@ -121,7 +121,7 @@ export default class RESTController extends Ringa.Controller {
           try {
             parsedResponse = xhr.response ? JSON.parse(xhr.response) : undefined;
           } catch (error) {
-            console.error(error);
+            parsedResponse = {error: `Error: ${xhr.response}`}
           }
 
           resolve(parsedResponse);
@@ -132,7 +132,7 @@ export default class RESTController extends Ringa.Controller {
           try {
             resolve(JSON.parse(xhr.response));
           } catch(e) {
-            console.log(e, xhr.response);
+            resolve({error: `Error: ${xhr.response}`});
           }
         }
       };

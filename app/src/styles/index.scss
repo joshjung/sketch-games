@@ -1,1 +1,23 @@
 @import '~ringa-fw-react/src/styles/themes/classic/index';
+
+.published-card {
+  display: flex;
+  align-items: center;
+  height: 15px;
+  background: green;
+  color: white;
+  padding: 5px;
+  border-radius: 7px;
+  font-size: 11px;
+}
+
+.unpublished-card {
+  display: flex;
+  align-items: center;
+  height: 15px;
+  background: darkgrey;
+  color: white;
+  padding: 5px;
+  border-radius: 7px;
+  font-size: 11px;
+}

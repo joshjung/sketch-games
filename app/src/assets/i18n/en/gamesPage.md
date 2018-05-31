@@ -1,5 +1,3 @@
-# Games List
-
 Here you can find the listing of all the games. If you are logged in, you can:
 
 **Play**: click a game to play it!

@@ -1,23 +1,38 @@
-.game-item {
-  width: calc(100% - 20px);
-  display: flex;
-  justify-content: space-between;
+.games {
+  height: 100%;
 
-  .title, .author, .actions {
-    width: 33%;
-  }
-
-  .author {
-    text-align: center;
-  }
-  .author, .actions {
-    font-size: 10px;
-    color: grey;
-  }
-
-  .actions {
+  .header {
     display: flex;
+    flex-direction: row;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: space-between;
+  }
+
+  .list {
+    height: calc(100% - 70px);
+  }
+
+  .game-item {
+    width: calc(100% - 20px);
+    display: flex;
+    justify-content: space-between;
+
+    .title, .author, .actions {
+      width: 33%;
+    }
+
+    .author {
+      text-align: center;
+    }
+    .author, .actions {
+      font-size: 10px;
+      color: grey;
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
   }
 }

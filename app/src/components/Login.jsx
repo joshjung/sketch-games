@@ -22,6 +22,10 @@ export default class Login extends RingaComponent {
   constructor(props) {
     super(props);
 
+    this.state = {
+      error: false
+    };
+
     this.depend(
       dependency(I18NModel, 'language')
     );
@@ -33,11 +37,14 @@ export default class Login extends RingaComponent {
   // Lifecycle
   //-----------------------------------
   render() {
+    const {error} = this.state;
+
     return <div className="editor">
       Email:
-      <TextInput model={this.login} modelField="email"/>
+      <TextInput model={this.login} modelField="email" onEnterKey={this.email_onEnterKeyHandler}/>
       Password:
-      <TextInput model={this.login} modelField="password" type="password"/>
+      <TextInput model={this.login} modelField="password" type="password" onEnterKey={this.password_onEnterKeyHandler}/>
+      {error && <div>Invalid login!</div>}
       <Button label="Login" onClick={this.login_onClickHandler} />
     </div>;
   }
@@ -45,6 +52,14 @@ export default class Login extends RingaComponent {
   //-----------------------------------
   // Events
   //-----------------------------------
+  email_onEnterKeyHandler() {
+    this.login_onClickHandler();
+  }
+
+  password_onEnterKeyHandler() {
+    this.login_onClickHandler();
+  }
+
   login_onClickHandler() {
     this.dispatch(APIController.LOGIN, {
       body: {
@@ -54,7 +69,11 @@ export default class Login extends RingaComponent {
       }
     }).then(success => {
       if (success) {
-        history.replace('/games');
+        history.replace('/games/mine');
+      } else {
+        this.setState({
+          error: true
+        });
       }
     });
   }

@@ -36,13 +36,20 @@ class Header extends RingaComponent {
         </a>
       </div>
       <div>
-        <Button label="All Games" onClick={this.games_onClickHandler} />
-        {user && <Button label="New Game" onClick={this.newGame_onClickHandler} />}
+        <Button label="Home" onClick={this.home_onClickHandler} />
+        <Button label="Explore" onClick={this.games_onClickHandler} />
+        <Button label="About" onClick={this.about_onClickHandler} />
+        <Button label="API" onClick={this.api_onClickHandler} />
       </div>
       <div>
-        {user ? <span>{user.email}<Button label="Logout" onClick={this.logout_onClickHandler} /></span> :
+        {user ? <div>
+            <span className="username">{user.name}</span>
+            <Button label="My Games" onClick={this.myGames_onClickHandler} />
+            <Button label="Create Game" onClick={this.newGame_onClickHandler} />
+            <Button label="Logout" onClick={this.logout_onClickHandler} />
+          </div> :
           <Button label="Login" onClick={this.login_onClickHandler} />}
-        <Button label="New User" onClick={this.newUser_onClickHandler} />
+        {!user && <Button label="Register" onClick={this.newUser_onClickHandler} />}
       </div>
     </header>;
   }
@@ -60,6 +67,14 @@ class Header extends RingaComponent {
     });
   }
 
+  myGames_onClickHandler() {
+    history.push('/games/mine');
+  }
+
+  home_onClickHandler() {
+    history.push('/');
+  }
+
   newUser_onClickHandler() {
     history.push('/user/create');
   }
@@ -74,6 +89,14 @@ class Header extends RingaComponent {
 
   newGame_onClickHandler() {
     history.push('/games/new');
+  }
+
+  about_onClickHandler() {
+    history.push('/about');
+  }
+
+  api_onClickHandler() {
+    history.push('/api');
   }
 }
 
