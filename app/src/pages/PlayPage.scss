@@ -60,9 +60,22 @@
 }
 
 .play-mobile {
+  height: calc(100% - 50px);
+  .tabs {
+    padding: 0 20px;
+  }
 
-  .classic .ringa-component.tab-navigator .content {
-    border: none;
+  .ringa-component.tab-navigator {
+    height: calc(100% - 20px);
+  }
+
+  .ringa-component.tab-content {
+    height: 100% !important;
+  }
+
+  .ringa-component.tab-navigator .content {
+    border: none !important;
+    border-bottom: 1px solid grey !important;
   }
 
   h3 {
@@ -94,6 +107,7 @@
       flex-direction: row;
       align-items: center;
       justify-content: space-between;
+      padding: 0 20px;
     }
 
     h1 {

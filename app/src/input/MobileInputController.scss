@@ -2,21 +2,34 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  width: 100%;
+  width: calc(100% - 40px);
+  padding: 20px;
+  height: 100%;
+
+  * {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+  }
 
   .fixed-directional-pad {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    width: 150px;
-    height: 150px;
+    justify-content: flex-start;
+    width: 170px;
+    height: 200px;
 
     .up, .left, .right, .down {
-      width: 50px;
-      height: 50px;
+      width: 60px;
+      height: 40px;
       background: lightblue;
       border-radius: 7px;
-      font-size: 12px;
+      font-size: 11px;
+      font-weight: bold;
     }
 
     .up-box, .down-box {
@@ -40,7 +53,8 @@
     min-width: 30px;
     min-height: 30px;
     border-radius: 7px;
-    font-size: 12px;
+    font-size: 15px;
+    font-weight: bold;
   }
 
   .action-pad {

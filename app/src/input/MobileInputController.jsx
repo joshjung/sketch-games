@@ -25,7 +25,7 @@ export default class MobileInputController extends RingaComponent {
     const {game} = this.props;
 
     if (!game.listeningKeys) {
-      return <span>no listening keys</span>;
+      return <span />;
     }
 
     let fixedDirectionalPad = undefined;
@@ -45,20 +45,28 @@ export default class MobileInputController extends RingaComponent {
         <div className="up-box">
           {up ? <button className="up"
                         onMouseDown={this.button_mouseDownHandler.bind(this, Keyboard.KEY_CODES.UP)}
-                        onMouseUp={this.button_mouseUpHandler.bind(this, Keyboard.KEY_CODES.UP)}>UP</button> : this.clear(Keyboard.KEY_CODES.UP)}
+                        onTouchStart={this.button_mouseDownHandler.bind(this, Keyboard.KEY_CODES.UP)}
+                        onMouseUp={this.button_mouseUpHandler.bind(this, Keyboard.KEY_CODES.UP)}
+                        onTouchEnd={this.button_mouseUpHandler.bind(this, Keyboard.KEY_CODES.UP)}>UP</button> : this.clear(Keyboard.KEY_CODES.UP)}
         </div>
         <div className="left-right-box">
           {left ? <button className="left"
                           onMouseDown={this.button_mouseDownHandler.bind(this, Keyboard.KEY_CODES.LEFT)}
-                          onMouseUp={this.button_mouseUpHandler.bind(this, Keyboard.KEY_CODES.LEFT)}>LEFT</button> : this.clear(Keyboard.KEY_CODES.LEFT)}
+                          onTouchStart={this.button_mouseDownHandler.bind(this, Keyboard.KEY_CODES.LEFT)}
+                          onMouseUp={this.button_mouseUpHandler.bind(this, Keyboard.KEY_CODES.LEFT)}
+                          onTouchEnd={this.button_mouseUpHandler.bind(this, Keyboard.KEY_CODES.LEFT)}>LEFT</button> : this.clear(Keyboard.KEY_CODES.LEFT)}
           {right ? <button className="right"
                            onMouseDown={this.button_mouseDownHandler.bind(this, Keyboard.KEY_CODES.RIGHT)}
-                           onMouseUp={this.button_mouseUpHandler.bind(this, Keyboard.KEY_CODES.RIGHT)}>RIGHT</button> : this.clear(Keyboard.KEY_CODES.RIGHT)}
+                           onTouchStart={this.button_mouseDownHandler.bind(this, Keyboard.KEY_CODES.RIGHT)}
+                           onMouseUp={this.button_mouseUpHandler.bind(this, Keyboard.KEY_CODES.RIGHT)}
+                           onTouchEnd={this.button_mouseUpHandler.bind(this, Keyboard.KEY_CODES.RIGHT)}>RIGHT</button> : this.clear(Keyboard.KEY_CODES.RIGHT)}
         </div>
         <div className="down-box">
           {down ? <button className="down"
                           onMouseDown={this.button_mouseDownHandler.bind(this, Keyboard.KEY_CODES.DOWN)}
-                          onMouseUp={this.button_mouseUpHandler.bind(this, Keyboard.KEY_CODES.DOWN)}>DOWN</button> : this.clear(Keyboard.KEY_CODES.DOWN)}
+                          onTouchStart={this.button_mouseDownHandler.bind(this, Keyboard.KEY_CODES.DOWN)}
+                          onMouseUp={this.button_mouseUpHandler.bind(this, Keyboard.KEY_CODES.DOWN)}
+                          onTouchEnd={this.button_mouseUpHandler.bind(this, Keyboard.KEY_CODES.DOWN)}>DOWN</button> : this.clear(Keyboard.KEY_CODES.DOWN)}
         </div>
       </div>;
     } else {
@@ -74,10 +82,18 @@ export default class MobileInputController extends RingaComponent {
     const otherKeyCodes = Object.keys(game.listeningKeys).filter(kc => upLeftRightDown.indexOf(parseInt(kc)) === -1);
 
     if (otherKeyCodes.length) {
+      this.watchingKeys = this.watchingKeys || {};
+
+      Object.keys(this.watchingKeys).forEach(kc => this.clear(parseInt(kc)));
+
       actionPad = <div className="action-pad">{otherKeyCodes.map(kc => {
+        this.watchingKeys[kc] = true;
+
         return <button className="key"
                        onMouseDown={this.button_mouseDownHandler.bind(this, parseInt(kc))}
-                       onMouseUp={this.button_mouseUpHandler.bind(this, parseInt(kc))}>{Keyboard.KEY_CODE_NAMES[parseInt(kc)]}</button>;
+                       onTouchStart={this.button_mouseDownHandler.bind(this, parseInt(kc))}
+                       onMouseUp={this.button_mouseUpHandler.bind(this, parseInt(kc))}
+                       onTouchEnd={this.button_mouseUpHandler.bind(this, parseInt(kc))}>{Keyboard.KEY_CODE_NAMES[parseInt(kc)]}</button>;
       })}</div>;
     }
 
