@@ -46,13 +46,12 @@ export default class HomePage extends RingaComponent {
   // Methods
   //-----------------------------------
   gameListItemRenderer(itemClickHandler, game) {
-    const {user} = this.state;
-
     return <div className="item-renderer game-item"
                 onClick={itemClickHandler}
                 key={game.id}>
-      <div className="title">{game.title}</div>
-      <div className="description">{game.description}</div>
+      <div className="image">{game.image && <img src={game.image} className="game-image-medium" />}</div>
+      <div className="title">{game.publishedTitle}</div>
+      <div className="description">{game.publishedDescription}</div>
       {game.owner && <div className="author">Author: {game.owner.name}</div>}
     </div>;
   }

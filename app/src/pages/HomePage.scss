@@ -6,8 +6,16 @@
     justify-content: space-between;
     align-items: center;
 
+    .image {
+      width: 150px;
+
+      img {
+        border: 3px solid lightblue;
+      }
+    }
+
     .title {
-      font-size: 30px;
+      font-size: 36px;
     }
 
     .description {

@@ -85,11 +85,12 @@ export default class Editor extends RingaComponent {
 
   render() {
     const {title, code, instructions, user, i18NModel} = this.state;
-    const {owner, syntaxError, runError, published, ownerUserId, publishedDate, description} = this.props.game;
+    const {image, owner, syntaxError, runError, published, ownerUserId, publishedDate, description} = this.props.game;
     const codeLength = code ? code.length : 0;
 
     return <div className="editor">
       <div className="header">
+        {image && <img className="game-image-small" src={image} />}
         <h1>{title}</h1>
         <h3>Author: {owner.name}, {codeLength} bytes {published ? <span className="published-card">Published</span> : <span className="unpublished-card">Unpublished</span> }</h3>
         <div className="actions">
@@ -127,6 +128,7 @@ export default class Editor extends RingaComponent {
               }
               <Button label="Publish Latest Changes" onClick={this.publish_onClickHandler} />
               {published && <Button label="Unpublish" onClick={this.unpublish_onClickHandler} />}
+              <Button label="Screenshot" onClick={this.screenshot_onClickHandler} />
             </Tab>
             <Tab label="API">
               <Markdown markdown={i18NModel.i18n('api')}/>
@@ -263,5 +265,13 @@ export default class Editor extends RingaComponent {
     const {game} = this.props;
 
     history.push(`/games/play/${game.id}`);
+  }
+
+  screenshot_onClickHandler() {
+    const {game} = this.props;
+
+    game.screenshot();
+
+    this.forceUpdate();
   }
 }

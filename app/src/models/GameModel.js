@@ -19,6 +19,7 @@ export default class GameModel extends Model {
     this.addProperty('syntaxError', undefined);
     this.addProperty('runError', undefined);
     this.addProperty('title', 'My Game');
+    this.addProperty('image', undefined);
     this.addProperty('state', GameModel.STATE_NOT_STARTED);
     this.addProperty('backgroundColor', 0x000000);
     this.addProperty('gameContainer');
@@ -55,6 +56,7 @@ export default class GameModel extends Model {
   get serializeProperties() {
     return [
       'title',
+      'image',
       'gameLoopFnText',
       'ownerUserId',
       'instructions',
@@ -75,6 +77,12 @@ export default class GameModel extends Model {
     this.publishedDescription = this.description;
     this.publishedInstructions = this.instructions;
     this.publishedGameLoopFnText = this.gameLoopFnText;
+  }
+
+  screenshot() {
+    if (this.renderer) {
+      this.image = this.renderer.canvas.toDataURL();
+    }
   }
 
   unpublish() {

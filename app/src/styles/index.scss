@@ -1,5 +1,15 @@
 @import '~ringa-fw-react/src/styles/themes/classic/index';
 
+.game-image-small {
+  width: 50px;
+  border-radius: 7px;
+}
+
+.game-image-medium {
+  width: 95px;
+  border-radius: 7px;
+}
+
 .published-card {
   height: 15px;
   background: green;
@@ -10,8 +20,6 @@
 }
 
 .unpublished-card {
-  display: flex;
-  align-items: center;
   height: 15px;
   background: darkgrey;
   color: white;

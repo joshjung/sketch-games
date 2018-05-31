@@ -9,6 +9,9 @@ const gameSchema = new Schema({
     required: true,
     trim: true
   },
+  image: {
+    type: String // Stored as base64 toDateUrl format from canvas
+  },
   gameLoopFnText: {
     type: String
   },
@@ -59,6 +62,7 @@ gameSchema.methods = {
     let fields = [
       'id',
       'title',
+      'image',
       'instructions',
       'description',
       'published',
@@ -95,6 +99,7 @@ gameSchema.methods = {
     return new Promise((response, fail) => {
         let body = {
           title: this.title + '(duplicated)',
+          image: this.image,
           instructions: this.instructions,
           description: this.description,
           history: this.history,

@@ -55,6 +55,8 @@ export default class Canvas extends RingaComponent {
       heightToWidthRatio: 600 / 800
     });
 
+    this.props.game.renderer = this.renderer;
+
     if (this.props.game && this.props.game.gameContainer) {
       this.addGameContainer(this.props.game.gameContainer);
     }
