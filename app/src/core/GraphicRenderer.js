@@ -48,9 +48,9 @@ class GraphicRenderer extends GraphicComponent {
     if (!canvas) {
       throw 'Please provide a canvas to GraphicRenderer. Thank you and have a nice day.';
     }
+
     super(options, id);
 
-    this.canvas = canvas;
     this.document = new Document();
 
     this.document.addListener(DocumentEvents.FOCUS_CHANGE, this._focusChangeHandler.bind(this));
@@ -76,31 +76,12 @@ class GraphicRenderer extends GraphicComponent {
       this.canvasTargetHeight = this.height = (o.height || DEFAULT_HEIGHT);
     }
 
-    setTimeout(this._resizeHandler.bind(this), 1);
-
     window.addEventListener('resize', this._resizeHandler.bind(this));
     this.lastScrollTop = window.pageYOffset;
 
     window.addEventListener('scroll', this._scrollHandler.bind(this));
 
-    if (o.mouseEnabled !== false) {
-      canvas.addEventListener('mousemove', this._canvasOnMouseMoveHandler.bind(this));
-      canvas.addEventListener('mouseout', this._canvasOnMouseOutHandler.bind(this));
-      canvas.addEventListener('click', this._canvasOnMouseClickHandler.bind(this));
-      canvas.addEventListener('mousedown', this._canvasOnMouseDownHandler.bind(this));
-      canvas.addEventListener('mouseup', this._canvasOnMouseUpHandler.bind(this));
-    }
-
-    if (o.touchEnabled !== false) {
-      canvas.addEventListener('touchstart', this._canvasOnTouchStartHandler.bind(this));
-      canvas.addEventListener('touchmove', this._canvasOnTouchMoveHandler.bind(this));
-    }
-
-    if (id) {
-      canvas.setAttribute('id', id);
-      window.jd = window.jd || {};
-      window.jd[id] = this;
-    }
+    this.setupCanvas(canvas);
 
     // GraphicComponent properties
     this.renderer = this;
@@ -188,6 +169,37 @@ class GraphicRenderer extends GraphicComponent {
       return;
     }
     this._paused = value;
+  }
+
+  //---------------------------------------------
+  // Methods
+  //---------------------------------------------
+  setupCanvas(canvas) {
+    const o = this.options;
+
+    this.ctx = undefined;
+    this.canvas = canvas;
+
+    if (o.mouseEnabled !== false) {
+      canvas.addEventListener('mousemove', this._canvasOnMouseMoveHandler.bind(this));
+      canvas.addEventListener('mouseout', this._canvasOnMouseOutHandler.bind(this));
+      canvas.addEventListener('click', this._canvasOnMouseClickHandler.bind(this));
+      canvas.addEventListener('mousedown', this._canvasOnMouseDownHandler.bind(this));
+      canvas.addEventListener('mouseup', this._canvasOnMouseUpHandler.bind(this));
+    }
+
+    if (o.touchEnabled !== false) {
+      canvas.addEventListener('touchstart', this._canvasOnTouchStartHandler.bind(this));
+      canvas.addEventListener('touchmove', this._canvasOnTouchMoveHandler.bind(this));
+    }
+
+    if (this.id) {
+      canvas.setAttribute('id', this.id);
+      window.jd = window.jd || {};
+      window.jd[this.id] = this;
+    }
+
+    setTimeout(this._resizeHandler.bind(this), 1);
   }
 
   //---------------------------------------------

@@ -10,18 +10,28 @@ export default class GameTimer extends RingaComponent {
   //-----------------------------------
   constructor(props) {
     super(props);
-
-    setInterval(() => {
-      this.forceUpdate();
-    }, 100);
   }
 
   //-----------------------------------
   // Lifecycle
   //-----------------------------------
+  componentDidMount() {
+    super.componentDidMount();
+
+    this.interval = setInterval(this.update, 100);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
   render() {
     return <span className="timer">
       Time: {Math.round(this.props.game.timePlayed)}
     </span>;
+  }
+
+  update() {
+    this.forceUpdate();
   }
 }

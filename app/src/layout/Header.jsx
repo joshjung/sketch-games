@@ -19,7 +19,8 @@ class Header extends RingaComponent {
     depend(this, [
       dependency(I18NModel, 'language'),
       dependency(ScreenModel, 'curBreakpointIx'),
-      dependency(AppModel, ['token', 'user'])
+      dependency(AppModel, ['token', 'user']),
+      dependency(ScreenModel, 'curBreakpointIx')
     ]);
   }
 
@@ -32,20 +33,20 @@ class Header extends RingaComponent {
     return <header className="app-header">
       <div className="title">
         <a onClick={this.home_onClickHandler}>
-          {i18NModel.i18n(curBreakpointIx < 1 ? 'header.shortTitle' : 'header.title')}
+          {i18NModel.i18n(curBreakpointIx < 2 ? 'header.shortTitle' : 'header.title')}
         </a>
       </div>
       <div>
-        <Button label="Home" onClick={this.home_onClickHandler} />
-        <Button label="Explore" onClick={this.games_onClickHandler} />
-        <Button label="About" onClick={this.about_onClickHandler} />
-        <Button label="API" onClick={this.api_onClickHandler} />
+        {curBreakpointIx > 2 && <Button label="Home" onClick={this.home_onClickHandler} />}
+        {curBreakpointIx > 2 && <Button label="Explore" onClick={this.games_onClickHandler} />}
+        {curBreakpointIx > 2 && <Button label="About" onClick={this.about_onClickHandler} />}
+        {curBreakpointIx > 2 && <Button label="API" onClick={this.api_onClickHandler} />}
       </div>
       <div>
         {user ? <div>
             <span className="username">{user.name}</span>
-            <Button label="My Games" onClick={this.myGames_onClickHandler} />
-            <Button label="Create Game" onClick={this.newGame_onClickHandler} />
+            {curBreakpointIx > 2 && <Button label="My Games" onClick={this.myGames_onClickHandler} />}
+            {curBreakpointIx > 2 && <Button label="Create Game" onClick={this.newGame_onClickHandler} />}
             <Button label="Logout" onClick={this.logout_onClickHandler} />
           </div> :
           <Button label="Login" onClick={this.login_onClickHandler} />}

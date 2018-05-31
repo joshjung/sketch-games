@@ -46,15 +46,84 @@
     }
 
     .instructions {
-      min-width: 450px;
+      min-width: 350px;
       padding: 0px 20px;
       height: 100%;
       max-height: calc(100vh - 200px);
       overflow: scroll;
 
       .tab-navigator {
-        height: 100%;
+        height: calc(100vh - 220px);
       }
+    }
+  }
+}
+
+.play-mobile {
+
+  .classic .ringa-component.tab-navigator .content {
+    border: none;
+  }
+
+  h3 {
+    color: darkgrey;
+    margin: 0;
+  }
+
+  .description {
+    color: darkgrey;
+    margin-bottom: 10px;
+  }
+
+  .beta-card {
+    background: darkred;
+    color: white;
+    padding: 5px;
+    border-radius: 7px;
+    font-size: 11px;
+    margin-left: 10px;
+  }
+
+  .play-header {
+    display: flex;
+    flex-direction: column;
+    margin: 5px 0;
+
+    .sub-header {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    h1 {
+      margin: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+
+  .tab-content {
+    padding: 0 !important;
+  }
+
+  .canvas {
+    width: 100%;
+    max-width: 1000px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .instructions {
+    min-width: 450px;
+    padding: 0px 20px;
+    height: 100%;
+    max-height: calc(100vh - 200px);
+    overflow: scroll;
+
+    .tab-navigator {
+      height: 100%;
     }
   }
 }

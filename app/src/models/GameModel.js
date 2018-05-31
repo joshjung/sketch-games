@@ -37,6 +37,9 @@ export default class GameModel extends Model {
     this.addProperty('publishedGameLoopFnText', undefined);
     this.addProperty('highscores', []);
     this.addProperty('playCount', 0);
+
+    this.addProperty('listeningKeys', undefined);
+    this.addProperty('activeKeys', undefined);
   }
 
   get indexedText() {

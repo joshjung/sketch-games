@@ -23,6 +23,8 @@ body {
 
     @media screen and (max-width: $break-small) {
       height: calc(100% - 52px);
+      width: calc(100% - #{$pad1 * 2});
+      padding: $pad1;
     }
   }
 }

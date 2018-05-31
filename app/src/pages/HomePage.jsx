@@ -1,11 +1,13 @@
 import React from 'react';
 
-import {RingaComponent, Markdown, I18NModel, List, Button} from 'ringa-fw-react';
+import {RingaComponent, I18NModel, List, ScreenModel} from 'ringa-fw-react';
 import {dependency} from 'react-ringa';
 
 import AppModel from '../models/AppModel';
 import APIController from '../controllers/APIController';
 import AppController from '../controllers/AppController';
+
+import classnames from 'classnames';
 
 import './HomePage.scss';
 
@@ -18,7 +20,8 @@ export default class HomePage extends RingaComponent {
 
     this.depend(
       dependency(I18NModel, 'language'),
-      dependency(AppModel, ['games', 'user'])
+      dependency(AppModel, ['games', 'user']),
+      dependency(ScreenModel, 'curBreakpointIx')
     );
   }
 
@@ -30,7 +33,7 @@ export default class HomePage extends RingaComponent {
   }
 
   render() {
-    let {games = [], i18NModel} = this.state;
+    let {games = [], curBreakpointIx} = this.state;
 
     games = games.filter(game => game.published);
 
@@ -48,18 +51,39 @@ export default class HomePage extends RingaComponent {
   // Methods
   //-----------------------------------
   gameListItemRenderer(itemClickHandler, game) {
+    const {curBreakpointIx} = this.state;
+    const cn = classnames('item-renderer', {
+      'game-item': curBreakpointIx > 2,
+      'game-item-mobile': curBreakpointIx <= 2
+    });
     const hs = this.getHighscores(game);
 
-    return <div className="item-renderer game-item"
-                onClick={itemClickHandler}
-                key={game.id}>
-      <div className="image">{game.image && <img src={game.image} className="game-image-medium" />}</div>
-      <div className="title">{game.publishedTitle}</div>
-      <div className="description">{game.publishedDescription}</div>
-      {game.owner && <div className="author">Author: {game.owner.name}</div>}
-      <div className="playCount">{game.playCount || 0} Plays</div>
-      <div className="highcore">{hs.score && 'High score of ' + hs.score + ' (' + hs.name + ')'}</div>
-    </div>;
+    if (curBreakpointIx < 2) {
+      return <div className={cn}
+                  onClick={itemClickHandler}
+                  key={game.id}>
+        <div className="image">{game.image && <img src={game.image} className="game-image-medium" />}</div>
+        <div className="details">
+          <div className="title">{game.publishedTitle}</div>
+          <div className="description">{game.publishedDescription}</div>
+          {game.owner && <div className="author">Author: {game.owner.name}</div>}
+          <div className="playCount">{game.playCount || 0} Plays</div>
+          <div className="highcore">{hs.score && 'High score of ' + hs.score + ' (' + hs.name + ')'}</div>
+        </div>
+      </div>;
+    } else {
+      return <div className={cn}
+                  onClick={itemClickHandler}
+                  key={game.id}>
+        <div className="image">{game.image && <img src={game.image} className="game-image-medium" />}</div>
+        <div className="title">{game.publishedTitle}</div>
+        <div className="description">{game.publishedDescription}</div>
+        {game.owner && <div className="author">Author: {game.owner.name}</div>}
+        <div className="playCount">{game.playCount || 0} Plays</div>
+        <div className="highcore">{hs.score && 'High score of ' + hs.score + ' (' + hs.name + ')'}</div>
+      </div>;
+    }
+
   }
 
   getSortedHighscores(game) {

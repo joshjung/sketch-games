@@ -12,11 +12,14 @@ export default class GameContainer extends GraphicContainer {
     this.gameModel = gameController.gameModel;
     this.gameController = gameController;
 
-    this.keyboard = new Keyboard();
+    this.keyboard = new Keyboard(this.gameModel);
+
+    this.gameModel.keyboard = this.keyboard;
 
     gameController.gameModel.watch(signal => {
       if (signal === 'reset') {
-        this.keyboard = new Keyboard(); // We have to reset the keys
+        this.keyboard = new Keyboard(this.gameModel); // We have to reset the keys
+        this.gameModel.keyboard = this.keyboard;
       }
     })
   }
@@ -172,6 +175,7 @@ export default class GameContainer extends GraphicContainer {
 
     if (this.gameModel.gameLoopFn) {
       try {
+        this.gameModel.listeningKeys = undefined;
         this.gameModel.gameLoopFn.apply(this.gameModel.gameLoopFn, args);
       } catch (error) {
         this.gameModel.runError = error;
