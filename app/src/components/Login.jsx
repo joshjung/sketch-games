@@ -2,7 +2,7 @@ import React from 'react';
 
 import {Model} from 'ringa';
 
-import {RingaComponent, I18NModel, TextInput, Button} from 'ringa-fw-react';
+import {RingaComponent, I18NModel, TextInput, Button, ScreenModel} from 'ringa-fw-react';
 import {dependency} from 'react-ringa';
 
 import history from '../global/history';
@@ -27,7 +27,8 @@ export default class Login extends RingaComponent {
     };
 
     this.depend(
-      dependency(I18NModel, 'language')
+      dependency(I18NModel, 'language'),
+      dependency(ScreenModel, 'curBreakpointIx')
     );
 
     this.login = new LoginModel();
@@ -61,6 +62,8 @@ export default class Login extends RingaComponent {
   }
 
   login_onClickHandler() {
+    const {curBreakpointIx} = this.state;
+
     this.dispatch(APIController.LOGIN, {
       body: {
         email: this.login.email,
@@ -69,7 +72,11 @@ export default class Login extends RingaComponent {
       }
     }).then(success => {
       if (success) {
-        history.replace('/games/mine');
+        if (curBreakpointIx > 3) {
+          history.replace('/games/mine');
+        } else {
+          history.replace('/');
+        }
       } else {
         this.setState({
           error: true
