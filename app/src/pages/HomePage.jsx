@@ -55,6 +55,7 @@ export default class HomePage extends RingaComponent {
       <div className="title">{game.publishedTitle}</div>
       <div className="description">{game.publishedDescription}</div>
       {game.owner && <div className="author">Author: {game.owner.name}</div>}
+      <div className="playCount">{game.playCount || 0} Plays</div>
     </div>;
   }
 

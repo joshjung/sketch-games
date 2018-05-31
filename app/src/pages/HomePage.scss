@@ -23,11 +23,11 @@
       color: darkgrey;
     }
 
-    .title, .author, .description {
-      width: 33%;
+    .title, .author, .description, .playCount {
+      width: 25%;
     }
 
-    .author {
+    .author, .playCount {
       text-align: center;
       font-size: 10px;
       color: grey;

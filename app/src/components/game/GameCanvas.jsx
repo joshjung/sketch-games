@@ -4,13 +4,16 @@ import {RingaComponent} from 'ringa-fw-react';
 
 import GraphicRenderer from '../../core/GraphicRenderer';
 
+import APIController from '../../controllers/APIController';
+
 import './GameCanvas.scss';
 
 class GameCanvasRenderer extends GraphicRenderer {
-  constructor(game, canvas, options) {
+  constructor(gameCanvasComponent, game, canvas, options) {
     super(canvas, options);
 
     this.game = game;
+    this.gameCanvasComponent = gameCanvasComponent;
   }
 
   _onFrameHandler(timestamp) {
@@ -18,6 +21,15 @@ class GameCanvasRenderer extends GraphicRenderer {
 
     if (!this.game.paused) {
       this.game.timePlayed += this.elapsed;
+    }
+
+    if (!this.game.playRecorded && this.game.mode === 'published' && this.game.timePlayed > 5) {
+      console.log('Recording play!');
+      this.gameCanvasComponent.dispatch(APIController.RECORD_PLAY, {
+        id: this.game.id
+      });
+
+      this.game.playRecorded = true;
     }
   }
 
@@ -34,7 +46,7 @@ class GameCanvasRenderer extends GraphicRenderer {
   }
 }
 
-export default class Canvas extends RingaComponent {
+export default class GameCanvas extends RingaComponent {
   //-----------------------------------
   // Constructor
   //-----------------------------------
@@ -46,9 +58,11 @@ export default class Canvas extends RingaComponent {
   // Lifecycle
   //-----------------------------------
   componentDidMount() {
+    super.componentDidMount();
+
     this.props.game.reset();
 
-    this.renderer = new GameCanvasRenderer(this.props.game, this.refs.canvas, {
+    this.renderer = new GameCanvasRenderer(this, this.props.game, this.refs.canvas, {
       debug: false,
       canvasAutoClear: true,
       resetPixelSizeToCanvas: false,
@@ -56,6 +70,7 @@ export default class Canvas extends RingaComponent {
     });
 
     this.props.game.renderer = this.renderer;
+    this.props.game.gameCanvas = this;
 
     if (this.props.game && this.props.game.gameContainer) {
       this.addGameContainer(this.props.game.gameContainer);

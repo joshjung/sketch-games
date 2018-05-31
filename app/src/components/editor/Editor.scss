@@ -68,6 +68,12 @@
       .unpublished {
         color: darkgrey;
       }
+
+      .screenshot {
+        img {
+          width: calc(100% - 20px);
+        }
+      }
     }
 
     .right-pane {

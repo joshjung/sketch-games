@@ -1,8 +1,8 @@
 import { Router } from 'express'
 import { middleware as query } from 'querymen'
 import { middleware as body } from 'bodymen'
-import { token, master } from '../../services/passport'
-import { index, showMe, show, create, clone, update, updatePassword, destroy } from './controller'
+import { token } from '../../services/passport'
+import { index, show, create, clone, play, highscore, clearHighscores, update, updatePassword, destroy } from './controller'
 import { schema } from './model'
 export Game, { schema } from './model'
 
@@ -21,7 +21,9 @@ const { title,
   publishedGameLoopFnText,
   history,
   originalGameId,
-  clonedFromGameId } = schema.tree;
+  clonedFromGameId,
+  highscores,
+  playcount } = schema.tree;
 
 router.get('/',
   query(),
@@ -54,6 +56,21 @@ router.post('/clone',
   token({ required: true }),
   body({ id: {type: String}, userId: {type: String} }),
   clone);
+
+router.post('/play',
+  token({ required: true }),
+  body({ id: {type: String}, userId: {type: String} }),
+  play);
+
+router.post('/highscore',
+  token({ required: true }),
+  body({ id: {type: String}, userId: {type: String}, score: {type: Number}, time: {type: Number}, name: {type: String} }),
+  highscore);
+
+router.post('/clearHighscores',
+  token({ required: true }),
+  body({ id: {type: String}, userId: {type: String}}),
+  clearHighscores);
 
 router.put('/:id',
   token({ required: true }),

@@ -1,0 +1,22 @@
+.highscores {
+  .highscore {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+
+    .position {
+      width: 30px;
+    }
+
+    .points, .time, .name {
+      width: 33%;
+    }
+
+    .name, .points {
+      font-weight: bold;
+      font-size: 14px;
+    }
+  }
+}

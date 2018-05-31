@@ -96,6 +96,51 @@ export default class APIController extends Controller {
         $detail.success = !!$lastPromiseResult.game;
       }]);
 
+    this.addListener('recordPlay', [
+      event(RESTController.POST, id => ({
+        url: '/games/play',
+        bodyParam: 'body',
+        body: {
+          id,
+          userId: this.appModel.user.id
+        },
+        credentials: true
+      })),
+      ($lastPromiseResult, $detail) => {
+        $detail.success = $lastPromiseResult.success;
+      }]);
+
+    this.addListener('recordHighscore', [
+      event(RESTController.POST, (id, score, time) => ({
+        url: '/games/highscore',
+        bodyParam: 'body',
+        body: {
+          id,
+          score,
+          time,
+          userId: this.appModel.user.id,
+          name: this.appModel.user.name
+        },
+        credentials: true
+      })),
+      ($lastPromiseResult, $detail) => {
+        $detail.success = $lastPromiseResult.success;
+      }]);
+
+    this.addListener('clearHighscores', [
+      event(RESTController.POST, (id) => ({
+        url: '/games/clearHighscores',
+        bodyParam: 'body',
+        body: {
+          id,
+          userId: this.appModel.user.id
+        },
+        credentials: true
+      })),
+      ($lastPromiseResult, $detail) => {
+        $detail.success = $lastPromiseResult.success;
+      }]);
+
     this.addListener('getGames', [
       event(RESTController.GET, {
         url: '/games',

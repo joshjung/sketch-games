@@ -7,7 +7,7 @@ import APIController from '../../controllers/APIController';
 import AppModel from '../../models/AppModel';
 import history from '../../global/history';
 import GameCanvas from '../game/GameCanvas';
-
+import Highscores from '../../components/Highscores';
 import moment from 'moment';
 
 import './Editor.scss';
@@ -128,7 +128,16 @@ export default class Editor extends RingaComponent {
               }
               <Button label="Publish Latest Changes" onClick={this.publish_onClickHandler} />
               {published && <Button label="Unpublish" onClick={this.unpublish_onClickHandler} />}
-              <Button label="Screenshot" onClick={this.screenshot_onClickHandler} />
+              <div className="screenshot">
+                <h3>Screenshot <Button label="Take New Screenshot" onClick={this.screenshot_onClickHandler} /></h3>
+                <div>Taking a screenshot records the current contents of the canvas on the right. Use Pause and Resume to get the
+                perfect picture.</div>
+                {image ? <img src={image} /> : 'No screenshot yet'}
+              </div>
+            </Tab>
+            <Tab label="Highscores">
+              <Button label="Clear Highscores" onClick={this.clearHighscores_onClickHandler} />
+              <Highscores game={this.props.game} />
             </Tab>
             <Tab label="API">
               <Markdown markdown={i18NModel.i18n('api')}/>
@@ -273,5 +282,22 @@ export default class Editor extends RingaComponent {
     game.screenshot();
 
     this.forceUpdate();
+  }
+
+  clearHighscores_onClickHandler() {
+    const {game} = this.props;
+
+    Alert.show(`Are you sure you want to clear all the highscores for this game?`, Alert.YES_NO, {}, this.rootDomNode).then(result => {
+      if (result.id === 'yes') {
+        this.dispatch(APIController.CLEAR_HIGHSCORES, {
+          id: game.id
+        }).then($lastPromiseResult => {
+          if ($lastPromiseResult.success) {
+            game.highscores = [];
+            this.forceUpdate();
+          }
+        });
+      }
+    })
   }
 }

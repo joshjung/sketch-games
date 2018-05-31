@@ -35,6 +35,8 @@ export default class GameModel extends Model {
     this.addProperty('publishedInstructions', undefined);
     this.addProperty('publishedDescription', undefined);
     this.addProperty('publishedGameLoopFnText', undefined);
+    this.addProperty('highscores', []);
+    this.addProperty('playCount', 0);
   }
 
   get indexedText() {
@@ -55,6 +57,14 @@ export default class GameModel extends Model {
 
   get activeGameLoopFnText() {
     return this.mode === 'development' ? this.gameLoopFnText : this.publishedGameLoopFnText;
+  }
+
+  get sortedHighscores() {
+    const hs = this.highscores || [];
+
+    return hs.sort((hs1, hs2) => {
+      return hs1.score < hs2.score ? 1 : -1;
+    });
   }
 
   get serializeProperties() {
@@ -95,6 +105,8 @@ export default class GameModel extends Model {
 
   reset() {
     this.setGameFunctionFromString(this.activeGameLoopFnText);
+
+    this.playRecorded = false;
 
     this.syntaxError = this.runError = undefined;
     this.exposedState = {};

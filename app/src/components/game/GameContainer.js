@@ -3,6 +3,8 @@ import GraphicContainer from '../../core/GraphicContainer';
 import Keyboard from '../../input/Keyboard';
 import Mouse from '../../input/Mouse';
 
+import APIController from '../../controllers/APIController';
+
 export default class GameContainer extends GraphicContainer {
   constructor(gameController, options, id) {
     super(options, id);
@@ -14,7 +16,7 @@ export default class GameContainer extends GraphicContainer {
 
     gameController.gameModel.watch(signal => {
       if (signal === 'reset') {
-        this.keyboard = new Keyboard();
+        this.keyboard = new Keyboard(); // We have to reset the keys
       }
     })
   }
@@ -100,6 +102,33 @@ export default class GameContainer extends GraphicContainer {
     }
   }
 
+  recordScore(score) {
+    const isHighscore = !this.gameModel.highscores ||
+      this.gameModel.highscores.length < 50 ||
+      this.gameModel.highscores.find(hs => hs.score < score);
+
+    if (isHighscore) {
+      if (this.gameModel.mode === 'published') {
+        this.gameModel.gameCanvas.dispatch(APIController.RECORD_HIGHSCORE, {
+          id: this.gameModel.id,
+          score,
+          time: this.gameModel.timePlayed
+        }).then($lastPromiseResult => {
+          if ($lastPromiseResult.success) {
+            this.gameModel.highscores = $lastPromiseResult.highscores;
+            console.log('new highscores', this.gameModel.highscores);
+          }
+        });
+      } else {
+        console.log(`You are in development mode, your highscore of ${score} is not recorded.`);
+      }
+
+      return true;
+    }
+
+    return false;
+  }
+
   onFrameHandler(elapsed) {
     if (!this.mouse) {
       this.mouse = new Mouse(this.renderer.canvas);
@@ -113,7 +142,9 @@ export default class GameContainer extends GraphicContainer {
       bg: this.background.bind(this)
     };
     const C = this.renderer.ctx;
-    const G = this.gameModel.exposedState;
+    const G = Object.assign(this.gameModel.exposedState, {
+      recordScore: this.recordScore.bind(this)
+    });
     const I = Object.assign({
       keyDown: this.keyboard.keyDown,
       keyCodes: this.keyboard.keyCodes,

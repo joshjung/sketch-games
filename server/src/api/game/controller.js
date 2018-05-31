@@ -49,6 +49,36 @@ export const clone = ({ bodymen: { body } }, res, next) =>
     })
     .catch(next);
 
+export const play = ({ bodymen: { body } }, res, next) =>
+  Game.findById(body.id)
+    .then(notFound(res))
+    .then(game => {
+      return game.play(body.userId)
+        .then(success(res, 201))
+        .catch(next);
+    })
+    .catch(next);
+
+export const highscore = ({ bodymen: { body } }, res, next) =>
+  Game.findById(body.id)
+    .then(notFound(res))
+    .then(game => {
+      return game.highscore(body.userId, body.score, body.time, body.name)
+        .then(success(res, 201))
+        .catch(next);
+    })
+    .catch(next);
+
+export const clearHighscores = ({ bodymen: { body } }, res, next) =>
+  Game.findById(body.id)
+    .then(notFound(res))
+    .then(game => {
+      return game.clearHighscores(body.userId)
+        .then(success(res, 201))
+        .catch(next);
+    })
+    .catch(next);
+
 export const update = ({ bodymen: { body }, params, game }, res, next) =>
   Game.findById(params.id === 'me' ? game.id : params.id)
     .then(notFound(res))

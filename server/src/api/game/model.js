@@ -49,8 +49,14 @@ const gameSchema = new Schema({
   publishedGameLoopFnText: {
     type: String
   },
+  highscores: {
+    type: [{}]
+  },
   history: {
     type: [{}]
+  },
+  playCount: {
+    type: Number
   }
 }, {
   timestamps: true
@@ -74,7 +80,9 @@ gameSchema.methods = {
       'gameLoopFnText',
       'ownerUserId',
       'originalGameId',
-      'clonedFromGameId'
+      'clonedFromGameId',
+      'highscores',
+      'playCount'
     ];
 
     if (full) {
@@ -108,7 +116,9 @@ gameSchema.methods = {
           clonedFromGameId: this.id,
           ownerUserId: userId,
           published: false,
-          publishedDate: undefined
+          publishedDate: undefined,
+          highscores: [],
+          playCount: 0
         };
 
         Game.create(body).then(clonedGame => {
@@ -118,6 +128,39 @@ gameSchema.methods = {
 
           fail(error);
         });
+    });
+  },
+  play (userId) {
+    return new Promise((response) => {
+      this.playCount = this.playCount || 0;
+      this.playCount++;
+
+      this.save().then(() => response({success: true}));
+    });
+  },
+  highscore (userId, score, time, name) {
+    return new Promise((response) => {
+      this.highscores = this.highscores || [];
+
+      this.highscores.push({
+        userId,
+        score,
+        time,
+        name
+      });
+
+      this.save().then(() => response({success: true, highscores: this.highscores}));
+    });
+  },
+  clearHighscores (userId) {
+    return new Promise((response) => {
+      if (userId !== this.ownerUserId) {
+        response({success:false});
+      } else {
+        this.highscores = [];
+
+        this.save().then(() => response({success: true}));
+      }
     });
   }
 };

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {RingaComponent, Button, Alert, Markdown} from 'ringa-fw-react';
+import {RingaComponent, Button, Markdown, TabNavigator, Tab} from 'ringa-fw-react';
 import {dependency} from 'react-ringa';
 
 import AppController from '../controllers/AppController';
@@ -10,6 +10,7 @@ import GameTimer from '../components/GameTimer';
 
 import GameCanvas from '../components/game/GameCanvas';
 
+import Highscores from '../components/Highscores';
 import history from '../global/history';
 
 import moment from 'moment';
@@ -33,7 +34,15 @@ export default class PlayPage extends RingaComponent {
     try {
       let { id } = this.props.match.params;
       if (id) {
-        this.dispatch(AppController.GET_GAME_AND_SET_CURRENT, { id, playgroundComponent: this, mode: 'published' });
+        this.dispatch(AppController.GET_GAME_AND_SET_CURRENT, { id, playgroundComponent: this, mode: 'published' }).then(() => {
+          const {curGame} = this.state.appModel;
+
+          curGame.watch(signal => {
+            if (['highscores'].indexOf(signal) !== -1) {
+              this.forceUpdate();
+            }
+          })
+        });
       } else {
         console.error('No ID provided to get the game!');
       }
@@ -62,9 +71,18 @@ export default class PlayPage extends RingaComponent {
         </div>
       </div>
       <div className="description">{curGame.activeDescription}</div>
-      <div className="game-instructions-container">
+      <div className="game-container">
         <GameCanvas game={curGame}/>
-        <Markdown markdown={curGame.activeInstructions} classes="instructions" />
+        <div className="instructions">
+          <TabNavigator>
+            <Tab label="Highscores">
+              <Highscores game={curGame} />
+            </Tab>
+            <Tab label="Instructions">
+              <Markdown markdown={curGame.activeInstructions} classes="instructions" />
+            </Tab>
+          </TabNavigator>
+        </div>
       </div>
     </div>;
   }
