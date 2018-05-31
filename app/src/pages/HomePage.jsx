@@ -35,7 +35,9 @@ export default class HomePage extends RingaComponent {
     games = games.filter(game => game.published);
 
     return <div className="home">
-      <List items={games}
+      <List items={games.concat()}
+            indexField="id"
+            indexFunction={game => `${game.publishedTitle} ${game.publishedDescription} ${game.owner.name}`}
             labelField="title"
             onChange={this.list_onChangeHandler}
             itemRenderer={this.gameListItemRenderer}/>

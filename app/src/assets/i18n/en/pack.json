@@ -11,5 +11,10 @@
   "i18n": {
     "en": "English",
     "sv": "Swedish"
+  },
+  "ringa-fw": {
+    "list": {
+      "noItemsForSearch": "Could not find anything for your search"
+    }
   }
 }

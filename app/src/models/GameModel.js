@@ -37,6 +37,10 @@ export default class GameModel extends Model {
     this.addProperty('publishedGameLoopFnText', undefined);
   }
 
+  get indexedText() {
+    return `${this.activeTitle} ${this.activeDescription} ${this.owner.name}`;
+  }
+
   get activeTitle() {
     return this.mode === 'development' ? this.title : this.publishedTitle;
   }

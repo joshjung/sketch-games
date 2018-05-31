@@ -117,6 +117,7 @@ export default class GamesPage extends RingaComponent {
     return <div className="item-renderer game-item"
                 onClick={itemClickHandler}
                 key={game.id}>
+      <div className="image">{game.image && <img className="game-image-tiny" src={game.image} /> }</div>
       <div className="title">{game.title}</div>
       {game.published ? <span className="published-card">Published</span> : <span className="unpublished-card">UnPublished</span>}
       {game.owner && <div className="author">Author: {game.owner.name}</div>}

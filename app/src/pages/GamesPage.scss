@@ -17,6 +17,10 @@
     display: flex;
     justify-content: space-between;
 
+    .image {
+      width: 40px;
+    }
+
     .title, .author, .actions {
       width: 33%;
     }
