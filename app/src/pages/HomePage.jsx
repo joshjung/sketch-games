@@ -48,6 +48,8 @@ export default class HomePage extends RingaComponent {
   // Methods
   //-----------------------------------
   gameListItemRenderer(itemClickHandler, game) {
+    const hs = this.getHighscores(game);
+
     return <div className="item-renderer game-item"
                 onClick={itemClickHandler}
                 key={game.id}>
@@ -56,7 +58,22 @@ export default class HomePage extends RingaComponent {
       <div className="description">{game.publishedDescription}</div>
       {game.owner && <div className="author">Author: {game.owner.name}</div>}
       <div className="playCount">{game.playCount || 0} Plays</div>
+      <div className="highcore">{hs.score && 'High score of ' + hs.score + ' (' + hs.name + ')'}</div>
     </div>;
+  }
+
+  getSortedHighscores(game) {
+    const hs = game.highscores || [];
+
+    return hs.sort((hs1, hs2) => {
+      return hs1.score < hs2.score ? 1 : -1;
+    });
+  }
+
+  getHighscores(game) {
+    const hss = this.getSortedHighscores(game);
+
+    return hss.length ? hss[0] : {};
   }
 
   //-----------------------------------

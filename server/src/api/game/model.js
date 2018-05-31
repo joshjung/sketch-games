@@ -146,7 +146,8 @@ gameSchema.methods = {
         userId,
         score,
         time,
-        name
+        name,
+        timestamp: new Date().getTime()
       });
 
       this.save().then(() => response({success: true, highscores: this.highscores}));
