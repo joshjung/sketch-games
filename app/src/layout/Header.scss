@@ -50,9 +50,7 @@
     @media screen and (max-width: $break-small) {
       height: 30px;
       width: 120px;
-    }
-
-    @media screen and (max-width: $break-small) {
+      padding-left: $pad1;
       font-size: 14px;
     }
   }

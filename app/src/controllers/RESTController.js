@@ -126,7 +126,11 @@ export default class RESTController extends Ringa.Controller {
 
           resolve(parsedResponse);
         } else if (xhr.status === 401) {
-          resolve(JSON.parse(xhr.response));
+          try {
+            resolve(JSON.parse(xhr.response));
+          } catch(e) {
+            resolve({error: `Error: ${xhr.response}`});
+          }
         } else {
           //TODO: Better handling of other error codes
           try {

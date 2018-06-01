@@ -102,7 +102,7 @@ export default class APIController extends Controller {
         bodyParam: 'body',
         body: {
           id,
-          userId: this.appModel.user.id
+          userId: this.appModel.user && this.appModel.user.id
         },
         credentials: true
       })),

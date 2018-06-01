@@ -60,13 +60,14 @@
 }
 
 .play-mobile {
-  height: calc(100% - 50px);
+  height: calc(100% - 60px);
+
   .tabs {
     padding: 0 20px;
   }
 
   .ringa-component.tab-navigator {
-    height: calc(100% - 20px);
+    height: calc(100% - 30px);
   }
 
   .ringa-component.tab-content {

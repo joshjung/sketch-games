@@ -58,7 +58,6 @@ router.post('/clone',
   clone);
 
 router.post('/play',
-  token({ required: true }),
   body({ id: {type: String}, userId: {type: String} }),
   play);
 
