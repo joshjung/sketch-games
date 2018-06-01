@@ -89,10 +89,10 @@ export default class MobileInputController extends RingaComponent {
     const upLeftRightDown = [Keyboard.KEY_CODES.UP, Keyboard.KEY_CODES.LEFT, Keyboard.KEY_CODES.RIGHT, Keyboard.KEY_CODES.DOWN];
     const otherKeyCodes = Object.keys(game.listeningKeys).filter(kc => upLeftRightDown.indexOf(parseInt(kc)) === -1);
 
-    if (otherKeyCodes.length) {
-      this.oldWatchingKeys = this.watchingKeys;
-      this.watchingKeys = {};
+    this.oldWatchingKeys = this.watchingKeys;
+    this.watchingKeys = {};
 
+    if (otherKeyCodes.length) {
       actionPad = <div className="action-pad">{otherKeyCodes.map(kc => {
         this.watchingKeys[kc] = true;
 
@@ -112,13 +112,13 @@ export default class MobileInputController extends RingaComponent {
                        onMouseUp={this.button_mouseUpHandler.bind(this, parseInt(kc))}
                        onTouchEnd={this.button_mouseUpHandler.bind(this, parseInt(kc))}>{action}</button>;
       })}</div>;
+    }
 
-      // Clear out all old buttons that were available before but are no longer visible now, in case the user
-      // had their mouse down on one of them.
-      for (let kc in this.oldWatchingKeys) {
-        if (!this.watchingKeys[parseInt(kc)]) {
-          this.clear(kc);
-        }
+    // Clear out all old buttons that were available before but are no longer visible now, in case the user
+    // had their mouse down on one of them.
+    for (let kc in this.oldWatchingKeys) {
+      if (!this.watchingKeys[parseInt(kc)]) {
+        this.clear(kc);
       }
     }
 
