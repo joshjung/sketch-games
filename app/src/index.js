@@ -8,6 +8,8 @@ import history from './global/history';
 
 import routes from './routes';
 
+import 'typeface-roboto';
+import 'font-awesome/scss/font-awesome.scss';
 import './styles/index.scss';
 
 render(<Router history={history}>{routes}</Router>, document.querySelector('.react-app'));

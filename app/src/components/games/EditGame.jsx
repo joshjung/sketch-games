@@ -24,7 +24,7 @@ export default class EditGame extends RingaComponent {
   // Lifecycle
   //-----------------------------------
   render() {
-    return <div className="editor">
+    return <div className="editor page">
       Game Title:
       <TextInput model={this.gameModel} modelField="title"/>
       <Button label="Save" onClick={this.save_onClickHandler} />

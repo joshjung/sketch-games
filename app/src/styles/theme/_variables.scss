@@ -1,0 +1,23 @@
+@import '~ringa-fw-react/src/styles/themes/base/defaults';
+@import 'variables_colors';
+
+$pad1: 5px;
+$pad2: 10px;
+$pad3: 20px;
+
+$radius-1: 7px;
+
+$break-small: 720px;
+$break-large: 1200px;
+
+$time-1: 300ms;
+
+$modal-z-index: 500;
+$overlay-z-index: 1000;
+
+$theme: classic;
+
+$alert-wrapper-background: rgba(0, 0, 0, 0.3);
+$alert-padding: $pad2;
+
+@import 'variables_dataGrid';

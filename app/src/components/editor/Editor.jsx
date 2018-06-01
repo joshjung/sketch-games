@@ -83,27 +83,40 @@ export default class Editor extends RingaComponent {
     // });
   }
 
+  renderControls() {
+    return <span className="controls">
+      <Button onClick={this.save_onClickHandler}>
+        <i class="fa fa-save"></i>
+      </Button>
+      <Button onClick={this.reset_onClickHandler}>
+        <i className="fa fa-step-backward" />
+      </Button>
+      <Button onClick={this.pausePlay_onClickHandler}>
+        {this.props.game.paused ? <i class="fa fa-play" /> : <i class="fa fa-pause" />}
+      </Button>
+    </span>;
+  }
+
   render() {
     const {title, code, instructions, user, i18NModel} = this.state;
     const {image, owner, syntaxError, runError, published, ownerUserId, publishedDate, description} = this.props.game;
     const codeLength = code ? code.length : 0;
 
-    return <div className="editor">
+    return <div className="editor page">
       <div className="header">
-        {image && <img className="game-image-small" src={image} />}
-        <h1>{title}</h1>
+        <div className="title-container">
+          <div>{image && <img className="game-image-small" src={image} />}</div>
+          <h1>Editing {title}</h1>
+        </div>
         <h3>Author: {owner.name}, {codeLength} bytes {published ? <span className="published-card">Published</span> : <span className="unpublished-card">Unpublished</span> }</h3>
         <div className="actions">
-          <Button label={user && this.props.game.ownerUserId === user.id ? 'Save and Reset' : 'Commit Code'} onClick={this.save_onClickHandler} />
-          <Button label="Restart Game" onClick={this.reset_onClickHandler} />
-          <Button label={this.props.game.paused ? 'Resume' : 'Pause' } onClick={this.pausePlay_onClickHandler} />
           {(user && user.id !== this.props.game.ownerUserId) && <Button label="Duplicate to my account" onClick={this.duplicate_clickHandler} />}
           {published && <Button label="Play Published Game" onClick={this.playPublished_onClickHandler} />}
         </div>
       </div>
       <div className="workspace">
         <div className="left-pane">
-          <TabNavigator>
+          <TabNavigator controls={this.renderControls()}>
             <Tab label="Code" classes="code">
               {(!user || user.id !== ownerUserId) && <div className="code-note">This code belongs to {owner.name}. You are in playground mode and can change the code as much as you like and press Commit Code to see the changes. Login to duplicate this game to your account!</div>}
               {(user && user.id !== ownerUserId) && <div className="code-note">You can copy this game to your account by clicking Duplicate above.</div>}

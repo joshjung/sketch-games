@@ -1,12 +1,14 @@
+@import '../styles/variables';
+
 .play {
   h3 {
     color: darkgrey;
     margin: 0;
   }
 
-  .description {
-    color: darkgrey;
-    margin-bottom: 10px;
+  .author, .description, .published-date {
+    font-size: 16px;
+    margin-bottom: $pad3;
   }
 
   .beta-card {
@@ -22,7 +24,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 5px 0;
+    margin-bottom: $pad2;
 
     h1 {
       margin: 0;
@@ -39,15 +41,15 @@
     min-width: 300px;
 
     .canvas {
-      width: 100%;
-      max-width: 1000px;
+      width: 60%;
       display: flex;
       justify-content: center;
     }
 
-    .instructions {
-      min-width: 350px;
-      padding: 0px 20px;
+    .details {
+      width: 40%;
+      margin-left: $pad3;
+      min-width: 290px;
       height: 100%;
       max-height: calc(100vh - 200px);
       overflow: scroll;
@@ -60,14 +62,8 @@
 }
 
 .play-mobile {
-  height: calc(100% - 60px);
-
-  .tabs {
-    padding: 0 20px;
-  }
-
   .ringa-component.tab-navigator {
-    height: calc(100% - 30px);
+    height: calc(100% - 36px);
   }
 
   .ringa-component.tab-content {
@@ -76,7 +72,14 @@
 
   .ringa-component.tab-navigator .content {
     border: none !important;
-    border-bottom: 1px solid grey !important;
+  }
+
+  .ringa-component.tab-content.play {
+    padding: 0;
+  }
+
+  h1 {
+    font-size: 16px;
   }
 
   h3 {
@@ -84,8 +87,7 @@
     margin: 0;
   }
 
-  .description {
-    color: darkgrey;
+  .author, .description, .published-date {
     margin-bottom: 10px;
   }
 
@@ -108,7 +110,7 @@
       flex-direction: row;
       align-items: center;
       justify-content: space-between;
-      padding: 0 20px;
+      padding: 0 $pad2;
     }
 
     h1 {
@@ -119,20 +121,14 @@
     }
   }
 
-  .tab-content {
-    padding: 0 !important;
-  }
-
   .canvas {
     width: 100%;
-    max-width: 1000px;
     display: flex;
     justify-content: center;
   }
 
   .instructions {
-    min-width: 450px;
-    padding: 0px 20px;
+    padding: 0px $pad1;
     height: 100%;
     max-height: calc(100vh - 200px);
     overflow: scroll;

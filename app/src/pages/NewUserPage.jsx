@@ -17,7 +17,7 @@ export default class NewUserPage extends RingaComponent {
   // Lifecycle
   //-----------------------------------
   render() {
-    return <div className="new-user-page">
+    return <div className="new-user-page page">
       <NewUser />
     </div>;
   }

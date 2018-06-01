@@ -1,0 +1,87 @@
+/**
+ * Step 1: Setup all our Ringa variables since all subsequent files require them.
+ */
+@import 'variables';
+@import 'mixins';
+
+/**
+ * Step 2: Setup all our base styles (fill, boddy, html, etc.) AND all our component styles (TextInput, Button, etc.)
+ */
+@import '~ringa-fw-react/src/styles/themes/base/index';
+
+html, body {
+  font-family: "Roboto",Arial,sans-serif;
+}
+
+.classic {
+  .ringa-component.button {
+    border-radius: $radius-1;
+    padding: 4px 7px;
+  }
+
+  .ringa-component.tab-navigator .button.tab {
+    border-radius: 0;
+    font-size: 14px;
+
+    &:first-child {
+      border-top-left-radius: $radius-1;
+    }
+
+    &:last-child {
+      border-top-right-radius: $radius-1;
+    }
+
+    @media screen and (max-width: 768px) {
+      font-size: 11px;
+    }
+  }
+
+  .ringa-component.text-input {
+    background: none;
+
+    &:hover {
+      background: none;
+      border: none;
+    }
+  }
+
+  .ringa-component.button.selected {
+    background: $ringa-color;
+    color: $white;
+    font-weight: bold;
+    border: none;
+    border-bottom: 1px solid $ringa-color;
+  }
+
+  .ringa-component.text-input {
+    border: none;
+    background: $grey-1;
+    border-radius: $radius-1;
+
+    input {
+      color: $black;
+      font-weight: bold;
+    }
+
+    &:hover {
+      border: none;
+      background: $grey-1;
+    }
+  }
+
+  .ringa-component.list .search {
+    border: none;
+
+    input {
+      color: $black;
+      font-weight: bold;
+    }
+  }
+}
+
+/**
+ * Step 3: Setup all our generic styles that are *not* associated with a Ringa component but might be useful in the theme.
+ */
+.#{$theme} {
+  @import 'generics';
+}

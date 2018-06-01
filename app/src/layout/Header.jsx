@@ -19,7 +19,7 @@ class Header extends RingaComponent {
     depend(this, [
       dependency(I18NModel, 'language'),
       dependency(ScreenModel, 'curBreakpointIx'),
-      dependency(AppModel, ['token', 'user']),
+      dependency(AppModel, ['token', 'user', 'fullscreen']),
       dependency(ScreenModel, 'curBreakpointIx')
     ]);
   }
@@ -28,20 +28,33 @@ class Header extends RingaComponent {
   // Lifecycle
   //-----------------------------------
   render(props) {
-    const {i18NModel, curBreakpointIx, user} = this.state;
+    const {i18NModel, curBreakpointIx, user, fullscreen} = this.state;
+
+    if (fullscreen) {
+      return <div className="app-header-fullscreen">
+        <button>Exit Fullscreen</button>
+      </div>;
+    }
 
     return <header className="app-header">
-      <div className="title">
+
+      <div className="logo">
         <a onClick={this.home_onClickHandler}>
-          {i18NModel.i18n(curBreakpointIx < 2 ? 'header.shortTitle' : 'header.title')}
+          <i class="fa fa-play-circle"></i>
+          {curBreakpointIx >= 2 && <div className="title">
+
+              {i18NModel.i18n('header.title')}
+
+            <div className="tagline">{i18NModel.i18n('header.tagline')}</div>
+          </div>}
         </a>
       </div>
-      <div>
-        <Button label="Home" onClick={this.home_onClickHandler} />
-        {curBreakpointIx > 2 && <Button label="Explore" onClick={this.games_onClickHandler} />}
-        {curBreakpointIx > 2 && <Button label="About" onClick={this.about_onClickHandler} />}
-        {curBreakpointIx > 2 && <Button label="API" onClick={this.api_onClickHandler} />}
-      </div>
+      {curBreakpointIx > 2 && <div>
+        <Button label="Games" onClick={this.home_onClickHandler} />
+        <Button label="Explore" onClick={this.games_onClickHandler} />
+        <Button label="About" onClick={this.about_onClickHandler} />
+        <Button label="API" onClick={this.api_onClickHandler} />
+      </div>}
       <div>
         {user ? <div>
             <span className="username">{user.name}</span>

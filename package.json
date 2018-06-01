@@ -25,6 +25,7 @@
     "@babel/standalone": "^7.0.0-beta.49",
     "classnames": "^2.2.5",
     "flag-icon-css": "^2.8.0",
+    "font-awesome": "^4.7.0",
     "moment": "^2.19.1",
     "monaco-editor": "^0.13.1",
     "monaco-editor-webpack-plugin": "^1.2.0",
@@ -35,6 +36,7 @@
     "react-router-dom": "^4.2.2",
     "ringa": "^0.4.4",
     "ringa-fw-react": "^0.6.0",
+    "typeface-roboto": "0.0.54",
     "webpack-cli": "^2.1.4"
   },
   "devDependencies": {

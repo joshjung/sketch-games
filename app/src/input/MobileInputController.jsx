@@ -21,6 +21,12 @@ export default class MobileInputController extends RingaComponent {
   //-----------------------------------
   // Lifecycle
   //-----------------------------------
+  componentWillUnmount() {
+    super.componentWillUnmount();
+
+    this.props.game.unwatch(this.game_signalHandler);
+  }
+
   render() {
     const {game} = this.props;
 
@@ -89,7 +95,8 @@ export default class MobileInputController extends RingaComponent {
       actionPad = <div className="action-pad">{otherKeyCodes.map(kc => {
         this.watchingKeys[kc] = true;
 
-        return <button className="key"
+        return <button key={`key${kc}`}
+                       className="key"
                        onMouseDown={this.button_mouseDownHandler.bind(this, parseInt(kc))}
                        onTouchStart={this.button_mouseDownHandler.bind(this, parseInt(kc))}
                        onMouseUp={this.button_mouseUpHandler.bind(this, parseInt(kc))}
@@ -107,36 +114,46 @@ export default class MobileInputController extends RingaComponent {
   // Methods
   //-----------------------------------
   watchGame(game) {
-    game.watch(signal => {
-      if (signal === 'listeningKeys') {
-        if (this.timeout) {
-          clearTimeout(this.timeout);
-        }
-
-        this.timeout = setTimeout(() => {
-          const lastKeys = JSON.stringify(this.lastListeningKeys);
-          const nextKeys = JSON.stringify(this.props.game.listeningKeys);
-
-          if (lastKeys !== nextKeys) {
-            this.forceUpdate();
-          }
-        }, 1);
-      }
-    });
+    game.watch(this.game_signalHandler);
   }
 
   clear(keyCode) {
-    this.props.game.keyboard.release(keyCode);
+    if (!this.props.game.paused) {
+      this.props.game.keyboard.release(keyCode);
+    }
   }
 
   //-----------------------------------
   // Events
   //-----------------------------------
+  game_signalHandler(signal) {
+    if (signal === 'listeningKeys' || signal === 'paused') {
+      const lastKeys = JSON.stringify(this.lastListeningKeys);
+      const nextKeys = JSON.stringify(this.props.game.listeningKeys);
+
+      if (lastKeys !== nextKeys) {
+        if (this.timeout) {
+          clearTimeout(this.timeout);
+        }
+
+        this.timeout = setTimeout(() => {
+          if (this.mounted) {
+            this.forceUpdate();
+          }
+        }, 10);
+      }
+    }
+  }
+
   button_mouseDownHandler(keyCode) {
-    this.props.game.keyboard.press(keyCode);
+    if (!this.props.game.paused) {
+      this.props.game.keyboard.press(keyCode);
+    }
   }
 
   button_mouseUpHandler(keyCode) {
-    this.props.game.keyboard.release(keyCode);
+    if (!this.props.game.paused) {
+      this.props.game.keyboard.release(keyCode);
+    }
   }
 }

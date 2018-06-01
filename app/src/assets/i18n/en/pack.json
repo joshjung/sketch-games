@@ -1,8 +1,8 @@
 {
-  "introduction": "Hello, welcome to the Ringa JS Application Template",
   "header": {
-    "title": "SuperMini Games",
-    "shortTitle": "SuperMini"
+    "title": "Supermini Games",
+    "shortTitle": "Supermini",
+    "tagline": "Build it in an hour, play it forever"
   },
   "misc": {
     "version": "Version",

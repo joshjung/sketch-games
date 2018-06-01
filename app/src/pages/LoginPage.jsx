@@ -17,7 +17,9 @@ export default class LoginPage extends RingaComponent {
   // Lifecycle
   //-----------------------------------
   render() {
-    return <div className="login">
+    return <div className="login page">
+      <h1>Login</h1>
+      <h3>Build games and record high scores!</h3>
       <Login />
     </div>;
   }

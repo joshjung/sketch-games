@@ -5,7 +5,6 @@ import {attach} from 'react-ringa';
 import {setup as setupI18N} from '../i18n';
 
 import Header from './Header';
-import Footer from './Footer';
 
 import AppController from '../controllers/AppController';
 import APIController from '../controllers/APIController';
@@ -44,7 +43,6 @@ export default class ApplicationLayout extends DefaultApplicationRoot {
         <div className="container">
           {this.props.children}
         </div>
-        <Footer />
       </div>);
   }
 }

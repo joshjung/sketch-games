@@ -13,13 +13,6 @@
 
   color: $white;
 
-  .ringa-component.button {
-    border: 1px solid grey;
-    padding: 3px 5px;
-    background: none;
-    color: white;
-  }
-
   a {
     color: white;
   }
@@ -30,28 +23,48 @@
     margin-right: 20px;
 
     @media screen and (max-width: 768px){
-      font-size: 12px;
+      font-size: 11px;
     }
   }
 
-  .title {
-    padding-left: $pad3;
-    font-size: 28px;
-    font-weight: bold;
-    height: 60px;
-    flex: 0 0 auto;
-    cursor: pointer;
-    color: $ringa-color-text;
-    overflow: hidden;
+  .logo a {
     display: flex;
+    flex-direction: row;
     align-items: center;
-    position: relative;
+    padding: $pad2;
 
-    @media screen and (max-width: $break-small) {
-      height: 30px;
-      width: 120px;
-      padding-left: $pad1;
-      font-size: 14px;
+    i {
+      font-size: 34px;
+
+      @media screen and (max-width: $break-small) {
+        font-size: 26px;
+      }
+    }
+
+    .title {
+      padding-left: $pad2;
+      font-size: 18px;
+      font-weight: bold;
+      height: 40px;
+      flex: 0 0 auto;
+      cursor: pointer;
+      color: $ringa-color-text;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+
+      .tagline {
+        font-size: 12px;
+        color: $white-2;
+      }
+
+      @media screen and (max-width: $break-small) {
+        height: 20px;
+        padding-left: $pad1;
+        font-size: 12px;
+      }
     }
   }
 

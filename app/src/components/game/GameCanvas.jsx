@@ -37,13 +37,52 @@ class GameCanvasRenderer extends GraphicRenderer {
   resizeHandler() {
     super.resizeHandler();
 
-    const canvasScreenWidth = this.canvas.clientWidth;
-    const canvasPixelWidth = this.canvas.width;
-    const canvasPixelHeight = this.canvas.height;
+    // On mobile, force the canvas width to be such that there is always room for the controls.
+    // TODO: this should only happen if the game needs button controls!
+    const {canvas} = this;
+
+    const ww = window.innerWidth;
+    const wh = window.innerHeight;
+
+    // Reset the width / height to whatever CSS says is correct
+    canvas.style.width = '';
+    this.setCanvasHeight();
+
+    // VERTICAL MOBILE
+    if (ww < wh && ww < 768) {
+      const maxHeightOfCanvas = wh - 320; // Leave room for the controls
+      const calcHeightOfCanvas = ww * (canvas.height / canvas.width);
+
+      if (calcHeightOfCanvas > maxHeightOfCanvas) {
+        const targetWidthOfCanvas = maxHeightOfCanvas * (canvas.width / canvas.height);
+
+        canvas.style.width = `${targetWidthOfCanvas}px`;
+      }
+    } else {
+      // DESKTOP
+      const rect = canvas.getBoundingClientRect();
+      const {top, height} = rect;
+      const mhoc = wh - top - 40; // Give 50 pixels of padding for bottom of screen
+
+      if (height > mhoc) {
+        const targetWidthOfCanvas = mhoc * (canvas.width / canvas.height);
+
+        canvas.style.width = `${targetWidthOfCanvas}px`;
+      }
+    }
+
+    this.setCanvasHeight();
+  }
+
+  setCanvasHeight() {
+    const {canvas} = this;
+    const canvasScreenWidth = canvas.clientWidth;
+    const canvasPixelWidth = canvas.width;
+    const canvasPixelHeight = canvas.height;
     const widthHeightRatio = canvasPixelHeight / canvasPixelWidth;
     const targetCanvasScreenHeight = canvasScreenWidth * widthHeightRatio;
 
-    this.canvas.style.height = `${targetCanvasScreenHeight}px`;
+    canvas.style.height = `${targetCanvasScreenHeight}px`;
   }
 }
 
@@ -93,6 +132,11 @@ export default class GameCanvas extends RingaComponent {
     if (nextProps.game && nextProps.game.gameContainer && nextProps.game !== this.props.game) {
       this.addGameContainer(nextProps.game.gameContainer);
     }
+
+    // Force a resize event to trigger the canvas to place itself properly if needed
+    setTimeout(() => {
+      nextProps.game.renderer.resizeHandler();
+    }, 50);
   }
 
   render() {
@@ -101,6 +145,9 @@ export default class GameCanvas extends RingaComponent {
     return <div className="canvas">
       <canvas ref="canvas" />
       {curBreakpointIx < 3 && <MobileInputController game={this.props.game} />}
+      {this.props.game.paused && <div className="paused" onClick={this.play_clickHandler}>
+        <div><i className="fa fa-play" /></div>
+      </div> }
     </div>;
   }
 
@@ -119,5 +166,9 @@ export default class GameCanvas extends RingaComponent {
     this.renderer.addChild(gameContainer);
 
     this.curGameContainer = gameContainer;
+  }
+
+  play_clickHandler() {
+    this.props.game.paused = false;
   }
 }

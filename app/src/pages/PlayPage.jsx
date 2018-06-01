@@ -6,8 +6,6 @@ import {dependency} from 'react-ringa';
 import AppController from '../controllers/AppController';
 import AppModel from '../models/AppModel';
 
-import GameTimer from '../components/GameTimer';
-
 import GameCanvas from '../components/game/GameCanvas';
 
 import Highscores from '../components/Highscores';
@@ -24,6 +22,10 @@ export default class PlayPage extends RingaComponent {
   constructor(props) {
     super(props);
 
+    this.state = {
+      selectedIx: 0
+    };
+
     this.depend(dependency(AppModel, ['curGame', 'token', 'user']), dependency(ScreenModel, 'curBreakpointIx'));
   }
 
@@ -38,7 +40,7 @@ export default class PlayPage extends RingaComponent {
           const {curGame} = this.state.appModel;
 
           curGame.watch(signal => {
-            if (['highscores'].indexOf(signal) !== -1) {
+            if (['highscores', 'paused'].indexOf(signal) !== -1) {
               this.forceUpdate();
             }
           })
@@ -52,7 +54,7 @@ export default class PlayPage extends RingaComponent {
   }
 
   render() {
-    const {curGame, user, curBreakpointIx} = this.state;
+    const {curGame, user, curBreakpointIx, selectedIx} = this.state;
 
     if (!curGame) {
       return <div>Loading...</div>;
@@ -61,22 +63,24 @@ export default class PlayPage extends RingaComponent {
     const gc = <GameCanvas id="primary-game-canvas" game={curGame}/>;
 
     if (curBreakpointIx < 3) {
-      return <div className="play-mobile">
+      return <div className="play-mobile page">
         <div className="play-header">
           <div className="sub-header">
             <h1>
               {curGame.activeTitle} {!curGame.published && <span className="beta-card">Beta</span>}
             </h1>
-            <h3>By {curGame.owner.name}</h3>
-          </div>
-          <div className="sub-header">
-            <GameTimer game={curGame}/>
-            <Button label="Restart" onClick={this.restart_onClickHandler}/>
-            <Button label={curGame.paused ? 'Resume' : 'Pause'} onClick={this.pausePlay_onClickHandler}/>
+            <div>
+              <Button onClick={this.restart_onClickHandler}>
+                <i class="fa fa-stop" />
+              </Button>
+              <Button onClick={this.pausePlay_onClickHandler}>
+                {curGame.paused ? <i class="fa fa-play" /> : <i class="fa fa-pause" />}
+              </Button>
+            </div>
           </div>
         </div>
-        <TabNavigator>
-          <Tab label="Play">
+        <TabNavigator onChange={this.tabNavigator_onChangeHandler} selectedIx={selectedIx}>
+          <Tab label="Play" classes="play">
             {gc}
           </Tab>
           <Tab label="Highscores">
@@ -85,31 +89,41 @@ export default class PlayPage extends RingaComponent {
           <Tab label="Instructions">
             <Markdown markdown={curGame.activeInstructions} classes="instructions"/>
           </Tab>
+          <Tab label="About" classes="about">
+            <div className="description">{curGame.activeDescription}</div>
+            <div className="author">By {curGame.owner.name}</div>
+            {curGame.published && <div className="published-date">Published: {moment(curGame.publishedDate).format('MMMM Do YYYY')}</div>}
+          </Tab>
         </TabNavigator>
       </div>;
     } else {
-      return <div className="play">
+      return <div className="play page">
         <div className="play-header">
           <h1>{curGame.activeTitle} {!curGame.published && <span className="beta-card">Beta</span>}</h1>
-          <h3>By {curGame.owner.name}</h3>
-          {curGame.published && <h3>Published: {moment(curGame.publishedDate).format('MMMM Do YYYY')}</h3>}
           <div>
-            <GameTimer game={curGame}/>
-            <Button label="Restart" onClick={this.restart_onClickHandler}/>
-            <Button label={curGame.paused ? 'Resume' : 'Pause'} onClick={this.pausePlay_onClickHandler}/>
+            <Button onClick={this.restart_onClickHandler}>
+              <i class="fa fa-stop" />
+            </Button>
+            <Button onClick={this.pausePlay_onClickHandler}>
+              {curGame.paused ? <i class="fa fa-play" /> : <i class="fa fa-pause" />}
+            </Button>
             {user ? <Button label="Develop" onClick={this.develop_onClickHandler}/> : undefined}
           </div>
         </div>
-        <div className="description">{curGame.activeDescription}</div>
         <div className="game-container">
           {gc}
-          <div className="instructions">
+          <div className="details">
             <TabNavigator>
               <Tab label="Highscores">
                 <Highscores game={curGame}/>
               </Tab>
               <Tab label="Instructions">
                 <Markdown markdown={curGame.activeInstructions} classes="instructions"/>
+              </Tab>
+              <Tab label="About">
+                <div className="description">{curGame.activeDescription}</div>
+                <div className="author">By {curGame.owner.name}</div>
+                {curGame.published && <div className="published-date">Published: {moment(curGame.publishedDate).format('MMMM Do YYYY')}</div>}
               </Tab>
             </TabNavigator>
           </div>
@@ -121,7 +135,13 @@ export default class PlayPage extends RingaComponent {
   pausePlay_onClickHandler() {
     this.state.curGame.paused = !this.state.curGame.paused;
 
-    this.forceUpdate();
+    if (!this.state.curGame.paused) {
+      this.setState({
+        selectedIx: 0
+      });
+    } else {
+      this.forceUpdate();
+    }
   }
 
   develop_onClickHandler() {
@@ -132,6 +152,14 @@ export default class PlayPage extends RingaComponent {
     this.state.curGame.reset();
 
     this.forceUpdate();
+  }
+
+  tabNavigator_onChangeHandler(ix) {
+    this.state.curGame.paused = true;
+
+    this.setState({
+      selectedIx: ix
+    });
   }
 }
 

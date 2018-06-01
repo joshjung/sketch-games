@@ -47,6 +47,7 @@ export default class Login extends RingaComponent {
       <TextInput model={this.login} modelField="password" type="password" onEnterKey={this.password_onEnterKeyHandler}/>
       {error && <div>Invalid login!</div>}
       <Button label="Login" onClick={this.login_onClickHandler} />
+      <Button label="Register" onClick={this.register_onClickHandler} />
     </div>;
   }
 
@@ -83,5 +84,9 @@ export default class Login extends RingaComponent {
         });
       }
     });
+  }
+
+  register_onClickHandler() {
+    history.replace('/users/create');
   }
 }

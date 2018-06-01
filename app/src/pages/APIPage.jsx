@@ -20,7 +20,7 @@ export default class APIPage extends RingaComponent {
   //-----------------------------------
   render() {
     const {i18NModel} = this.state;
-    return <div>
+    return <div className="page">
       <Markdown markdown={i18NModel.i18n('api')} />
     </div>;
   }

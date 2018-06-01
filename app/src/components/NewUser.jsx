@@ -39,7 +39,7 @@ export default class NewUser extends RingaComponent {
   //-----------------------------------
   render() {
     return <div className="newUser">
-      Name:
+      Username:
       <TextInput model={this.newUser} modelField="name"/>
       Email:
       <TextInput model={this.newUser} modelField="email"/>

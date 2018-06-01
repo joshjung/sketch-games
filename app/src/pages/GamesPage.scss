@@ -1,11 +1,20 @@
+@import '../styles/variables';
+
 .games {
   height: 100%;
+
+  h1 {
+    color: $white;
+    margin: 0;
+  }
 
   .header {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    padding: $pad3;
+    padding-top: 0;
   }
 
   .list {

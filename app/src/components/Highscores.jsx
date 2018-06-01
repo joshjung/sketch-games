@@ -22,7 +22,7 @@ export default class Highscores extends RingaComponent {
 
     return <div className="highscores">
       {!game.sortedHighscores.length && <div>No highscores yet.</div>}
-      {game.sortedHighscores.map((hs, ix) => <div className="highscore">
+      {game.sortedHighscores.map((hs, ix) => <div key={`hs${ix}`} className="highscore">
         <div className="position"> {ix + 1}.</div>
         <div className="name"> {hs.name}</div>
         <div className="points"> {hs.score} points</div>
