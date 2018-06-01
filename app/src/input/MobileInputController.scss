@@ -1,3 +1,5 @@
+@import '../styles/variables';
+
 .mobile-input-controller {
   display: flex;
   flex-direction: row;
@@ -20,30 +22,39 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    width: 170px;
-    height: 200px;
+    position: relative;
+    width: 160px;
+    height: 160px;
 
     .up, .left, .right, .down {
+      position: absolute;
       width: 60px;
-      height: 40px;
-      background: lightblue;
-      border-radius: 7px;
+      height: 60px;
+      border-radius: 40px;
+      background: $black;
+      border: 5px solid $black;
+      color: white;
       font-size: 11px;
-      font-weight: bold;
     }
 
-    .up-box, .down-box {
-      width: 100%;
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
+    .up {
+      left: calc(80px - 30px);
+      top: 0;
     }
 
-    .left-right-box {
-      width: 100%;
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
+    .left {
+      left: 0;
+      top: calc(80px - 30px);
+    }
+
+    .right {
+      left: calc(160px - 60px);
+      top: calc(80px - 30px);
+    }
+
+    .down {
+      left: calc(80px - 30px);
+      top: calc(160px - 60px);
     }
   }
 

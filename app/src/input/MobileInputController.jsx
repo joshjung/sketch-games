@@ -48,32 +48,34 @@ export default class MobileInputController extends RingaComponent {
 
     if (up || down || left || right) {
       fixedDirectionalPad = <div className="fixed-directional-pad">
-        <div className="up-box">
-          {up ? <button className="up"
-                        onMouseDown={this.button_mouseDownHandler.bind(this, Keyboard.KEY_CODES.UP)}
-                        onTouchStart={this.button_mouseDownHandler.bind(this, Keyboard.KEY_CODES.UP)}
-                        onMouseUp={this.button_mouseUpHandler.bind(this, Keyboard.KEY_CODES.UP)}
-                        onTouchEnd={this.button_mouseUpHandler.bind(this, Keyboard.KEY_CODES.UP)}>UP</button> : this.clear(Keyboard.KEY_CODES.UP)}
-        </div>
-        <div className="left-right-box">
-          {left ? <button className="left"
-                          onMouseDown={this.button_mouseDownHandler.bind(this, Keyboard.KEY_CODES.LEFT)}
-                          onTouchStart={this.button_mouseDownHandler.bind(this, Keyboard.KEY_CODES.LEFT)}
-                          onMouseUp={this.button_mouseUpHandler.bind(this, Keyboard.KEY_CODES.LEFT)}
-                          onTouchEnd={this.button_mouseUpHandler.bind(this, Keyboard.KEY_CODES.LEFT)}>LEFT</button> : this.clear(Keyboard.KEY_CODES.LEFT)}
-          {right ? <button className="right"
-                           onMouseDown={this.button_mouseDownHandler.bind(this, Keyboard.KEY_CODES.RIGHT)}
-                           onTouchStart={this.button_mouseDownHandler.bind(this, Keyboard.KEY_CODES.RIGHT)}
-                           onMouseUp={this.button_mouseUpHandler.bind(this, Keyboard.KEY_CODES.RIGHT)}
-                           onTouchEnd={this.button_mouseUpHandler.bind(this, Keyboard.KEY_CODES.RIGHT)}>RIGHT</button> : this.clear(Keyboard.KEY_CODES.RIGHT)}
-        </div>
-        <div className="down-box">
-          {down ? <button className="down"
-                          onMouseDown={this.button_mouseDownHandler.bind(this, Keyboard.KEY_CODES.DOWN)}
-                          onTouchStart={this.button_mouseDownHandler.bind(this, Keyboard.KEY_CODES.DOWN)}
-                          onMouseUp={this.button_mouseUpHandler.bind(this, Keyboard.KEY_CODES.DOWN)}
-                          onTouchEnd={this.button_mouseUpHandler.bind(this, Keyboard.KEY_CODES.DOWN)}>DOWN</button> : this.clear(Keyboard.KEY_CODES.DOWN)}
-        </div>
+        {up ? <button className="up"
+                      onMouseDown={this.button_mouseDownHandler.bind(this, Keyboard.KEY_CODES.UP)}
+                      onTouchStart={this.button_mouseDownHandler.bind(this, Keyboard.KEY_CODES.UP)}
+                      onMouseUp={this.button_mouseUpHandler.bind(this, Keyboard.KEY_CODES.UP)}
+                      onTouchEnd={this.button_mouseUpHandler.bind(this, Keyboard.KEY_CODES.UP)}>
+          <i className="fa fa-arrow-up" />
+        </button> : this.clear(Keyboard.KEY_CODES.UP)}
+        {left ? <button className="left"
+                        onMouseDown={this.button_mouseDownHandler.bind(this, Keyboard.KEY_CODES.LEFT)}
+                        onTouchStart={this.button_mouseDownHandler.bind(this, Keyboard.KEY_CODES.LEFT)}
+                        onMouseUp={this.button_mouseUpHandler.bind(this, Keyboard.KEY_CODES.LEFT)}
+                        onTouchEnd={this.button_mouseUpHandler.bind(this, Keyboard.KEY_CODES.LEFT)}>
+          <i className="fa fa-arrow-left" />
+        </button> : this.clear(Keyboard.KEY_CODES.LEFT)}
+        {right ? <button className="right"
+                         onMouseDown={this.button_mouseDownHandler.bind(this, Keyboard.KEY_CODES.RIGHT)}
+                         onTouchStart={this.button_mouseDownHandler.bind(this, Keyboard.KEY_CODES.RIGHT)}
+                         onMouseUp={this.button_mouseUpHandler.bind(this, Keyboard.KEY_CODES.RIGHT)}
+                         onTouchEnd={this.button_mouseUpHandler.bind(this, Keyboard.KEY_CODES.RIGHT)}>
+          <i className="fa fa-arrow-right" />
+        </button> : this.clear(Keyboard.KEY_CODES.RIGHT)}
+        {down ? <button className="down"
+                        onMouseDown={this.button_mouseDownHandler.bind(this, Keyboard.KEY_CODES.DOWN)}
+                        onTouchStart={this.button_mouseDownHandler.bind(this, Keyboard.KEY_CODES.DOWN)}
+                        onMouseUp={this.button_mouseUpHandler.bind(this, Keyboard.KEY_CODES.DOWN)}
+                        onTouchEnd={this.button_mouseUpHandler.bind(this, Keyboard.KEY_CODES.DOWN)}>
+          <i className="fa fa-arrow-down" />
+        </button> : this.clear(Keyboard.KEY_CODES.DOWN)}
       </div>;
     } else {
       // If we rerender and erase the buttons ,there is no chance to listen for a mouse up! This means that
