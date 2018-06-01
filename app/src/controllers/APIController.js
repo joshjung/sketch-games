@@ -119,7 +119,7 @@ export default class APIController extends Controller {
           score,
           time,
           userId: this.appModel.user && this.appModel.user.id,
-          name: this.appModel.user.name || 'Anonymous'
+          name: (this.appModel.user && this.appModel.user.name) || 'Anonymous'
         },
         credentials: true
       })),
