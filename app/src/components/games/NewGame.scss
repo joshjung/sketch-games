@@ -1,0 +1,10 @@
+@import "../../styles/variables";
+
+.new-game {
+  display: flex;
+  flex-direction: column;
+
+  > div {
+    margin-bottom: $pad2;
+  }
+}

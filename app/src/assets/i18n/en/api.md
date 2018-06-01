@@ -1,19 +1,20 @@
 # Overview
 
-The SuperMini Games API has been designed so that you can write compact games very quickly. The goal is that
-once you know the API you should be able to write a simple game in less than 1 hour.
+The SuperMini Games API has been designed so that you can write compact games very quickly.
 
-Almost every video has these two stages:
+## Game Development 101
+
+Almost every video game has these two stages:
 
 1. Initialization
 2. Game Loop
 
-Initialization is where you create all your "starting state" of the game. Typically you will use this to setup things like
-sprites, characters, resetting the score, etc.
+**Initialization** is where you create all your "starting state" of the game. Typically you will use this to setup things like
+sprites (images), characters, the starting score, etc.
 
-The game loop is a special function that runs all your AI, rendering, and game logic.
+The **game loop** is a special function that runs all your AI, rendering, and game logic.
 
-**All the code you edit in SuperMini Games is contained within the game loop function.**
+**All the code you edit in SuperMini Games is contained within the game loop.**
 
 ## Game Loop
 
@@ -26,7 +27,7 @@ function is called every frame.
 The game loop function is called something like this:
 
 ```
-loop(E, R, C, G, I, T) {
+loop(E, R, C, G, I, T, M) {
   //
   // All the code you write runs in this context!
   //
@@ -49,6 +50,8 @@ for you to render, store state, and check on user input:
 **`I`**: Input object containing information on keys, mouse location (coming soon)
 
 **`T`**: Time information other than elapsed.
+
+**`M`**: Math functions not provided by the `Math` Javascript object.
 
 ## `E`
 
@@ -157,6 +160,13 @@ if (I.mouseX >= 0) {
 
 The `T` object contains some extra information about time.
 
-`T.elapsed`: identical to `E`
-`T.now`: the number of milliseconds since 1970
-`T.total`: the total time in milliseconds the game has been running (minus pauses)
+* `T.elapsed`: identical to `E`
+* `T.now`: the number of milliseconds since 1970
+* `T.total`: the total time in milliseconds the game has been running (minus pauses)
+
+## `M`
+
+The `M` object is used for math operations.
+
+* `M.seed(N)`: pass in any Number to seed the random number generator.
+* `M.rand()`: get a random number from 0.0 - 1.0 provided by the seed.

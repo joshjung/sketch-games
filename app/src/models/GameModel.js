@@ -2,6 +2,9 @@ import {Model} from 'ringa';
 
 import * as Babel from '@babel/standalone';
 
+import NEW_GAME_CODE from '../assets/newGameCode.txt';
+import NEW_GAME_INSTRUCTIONS from '../assets/newGameInstructions.txt';
+
 export default class GameModel extends Model {
   static STATE_NOT_STARTED = 0;
 
@@ -13,8 +16,8 @@ export default class GameModel extends Model {
     this.addProperty('mode', 'development');
 
     this.addProperty('gameLoopFn', '');
-    this.addProperty('gameLoopFnText', '// Javascript here');
-    this.addProperty('instructions', 'Enter your game instructions using Markdown syntax');
+    this.addProperty('gameLoopFnText', NEW_GAME_CODE);
+    this.addProperty('instructions', NEW_GAME_INSTRUCTIONS);
     this.addProperty('description', '');
     this.addProperty('syntaxError', undefined);
     this.addProperty('runError', undefined);
@@ -37,6 +40,7 @@ export default class GameModel extends Model {
     this.addProperty('publishedGameLoopFnText', undefined);
     this.addProperty('highscores', []);
     this.addProperty('playCount', 0);
+    this.addProperty('dirty', false);
 
     this.addProperty('listeningKeys', undefined);
     this.addProperty('activeKeys', undefined);

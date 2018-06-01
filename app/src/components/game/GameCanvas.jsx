@@ -146,7 +146,9 @@ export default class GameCanvas extends RingaComponent {
       <canvas ref="canvas" />
       {curBreakpointIx < 3 && <MobileInputController game={this.props.game} />}
       {this.props.game.paused && <div className="paused" onClick={this.play_clickHandler}>
-        <div><i className="fa fa-play" /></div>
+        <div className="game-paused">Game Paused</div>
+        <div className="click-to-resume">Click to Resume</div>
+        <div><i className="fa fa-pause" /></div>
       </div> }
     </div>;
   }
@@ -170,5 +172,7 @@ export default class GameCanvas extends RingaComponent {
 
   play_clickHandler() {
     this.props.game.paused = false;
+
+    this.forceUpdate();
   }
 }

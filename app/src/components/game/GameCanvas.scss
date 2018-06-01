@@ -24,8 +24,18 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
+    text-align: center;
 
-    font-size: 80px;
-    color: $white;
+    font-size: 40px;
+    color: rgba(255, 255, 255, 0.5);
+
+    .game-paused {
+      font-size: 16px;
+    }
+
+    .click-to-resume {
+      font-size: 12px;
+    }
   }
 }

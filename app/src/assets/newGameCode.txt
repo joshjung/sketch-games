@@ -1,0 +1,39 @@
+//---------------------------------------------------------------
+//
+// Welcome to your new game!
+//
+// You can delete this code or use it to get started.
+// Use the API tab above for instructions on writing the game.
+//
+//---------------------------------------------------------------
+
+// This is an initialization block. It is run every time the game is
+// reset by the user or the game initially loads.
+if (!G.gameInitialized) {
+  G.box = {
+    position: [400, 300],
+    angle: 0
+  };
+
+  G.gameInitialized = true;
+}
+
+// This renders the green background.
+R.bg('rgb(100,200,100)');
+
+// Here we draw a box.
+const points = [
+  -50, -50, // Upper left
+  50, -50,  // Upper right
+  50, 50,   // Lower left
+  -50, 50   // Lower right
+];
+
+R.poly(points, {
+  fill: 'blue',
+  angle: G.box.angle,
+  center: G.box.position
+});
+
+// Rotate the blue square half a circle per second
+G.box.angle += Math.PI * E;

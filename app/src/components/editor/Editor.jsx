@@ -50,7 +50,7 @@ export default class Editor extends RingaComponent {
       this.state.title = this.props.game.title;
 
       this.props.game.watch(signal => {
-        if (['syntaxError', 'runError', 'published'].indexOf(signal) !== -1) {
+        if (['syntaxError', 'runError', 'published', 'dirty'].indexOf(signal) !== -1) {
           this.forceUpdate();
         }
       })
@@ -85,7 +85,7 @@ export default class Editor extends RingaComponent {
 
   renderControls() {
     return <span className="controls">
-      <Button onClick={this.save_onClickHandler}>
+      <Button onClick={this.save_onClickHandler} classes={this.props.game.dirty ? 'dirty' : undefined}>
         <i class="fa fa-save"></i>
       </Button>
       <Button onClick={this.reset_onClickHandler}>
@@ -99,14 +99,14 @@ export default class Editor extends RingaComponent {
 
   render() {
     const {title, code, instructions, user, i18NModel} = this.state;
-    const {image, owner, syntaxError, runError, published, ownerUserId, publishedDate, description} = this.props.game;
+    const {image, owner, syntaxError, runError, published, ownerUserId, publishedDate, description, dirty} = this.props.game;
     const codeLength = code ? code.length : 0;
 
     return <div className="editor page">
       <div className="header">
         <div className="title-container">
-          <div>{image && <img className="game-image-small" src={image} />}</div>
-          <h1>Editing {title}</h1>
+          {image && <div><img className="game-image-small" src={image} /></div>}
+          <h1>Editing {title} {dirty ? '*' : ''}</h1>
         </div>
         <h3>Author: {owner.name}, {codeLength} bytes {published ? <span className="published-card">Published</span> : <span className="unpublished-card">Unpublished</span> }</h3>
         <div className="actions">
@@ -121,6 +121,10 @@ export default class Editor extends RingaComponent {
               {(!user || user.id !== ownerUserId) && <div className="code-note">This code belongs to {owner.name}. You are in playground mode and can change the code as much as you like and press Commit Code to see the changes. Login to duplicate this game to your account!</div>}
               {(user && user.id !== ownerUserId) && <div className="code-note">You can copy this game to your account by clicking Duplicate above.</div>}
               <textarea onChange={this.code_onChangeHandler} value={code} wrap="soft" />
+              <div className="errors">
+                {syntaxError && <div className="error">Syntax Error: {syntaxError.toString()}</div>}
+                {runError && <div className="error">Run Error: {runError.toString()}</div>}
+              </div>
             </Tab>
             <Tab label="Instructions" classes="instructions">
               {user && user.id === ownerUserId ? <TabNavigator>
@@ -156,8 +160,6 @@ export default class Editor extends RingaComponent {
               <Markdown markdown={i18NModel.i18n('api')}/>
             </Tab>
           </TabNavigator>
-          {syntaxError && <div className="error">Syntax Error: {syntaxError.toString()}</div>}
-          {runError && <div className="error">Run Error: {runError.toString()}</div>}
         </div>
         <div className="right-pane">
           <GameCanvas game={this.props.game}/>
@@ -186,6 +188,8 @@ export default class Editor extends RingaComponent {
     this.dispatch(APIController.SAVE_GAME, {
       body
     }).then($lastPromiseResult => {
+      this.props.game.dirty = false;
+
       history.push(`/games/playground/${$lastPromiseResult.id}`);
 
       this.forceUpdate();
@@ -218,24 +222,32 @@ export default class Editor extends RingaComponent {
   }
 
   code_onChangeHandler(event) {
+    this.props.game.dirty = true;
+
     this.setState({
       code: event.target.value
     });
   }
 
   instructions_onChangeHandler(event) {
+    this.props.game.dirty = true;
+
     this.setState({
       instructions: event.target.value
     });
   }
 
   description_onChangeHandler(event) {
+    this.props.game.dirty = true;
+
     this.setState({
       description: event.target.value
     });
   }
 
   title_onChangeHandler(event) {
+    this.props.game.dirty = true;
+
     this.setState({
       title: event.target.value
     });

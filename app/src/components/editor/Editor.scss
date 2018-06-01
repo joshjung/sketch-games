@@ -48,6 +48,12 @@
 
         .controls {
           margin-left: $pad2;
+
+          .dirty {
+            background: green;
+            color: $white;
+            font-weight: bold;
+          }
         }
       }
 
@@ -71,6 +77,15 @@
         }
       }
 
+      .code {
+        display: flex;
+        flex-direction: column;
+
+        .errors {
+          flex: 0 0 auto;
+          max-height: 400px;
+        }
+      }
       .error {
         padding: 10px 0px;
         font-size: 14px;

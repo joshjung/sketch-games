@@ -1,0 +1,5 @@
+# Your Game Instructions
+
+Use this area to write instructions to people playing your games.
+
+The format of this text is written in Markdown. You can see some great instructions on how to write Markdown [here](https://blog.ghost.org/markdown/).

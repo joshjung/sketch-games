@@ -3,11 +3,11 @@ import React from 'react';
 import {RingaComponent, I18NModel} from 'ringa-fw-react';
 import {dependency, attach} from 'react-ringa';
 
-import EditGame from '../components/games/EditGame';
+import NewGame from '../components/games/NewGame';
 
-import './PlaygroundPage.scss';
+import './NewGamePage.scss';
 
-export default class EditGamePage extends RingaComponent {
+export default class NewGamePage extends RingaComponent {
   //-----------------------------------
   // Constructor
   //-----------------------------------
@@ -21,10 +21,11 @@ export default class EditGamePage extends RingaComponent {
   // Lifecycle
   //-----------------------------------
   render() {
-    const {i18NModel} = this.state;
-
-    return <div className="editGamePage">
-      <EditGame />
+    return <div className="new-game-page page">
+      <h1>Create a New Game</h1>
+      <div>Creating a game in Supermini Games is easy.</div>
+      <div>To start, enter a game title and you will be taken to the editor.</div>
+      <NewGame />
     </div>;
   }
 }

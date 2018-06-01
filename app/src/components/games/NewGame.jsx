@@ -9,7 +9,9 @@ import GameModel from '../../models/GameModel';
 
 import history from '../../global/history';
 
-export default class EditGame extends RingaComponent {
+import './NewGame.scss';
+
+export default class NewGame extends RingaComponent {
   //-----------------------------------
   // Constructor
   //-----------------------------------
@@ -24,10 +26,12 @@ export default class EditGame extends RingaComponent {
   // Lifecycle
   //-----------------------------------
   render() {
-    return <div className="editor page">
-      Game Title:
-      <TextInput model={this.gameModel} modelField="title"/>
-      <Button label="Save" onClick={this.save_onClickHandler} />
+    return <div className="new-game">
+      <h3>Game Title:</h3>
+      <div><TextInput model={this.gameModel} modelField="title"/></div>
+      <div>
+        <Button label="Create Game!" onClick={this.save_onClickHandler} />
+      </div>
     </div>;
   }
 
