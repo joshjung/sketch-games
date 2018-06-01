@@ -64,6 +64,12 @@ export default class Keyboard {
     this.game = game;
 
     this.keyDown = this.keyDown.bind(this);
+
+    this.keyActionNames = {};
+    this.keyColors = {
+      [Keyboard.KEY_CODES.SPACE]: 'green',
+      [Keyboard.KEY_CODES.ENTER]: 'red'
+    };
   }
 
   keyDown(keyCode) {

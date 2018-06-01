@@ -59,11 +59,12 @@
   }
 
   .key {
-    margin: 20px;
+    margin: 10px;
     background: lightblue;
-    min-width: 30px;
-    min-height: 30px;
-    border-radius: 7px;
+    min-width: 60px;
+    min-height: 60px;
+    max-height: 80px;
+    border-radius: 20px;
     font-size: 15px;
     font-weight: bold;
   }

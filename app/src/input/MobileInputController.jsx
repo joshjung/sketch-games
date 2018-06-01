@@ -96,12 +96,21 @@ export default class MobileInputController extends RingaComponent {
       actionPad = <div className="action-pad">{otherKeyCodes.map(kc => {
         this.watchingKeys[kc] = true;
 
+        const action = this.props.game.keyboard.keyActionNames[parseInt(kc)] || Keyboard.KEY_CODE_NAMES[parseInt(kc)];
+
+        const style = {};
+
+        if (this.props.game.keyboard.keyColors[parseInt(kc)]) {
+          style.background = this.props.game.keyboard.keyColors[parseInt(kc)];
+        }
+
         return <button key={`key${kc}`}
                        className="key"
+                       style={style}
                        onMouseDown={this.button_mouseDownHandler.bind(this, parseInt(kc))}
                        onTouchStart={this.button_mouseDownHandler.bind(this, parseInt(kc))}
                        onMouseUp={this.button_mouseUpHandler.bind(this, parseInt(kc))}
-                       onTouchEnd={this.button_mouseUpHandler.bind(this, parseInt(kc))}>{Keyboard.KEY_CODE_NAMES[parseInt(kc)]}</button>;
+                       onTouchEnd={this.button_mouseUpHandler.bind(this, parseInt(kc))}>{action}</button>;
       })}</div>;
 
       // Clear out all old buttons that were available before but are no longer visible now, in case the user

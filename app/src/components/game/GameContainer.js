@@ -152,7 +152,9 @@ export default class GameContainer extends GraphicContainer {
       keyDown: this.keyboard.keyDown,
       keyCodes: this.keyboard.keyCodes,
       mouseX: this.mouse.mouseX,
-      mouseY: this.mouse.mouseY
+      mouseY: this.mouse.mouseY,
+      keyActionNames: this.keyboard.keyActionNames,
+      keyColors: this.keyboard.keyColors
     }, this.keyboard.keyCodes);
 
     const T = {
