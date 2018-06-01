@@ -35,6 +35,12 @@ const config = {
           safe: true
         }
       }
+    },
+    ssl: {
+      keyFile: process.env.SSL_KEY_FILE,
+      certFile: process.env.SSL_CERT_FILE,
+      passphrase: process.env.SSL_PASSPHRASE,
+      port: process.env.HTTPS_PORT || 9000
     }
   },
   test: {
