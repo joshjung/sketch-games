@@ -32,6 +32,47 @@ export default class APIController extends Controller {
         }
       }]);
 
+    this.addListener('resetPassword', [
+      event(RESTController.POST, {
+        url: '/password-reset',
+        bodyParam: 'body'
+      }),
+      ($lastPromiseResult, $detail) => {
+        if ($lastPromiseResult && $lastPromiseResult.error) {
+          $detail.error = $lastPromiseResult.error;
+          $detail.success = false;
+        } else {
+          $detail.success = true;
+        }
+      }]);
+
+    this.addListener('resetPasswordValidate', [
+      event(RESTController.PUT, $detail => ({
+        url: `/password-reset/${$detail.token}`,
+        bodyParam: 'body'
+      })),
+      ($lastPromiseResult, $detail) => {
+        if ($lastPromiseResult && $lastPromiseResult.error) {
+          $detail.error = $lastPromiseResult.error;
+          $detail.success = false;
+        } else {
+          $detail.success = true;
+        }
+      }]);
+
+    this.addListener('resetPasswordTokenValidate', [
+      event(RESTController.GET, $detail => ({
+        url: `/password-reset/${$detail.token}`
+      })),
+      ($lastPromiseResult, $detail) => {
+        if ($lastPromiseResult && $lastPromiseResult.error) {
+          $detail.error = $lastPromiseResult.error;
+          $detail.success = false;
+        } else {
+          $detail.success = true;
+        }
+      }]);
+
     this.addListener('createUser', [
       event(RESTController.POST, {
         url: '/users',

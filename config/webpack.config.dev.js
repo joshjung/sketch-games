@@ -66,6 +66,7 @@ module.exports = new Promise(resolve => {
       __BUILD__: JSON.stringify(build),
       __BUILD_EPOCH__: new Date().getTime(),
       RINGA_CURRENT_WHITELIST: JSON.stringify(require('./uglifyMangleWhitelist.json')),
+      PASSWORD_RESET_REDIRECT_URI: "'http://localhost:8080/account/password/validate-reset'",
       API_ROOT: `'http://localhost:9000'`,
       'process.env': {
         NODE_ENV: '"development"'

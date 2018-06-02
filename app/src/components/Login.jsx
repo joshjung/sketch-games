@@ -51,7 +51,10 @@ export default class Login extends RingaComponent {
       <div className="actions">
         <Button label="Login" onClick={this.login_onClickHandler} />
         <Button label="Register" onClick={this.register_onClickHandler} />
+        <Button label="Forgot Password?" onClick={this.forgotPassword_onClickHandler} />
+
       </div>
+
     </div>;
   }
 
@@ -92,5 +95,9 @@ export default class Login extends RingaComponent {
 
   register_onClickHandler() {
     history.replace('/users/create');
+  }
+
+  forgotPassword_onClickHandler() {
+    history.replace('/account/password/reset');
   }
 }

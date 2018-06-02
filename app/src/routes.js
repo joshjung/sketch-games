@@ -7,6 +7,8 @@ import AboutPage from './pages/AboutPage';
 import PlaygroundPage from './pages/PlaygroundPage';
 import PlayPage from './pages/PlayPage';
 import LoginPage from './pages/LoginPage';
+import PasswordResetPage from './pages/PasswordResetPage';
+import PasswordResetValidatePage from './pages/PasswordResetValidatePage';
 import NewUserPage from './pages/NewUserPage';
 import NewGamePage from './pages/NewGamePage';
 import GamesPage from './pages/GamesPage';
@@ -27,6 +29,8 @@ export default (
         <Route path="/user/create" exact component={NewUserPage} />
         <Route path="/about" exact component={AboutPage} />
         <Route path="/api" exact component={APIPage} />
+        <Route path="/account/password/reset" exact component={PasswordResetPage} />
+        <Route path="/account/password/validate-reset/:token" exact component={PasswordResetValidatePage} />
       </Switch>
     </ApplicationLayout>
   </Route>
