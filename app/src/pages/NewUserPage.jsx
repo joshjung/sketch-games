@@ -18,6 +18,9 @@ export default class NewUserPage extends RingaComponent {
   //-----------------------------------
   render() {
     return <div className="new-user-page page">
+      <h1>Register New Account</h1>
+      <div>Register to create games and record high scores</div>
+      <br />
       <NewUser />
     </div>;
   }

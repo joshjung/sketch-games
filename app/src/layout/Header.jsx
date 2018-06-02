@@ -45,21 +45,21 @@ class Header extends RingaComponent {
 
               {i18NModel.i18n('header.title')}
 
-            <div className="tagline">{i18NModel.i18n('header.tagline')}</div>
+            {curBreakpointIx > 2 && <div className="tagline">{i18NModel.i18n('header.tagline')}</div>}
           </div>}
         </a>
       </div>
       {curBreakpointIx > 2 && <div>
         <Button label="Games" onClick={this.home_onClickHandler} />
-        <Button label="Explore" onClick={this.games_onClickHandler} />
+        {curBreakpointIx >= 4 && <Button label="Explore" onClick={this.games_onClickHandler} />}
         <Button label="About" onClick={this.about_onClickHandler} />
-        <Button label="API" onClick={this.api_onClickHandler} />
+        {curBreakpointIx >= 4 && <Button label="API" onClick={this.api_onClickHandler} />}
       </div>}
       <div>
         {user ? <div>
             <span className="username">{user.name}</span>
-            {curBreakpointIx > 2 && <Button label="My Games" onClick={this.myGames_onClickHandler} />}
-            {curBreakpointIx > 2 && <Button label="Create Game" onClick={this.newGame_onClickHandler} />}
+            {curBreakpointIx >= 3 && <Button label="My Games" onClick={this.myGames_onClickHandler} />}
+            {curBreakpointIx >= 4 && <Button label="Create Game" onClick={this.newGame_onClickHandler} />}
             <Button label="Logout" onClick={this.logout_onClickHandler} />
           </div> :
           <Button label="Login" onClick={this.login_onClickHandler} />}

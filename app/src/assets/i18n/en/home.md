@@ -1,9 +1,10 @@
-# Supermini Games
+# What is this?
 
-Supermini Games exists for two primary purposes:
+**Supermini Games** has three main goals:
 
-1. Educate the next generation in software development
-2. Enable anyone with moderate programming experience to build a entire game in less than one hour
+1. Host fun, fast, addictive games for web
+2. Educate the next generation in software development
+3. Enable anyone with moderate programming experience to build a entire game in less than one hour
 
 # Story
 
@@ -12,10 +13,4 @@ QuickBasic games in DOS. It was so simple, so pure, and in a few hours you could
 
 Sadly, the web is complicated, build configurations take forever, and browser compatibility especially with
 mobile can be a nightmare. I built Supermini Games on vacation while in Italy. My goal was to make it available
-to everyone.
-
-# Creating Games
-
-1. Create an account using **Register** above.
-2. Login
-3. Click **Create Game** or select someone else's game and when in the editor, click **Duplicate to my Account**.
+to everyone so that if you have a game idea you can build it, publish it, and watch others play it within an hour.

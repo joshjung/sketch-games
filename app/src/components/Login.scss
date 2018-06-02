@@ -1,0 +1,16 @@
+@import '../styles/variables';
+
+.login {
+  label {
+    display: block;
+    margin: $pad2 0;
+    font-weight: bold;
+  }
+
+  .actions {
+    margin-top: $pad2;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+}

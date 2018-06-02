@@ -10,7 +10,12 @@ const roles = ['user', 'admin']
 const userSchema = new Schema({
   email: {
     type: String,
-    match: /^\S+@\S+\.\S+$/,
+    validate: {
+      validator: function(v) {
+        return /^\S+@\S+\.\S+$/.test(v);
+      },
+      message: '{VALUE} is not a valid email!'
+    },
     required: true,
     unique: true,
     trim: true,
@@ -19,7 +24,12 @@ const userSchema = new Schema({
   password: {
     type: String,
     required: true,
-    minlength: 6
+    validate: {
+      validator: function(v) {
+        return v && v.length >= 6;
+      },
+      message: 'Password must be at least 6 characters long.'
+    },
   },
   name: {
     type: String,

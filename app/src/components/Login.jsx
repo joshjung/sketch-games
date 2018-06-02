@@ -9,6 +9,8 @@ import history from '../global/history';
 
 import APIController from '../controllers/APIController';
 
+import './Login.scss';
+
 const LoginModel = Model.construct('LoginModel', [{
   name: 'email'
 }, {
@@ -40,14 +42,16 @@ export default class Login extends RingaComponent {
   render() {
     const {error} = this.state;
 
-    return <div className="editor">
-      Email:
+    return <div className="login">
+      <label>Email</label>
       <TextInput model={this.login} modelField="email" onEnterKey={this.email_onEnterKeyHandler}/>
-      Password:
+      <label>Password</label>
       <TextInput model={this.login} modelField="password" type="password" onEnterKey={this.password_onEnterKeyHandler}/>
       {error && <div>Invalid login!</div>}
-      <Button label="Login" onClick={this.login_onClickHandler} />
-      <Button label="Register" onClick={this.register_onClickHandler} />
+      <div className="actions">
+        <Button label="Login" onClick={this.login_onClickHandler} />
+        <Button label="Register" onClick={this.register_onClickHandler} />
+      </div>
     </div>;
   }
 

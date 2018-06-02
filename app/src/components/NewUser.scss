@@ -1,0 +1,14 @@
+@import '../styles/variables';
+
+.new-user {
+  label {
+    display: block;
+    margin: $pad2 0;
+    font-weight: bold;
+  }
+
+  .error {
+    color: $error-red;
+    padding: $pad2;
+  }
+}

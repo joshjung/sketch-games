@@ -1,4 +1,4 @@
-import { success, notFound } from '../../services/response/'
+import { success, notFound, badRequest } from '../../services/response/'
 import { User } from '.'
 import { sign } from '../../services/jwt'
 
@@ -23,11 +23,11 @@ export const show = ({ params }, res, next) =>
 export const showMe = ({ user }, res) =>
   res.json(user.view(true))
 
-export const create = ({ bodymen: { body } }, res, next) =>
+export const create = ({ bodymen: { body } }, res, next) => {
   User.create(body)
     .then(user => {
       sign(user.id)
-        .then((token) => ({ token, user: user.view(true) }))
+        .then((token) => ({token, user: user.view(true)}))
         .then(success(res, 201))
     })
     .catch((err) => {
@@ -36,12 +36,14 @@ export const create = ({ bodymen: { body } }, res, next) =>
         res.status(409).json({
           valid: false,
           param: 'email',
-          message: 'email already registered'
+          message: 'Email already registered.'
         })
-      } else {
-        next(err)
+      } else if (err.errors) {
+        err.errors.message = Object.keys(err.errors).map(key => err.errors[key].message).join(', ');
+        res.status(400).json(err.errors);
       }
-    })
+    });
+}
 
 export const update = ({ bodymen: { body }, params, user }, res, next) =>
   User.findById(params.id === 'me' ? user.id : params.id)

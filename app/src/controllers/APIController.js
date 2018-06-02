@@ -45,6 +45,7 @@ export default class APIController extends Controller {
           this.dispatch(APIController.ME);
         } else {
           $detail.success = false;
+          $detail.error = $lastPromiseResult.message;
         }
       }]);
 

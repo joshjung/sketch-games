@@ -5,6 +5,13 @@ export const success = (res, status) => (entity) => {
   return null
 }
 
+export const badRequest = (res, status) => (entity) => {
+  if (entity) {
+    res.status(status || 400).json(entity)
+  }
+  return null
+}
+
 export const notFound = (res) => (entity) => {
   if (entity) {
     return entity

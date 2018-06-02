@@ -2,12 +2,14 @@ import React from 'react';
 
 import {Model} from 'ringa';
 
-import {RingaComponent, I18NModel, TextInput, Button} from 'ringa-fw-react';
+import {RingaComponent, I18NModel, TextInput, Button, ScreenModel} from 'ringa-fw-react';
 import {dependency} from 'react-ringa';
 
 import history from '../global/history';
 
 import APIController from '../controllers/APIController';
+
+import './NewUser.scss';
 
 const NewUserModel = Model.construct('NewUserModel', [{
   name: 'name',
@@ -27,8 +29,13 @@ export default class NewUser extends RingaComponent {
   constructor(props) {
     super(props);
 
+    this.state = {
+      error: undefined
+    };
+
     this.depend(
-      dependency(I18NModel, 'language')
+      dependency(I18NModel, 'language'),
+      dependency(ScreenModel, 'breakpointIx')
     );
 
     this.newUser = new NewUserModel();
@@ -38,13 +45,16 @@ export default class NewUser extends RingaComponent {
   // Lifecycle
   //-----------------------------------
   render() {
-    return <div className="newUser">
-      Username:
+    const {error} = this.state;
+
+    return <div className="new-user">
+      <label>Username</label>
       <TextInput model={this.newUser} modelField="name"/>
-      Email:
+      <label>Email</label>
       <TextInput model={this.newUser} modelField="email"/>
-      Password:
+      <label>Password</label>
       <TextInput model={this.newUser} modelField="password" type="password"/>
+      {error && <div className="error">{error}</div>}
       <Button label="Create" onClick={this.newUser_onClickHandler} />
     </div>;
   }
@@ -53,6 +63,8 @@ export default class NewUser extends RingaComponent {
   // Events
   //-----------------------------------
   newUser_onClickHandler() {
+    const {breakpointIx} = this.state;
+
     this.dispatch(APIController.CREATE_USER, {
       body: {
         email: this.newUser.email,
@@ -60,9 +72,17 @@ export default class NewUser extends RingaComponent {
         name: this.newUser.name,
         access_token: 'QiW54Gu0IqrYE6v8zHOSzqVdbIeiHknn'
       }
-    }).then(success => {
+    }).then((success, error) => {
       if (success) {
-        history.replace('/games');
+        if (breakpointIx > 2) {
+          history.replace('/games/mine');
+        } else {
+          history.replace('/');
+        }
+      } else {
+        this.setState({
+          error
+        });
       }
     });
   }
