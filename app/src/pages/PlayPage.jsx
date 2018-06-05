@@ -78,7 +78,7 @@ export default class PlayPage extends RingaComponent {
             </h1>
             <div>
               <Button onClick={this.restart_onClickHandler}>
-                <i className="fa fa-stop" />
+                <i className="fa fa-step-backward" />
               </Button>
               <Button onClick={this.pausePlay_onClickHandler}>
                 {curGame.paused ? <i className="fa fa-play" /> : <i className="fa fa-pause" />}
@@ -109,12 +109,12 @@ export default class PlayPage extends RingaComponent {
           <h1>{curGame.activeTitle} {!curGame.published && <span className="beta-card">Beta</span>}</h1>
           <div>
             <Button onClick={this.restart_onClickHandler}>
-              <i className="fa fa-stop" />
+              <i className="fa fa-step-backward" />
             </Button>
             <Button onClick={this.pausePlay_onClickHandler}>
               {curGame.paused ? <i className="fa fa-play" /> : <i className="fa fa-pause" />}
             </Button>
-            {user ? <Button label="Develop" onClick={this.develop_onClickHandler}/> : undefined}
+            {user ? <Button onClick={this.develop_onClickHandler}><i className="fa fa-edit" /></Button> : undefined}
             <Button onClick={this.toggleLargeScreen_onClickHandler}>
               <i className={largeScreen ? 'fa fa-window-restore' : 'fa fa-window-maximize'} />
             </Button>

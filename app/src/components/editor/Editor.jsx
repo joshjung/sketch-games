@@ -94,11 +94,14 @@ export default class Editor extends RingaComponent {
       <Button onClick={this.pausePlay_onClickHandler}>
         {this.props.game.paused ? <i class="fa fa-play" /> : <i class="fa fa-pause" />}
       </Button>
+      <Button onClick={this.fullScreenEditor_onClickHandler}>
+        {this.state.fullScreenEditor ? <i class="fa fa-window-restore" /> : <i class="fa fa-window-maximize" />}
+      </Button>
     </span>;
   }
 
   render() {
-    const {title, code, instructions, user, i18NModel} = this.state;
+    const {title, code, instructions, user, i18NModel, fullScreenEditor} = this.state;
     const {image, owner, syntaxError, runError, published, ownerUserId, publishedDate, description, dirty} = this.props.game;
     const codeLength = code ? code.length : 0;
 
@@ -115,7 +118,7 @@ export default class Editor extends RingaComponent {
         </div>
       </div>
       <div className="workspace">
-        <div className="left-pane">
+        <div className={fullScreenEditor ? 'left-pane full-screen' : 'left-pane'}>
           <TabNavigator controls={this.renderControls()}>
             <Tab label="Code" classes="code">
               {(!user || user.id !== ownerUserId) && <div className="code-note">This code belongs to {owner.name}. You are in playground mode and can change the code as much as you like and press Commit Code to see the changes. Login to duplicate this game to your account!</div>}
@@ -161,9 +164,9 @@ export default class Editor extends RingaComponent {
             </Tab>
           </TabNavigator>
         </div>
-        <div className="right-pane">
+        {!fullScreenEditor && <div className="right-pane">
           <GameCanvas game={this.props.game}/>
-        </div>
+        </div>}
       </div>
     </div>;
   }
@@ -324,5 +327,10 @@ export default class Editor extends RingaComponent {
         });
       }
     })
+  }
+  fullScreenEditor_onClickHandler() {
+    this.setState({
+      fullScreenEditor: !this.state.fullScreenEditor
+    });
   }
 }
