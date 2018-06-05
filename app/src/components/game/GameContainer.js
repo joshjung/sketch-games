@@ -5,7 +5,13 @@ import Mouse from '../../input/Mouse';
 
 import APIController from '../../controllers/APIController';
 
+import * as RenderAPI from '../../api/R';
+import * as MathAPI from '../../api/M';
+
 export default class GameContainer extends GraphicContainer {
+  //-----------------------------------
+  // Constructor
+  //-----------------------------------
   constructor(gameController, options, id) {
     super(options, id);
 
@@ -24,87 +30,9 @@ export default class GameContainer extends GraphicContainer {
     })
   }
 
-  seed(i) {
-    this.randSeed = i;
-  }
-
-  random() {
-    const x = Math.sin(this.randSeed++) * 10000;
-    return x - Math.floor(x);
-  }
-
-  background(fill) {
-    let ctx = this.renderer.ctx;
-    ctx.fillStyle = fill;
-    ctx.fillRect(0, 0, 800, 600);
-  }
-
-  text(text, x, y, color, font, baseline) {
-    let ctx = this.renderer.ctx;
-
-    baseline = baseline || 'hanging';
-
-    ctx.fillStyle = color;
-    ctx.font = font || '30px Arial';
-    ctx.textBaseline = baseline;
-
-    ctx.fillText(text, x, y);
-  }
-
-  circle(center, radius, stroke, fill) {
-    let ctx = this.renderer.ctx;
-
-    if (fill) {
-      ctx.fillStyle = fill;
-    }
-
-    ctx.beginPath();
-    ctx.arc(center[0], center[1], radius, 0, 2 * Math.PI);
-    ctx.closePath();
-
-    if (fill) {
-      ctx.fill();
-    }
-
-    if (stroke) {
-      ctx.stroke();
-    }
-  }
-
-  poly(poly, {fill = undefined, angle = 0, center = [0, 0]} = {}) {
-    let ctx = this.renderer.ctx;
-
-    if (fill) {
-      ctx.fillStyle = fill;
-    }
-
-    if (angle || center) {
-      poly = poly.concat();
-
-      for (let i=0 ; i < poly.length-1 ; i+=2) {
-        const x = poly[i],
-              y = poly[i+1];
-        const s = Math.sin(angle);
-        const c = Math.cos(angle);
-        poly[i] =   x * c - y * s + center[0];
-        poly[i+1] = x * s + y * c + center[1];
-      }
-    }
-
-    ctx.beginPath();
-    ctx.moveTo(poly[0], poly[1]);
-
-    for (let i=2 ; i < poly.length-1 ; i+=2) {
-      ctx.lineTo( poly[i] , poly[i+1] );
-    }
-
-    ctx.closePath();
-
-    if (fill) {
-      ctx.fill();
-    }
-  }
-
+  //-----------------------------------
+  // Methods
+  //-----------------------------------
   recordScore(score) {
     const isHighscore = !this.gameModel.highscores ||
       this.gameModel.highscores.length < 50 ||
@@ -134,22 +62,30 @@ export default class GameContainer extends GraphicContainer {
     return false;
   }
 
+  //-----------------------------------
+  // Events
+  //-----------------------------------
   onFrameHandler(elapsed) {
     if (!this.mouse) {
       this.mouse = new Mouse(this.renderer.canvas);
     }
 
     const E = elapsed;
+
     const R = {
-      text: this.text.bind(this),
-      poly: this.poly.bind(this),
-      circle: this.circle.bind(this),
-      bg: this.background.bind(this)
+      text: RenderAPI.text.bind(this, this.renderer.ctx),
+      poly: RenderAPI.poly.bind(this, this.renderer.ctx),
+      circle: RenderAPI.circle.bind(this, this.renderer.ctx),
+      bg: RenderAPI.background.bind(this, this.renderer.ctx)
     };
+
     const C = this.renderer.ctx;
+
     const G = Object.assign(this.gameModel.exposedState, {
-      recordScore: this.recordScore.bind(this)
+      recordScore: this.recordScore.bind(this),
+      paused: this.gameModel.paused
     });
+
     const I = Object.assign({
       keyDown: this.keyboard.keyDown,
       keyCodes: this.keyboard.keyCodes,
@@ -166,11 +102,13 @@ export default class GameContainer extends GraphicContainer {
     };
 
     const M = {
-      seed: this.seed.bind(this),
-      rand: this.random.bind(this)
+      seed: MathAPI.seed.bind(this),
+      rand: MathAPI.rand.bind(this)
     };
 
-    const args = [E, R, C, G, I, T, M];
+    const S = {};
+
+    const args = [E, R, C, G, I, T, M, S];
 
     if (this.gameModel.paused) {
       args[0] = 0; // elapsed to 0

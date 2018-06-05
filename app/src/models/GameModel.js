@@ -135,7 +135,7 @@ export default class GameModel extends Model {
 
     try {
       const es5Output = Babel.transform(gameLoopFnString, { presets: ['es2015'] }).code;
-      fn = new Function('E', 'R', 'C', 'G', 'I', 'T', 'M', es5Output);
+      fn = new Function('E', 'R', 'C', 'G', 'I', 'T', 'M', 'S', es5Output);
       this.gameLoopFn = fn;
 
       this.gameLoopFnText = gameLoopFnString;

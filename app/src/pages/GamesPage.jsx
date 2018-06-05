@@ -77,7 +77,7 @@ export default class GamesPage extends RingaComponent {
       {renderedGames.length ? <List items={renderedGames}
                                     labelField="title"
                                     onChange={this.list_onChangeHandler}
-                                    itemRenderer={this.gameListItemRenderer}/> : <div>There are no games available for this filter.</div>}
+                                    itemRenderer={this.gameListItemRenderer}/> : <div className="filter-empty">There are no games available for this filter.</div>}
     </div>;
   }
 
@@ -122,10 +122,10 @@ export default class GamesPage extends RingaComponent {
       {game.published ? <span className="published-card">Published</span> : <span className="unpublished-card">UnPublished</span>}
       {game.owner && <div className="author">Author: {game.owner.name}</div>}
       <div className="actions">
-        <Button label="Play" onClick={this.list_playClickHandler.bind(this, game)} />
-        <Button label="Develop" onClick={this.list_developButtonClickHandler.bind(this, game)} />
-        {(user && user.id === game.ownerUserId) ? <Button label="Delete" onClick={this.list_deleteClickHandler.bind(this, game)} /> : undefined}
-        {user && <Button label="Duplicate" onClick={this.duplicate_clickHandler.bind(this, game)} />}
+        <Button onClick={this.list_playClickHandler.bind(this, game)} classes="highlight"><i className="fa fa-play" /></Button>
+        <Button onClick={this.list_developButtonClickHandler.bind(this, game)}><i className="fa fa-edit" /></Button>
+        {user && <Button label="Duplicate" onClick={this.duplicate_clickHandler.bind(this, game)}><i className="fa fa-copy" /></Button>}
+        {(user && user.id === game.ownerUserId) ? <Button onClick={this.list_deleteClickHandler.bind(this, game)} classes="warning"><i className="fa fa-trash" /></Button> : undefined}
         {!user && <div>Login for more actions</div>}
       </div>
       </div>;
@@ -157,7 +157,7 @@ export default class GamesPage extends RingaComponent {
   list_deleteClickHandler(game, event) {
     event.stopPropagation();
 
-    Alert.show(`Are you sure you want to permanently delete ${game.title}`, Alert.YES_NO, {}, this.rootDomNode).then(result => {
+    Alert.show(`Are you sure you want to permanently delete ${game.title}?`, Alert.YES_NO, {}, this.rootDomNode).then(result => {
       if (result.id === 'yes') {
         this.dispatch(APIController.DELETE_GAME, {
           id: game.id

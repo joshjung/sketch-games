@@ -85,7 +85,7 @@ export default class Editor extends RingaComponent {
 
   renderControls() {
     return <span className="controls">
-      <Button onClick={this.save_onClickHandler} classes={this.props.game.dirty ? 'dirty' : undefined}>
+      <Button onClick={this.save_onClickHandler} classes={this.props.game.dirty ? 'highlight' : undefined}>
         <i class="fa fa-save"></i>
       </Button>
       <Button onClick={this.reset_onClickHandler}>

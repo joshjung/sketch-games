@@ -21,6 +21,12 @@
     height: calc(100% - 70px);
   }
 
+  .filter-empty {
+    background: $white;
+    padding: 20px;
+    border-radius: $radius-1;
+  }
+
   .game-item {
     width: calc(100% - 20px);
     display: flex;

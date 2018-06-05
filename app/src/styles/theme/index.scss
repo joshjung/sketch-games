@@ -14,6 +14,14 @@ html, body {
 }
 
 .classic {
+  .modal {
+    border-radius: $radius-1;
+  }
+
+  .alert {
+    font-weight: bold;
+  }
+
   .modal-contents {
     padding: $pad1;
   }
@@ -21,6 +29,7 @@ html, body {
   .modal-close-btn {
     color: $white;
   }
+
   .modal-header {
     height: 30px;
     background: $ringa-color;
@@ -32,12 +41,26 @@ html, body {
       padding: $pad1;
     }
   }
+
   .ringa-component.modal-container-wrapper .modal-container-contents.block-mouse-events {
     opacity: 0.4;
   }
-  .ringa-component.button {
+
+  .ringa-component.button, button {
     border-radius: $radius-1;
     padding: 4px 7px;
+
+    &.highlight, &.green {
+      background: green;
+      color: $white;
+      font-weight: bold;
+    }
+
+    &.warning, &.red {
+      background: red;
+      color: $white;
+      font-weight: bold;
+    }
   }
 
   .ringa-component.tab-navigator .button.tab {
