@@ -58,7 +58,7 @@ export default class HomePage extends RingaComponent {
     });
     const hs = this.getHighscores(game);
 
-    if (curBreakpointIx < 2) {
+    if (curBreakpointIx <= 2) {
       return <div className={cn}
                   onClick={itemClickHandler}
                   key={game.id}>

@@ -3,7 +3,7 @@ import React from 'react';
 import {RingaComponent, TextInput, Button, ScreenModel} from 'ringa-fw-react';
 import {dependency} from 'react-ringa';
 
-import history from '../global/history';
+export const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 import APIController from '../controllers/APIController';
 
@@ -42,7 +42,7 @@ export default class PasswordReset extends RingaComponent {
     return <div className="password-reset">
       <label>Email</label>
       <TextInput value={email} onChange={this.email_onChangeHandler} onEnterKey={this.email_onEnterKeyHandler}/>
-      {error && <div>The email you provided does not appear to exist.</div>}
+      {error && <div className="warning-card">The email you provided does not exist in our system</div>}
       <div className="actions">
         <Button label="Reset Password" onClick={this.reset_onClickHandler} />
       </div>
@@ -63,10 +63,11 @@ export default class PasswordReset extends RingaComponent {
   }
 
   reset_onClickHandler() {
-    if (!this.state.email) {
+    if (!EMAIL_REGEX.test(this.state.email)) {
       this.setState({
         error: 'Please enter a valid email'
       });
+      return;
     }
 
     this.dispatch(APIController.RESET_PASSWORD, {

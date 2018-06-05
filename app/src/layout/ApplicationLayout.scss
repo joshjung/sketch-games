@@ -22,7 +22,7 @@ body {
     padding: $pad3;
     overflow: hidden;
 
-    @media screen and (max-width: $break-small) {
+    @media screen and (max-width: 768px) {
       height: calc(100% - 46px);
       width: 100%;
       padding: 0;

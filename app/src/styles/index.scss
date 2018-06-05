@@ -46,6 +46,16 @@
   }
 }
 
+.warning-card {
+  background-color: $error-red;
+  color: white;
+  font-weight: bold;
+  opacity: 0.75;
+  padding: $pad1 $pad2;
+  border-radius: $radius-1;
+  margin: $pad2 0;
+}
+
 button {
   touch-action: manipulation !important;
 }
