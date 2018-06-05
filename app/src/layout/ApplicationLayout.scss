@@ -20,6 +20,7 @@ body {
     position: relative;
     overflow: auto;
     padding: $pad3;
+    overflow: hidden;
 
     @media screen and (max-width: $break-small) {
       height: calc(100% - 46px);

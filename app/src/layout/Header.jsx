@@ -40,7 +40,7 @@ class Header extends RingaComponent {
 
       <div className="logo">
         <a onClick={this.home_onClickHandler}>
-          <i class="fa fa-play-circle"></i>
+          <i className="fa fa-play-circle"></i>
           {curBreakpointIx >= 2 && <div className="title">
 
               {i18NModel.i18n('header.title')}

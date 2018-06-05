@@ -48,9 +48,9 @@ export default class NewUser extends RingaComponent {
     const {error} = this.state;
 
     return <div className="new-user">
-      <label>Username</label>
+      <label>Desired Username</label>
       <TextInput model={this.newUser} modelField="name"/>
-      <label>Email</label>
+      <label>Your Email</label>
       <TextInput model={this.newUser} modelField="email"/>
       <label>Password</label>
       <TextInput model={this.newUser} modelField="password" type="password"/>

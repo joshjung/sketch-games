@@ -304,7 +304,7 @@ export default class Editor extends RingaComponent {
   screenshot_onClickHandler() {
     const {game} = this.props;
 
-    game.screenshot();
+    game.image = game.screenshot();
 
     this.forceUpdate();
   }

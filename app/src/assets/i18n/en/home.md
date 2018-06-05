@@ -1,10 +1,13 @@
-# What is this?
+# What is Supermini Games?
 
+Supermini Games is a site where you can build, publish, and play games. We are a  site devoted to online arcade 
+style gameplay, with a focus on quality first instead of graphics and effects. 
+ 
 **Supermini Games** has three main goals:
 
-1. Host fun, fast, addictive games for web
-2. Educate the next generation in software development
-3. Enable anyone with moderate programming experience to build a entire game in less than one hour
+1. Host fun, fast, small - yet addictive - games for web
+2. Help educate the next generation in software game development
+3. Enable anyone with moderate programming experience to **build an entire game in one hour**
 
 # Story
 

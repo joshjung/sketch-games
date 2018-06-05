@@ -160,6 +160,7 @@ export default class APIController extends Controller {
           id,
           score,
           time,
+          screenshot: this.appModel.curGame.screenshot(),
           userId: this.appModel.user && this.appModel.user.id,
           name: (this.appModel.user && this.appModel.user.name) || 'Anonymous'
         },
@@ -181,6 +182,14 @@ export default class APIController extends Controller {
       })),
       ($lastPromiseResult, $detail) => {
         $detail.success = $lastPromiseResult.success;
+      }]);
+
+    this.addListener('viewHighscore', [
+      event(RESTController.GET, (id, userId, timestamp) => ({
+        url: `/games/highscore/${id}/${userId}/${timestamp}`
+      })),
+      ($lastPromiseResult) => {
+        console.log($lastPromiseResult);
       }]);
 
     this.addListener('getGames', [

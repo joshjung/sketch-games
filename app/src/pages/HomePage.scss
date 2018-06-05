@@ -48,12 +48,17 @@
         color: grey;
       }
 
-      .highcore {
+      .highscore {
+        color: $black-3;
         min-width: 150px;
         text-align: right;
         font-size: 12px;
         color: black;
-        font-weight: bold;
+
+        .points {
+          font-weight: bold;
+          font-size: 16px;
+        }
       }
     }
 
@@ -95,10 +100,16 @@
           margin: 5px 0;
         }
 
-        .highcore {
+        .highscore {
+          color: $black-3;
           font-size: 11px;
           color: black;
           font-weight: bold;
+
+          .points {
+            font-weight: bold;
+            font-size: 16px;
+          }
         }
       }
     }

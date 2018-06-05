@@ -3,6 +3,8 @@ import React from 'react';
 import {RingaComponent, Markdown, I18NModel} from 'ringa-fw-react';
 import {dependency} from 'react-ringa';
 
+import './AboutPage.scss';
+
 export default class AboutPage extends RingaComponent {
   //-----------------------------------
   // Constructor
@@ -20,7 +22,7 @@ export default class AboutPage extends RingaComponent {
   //-----------------------------------
   render() {
     const {i18NModel} = this.state;
-    return <div className="page">
+    return <div className="about-page page">
       <Markdown markdown={i18NModel.i18n('home.content')} />
     </div>;
   }

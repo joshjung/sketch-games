@@ -63,7 +63,17 @@ export const highscore = ({ bodymen: { body } }, res, next) =>
   Game.findById(body.id)
     .then(notFound(res))
     .then(game => {
-      return game.highscore(body.userId, body.score, body.time, body.name)
+      return game.highscore(body.userId, body.score, body.time, body.name, body.screenshot)
+        .then(success(res, 201))
+        .catch(next);
+    })
+    .catch(next);
+
+export const viewHighscore = ({ params }, res, next) =>
+  Game.findById(params.gameId)
+    .then(notFound(res))
+    .then(game => {
+      return game.viewHighscore(params.userId, params.timestamp)
         .then(success(res, 201))
         .catch(next);
     })

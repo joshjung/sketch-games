@@ -112,16 +112,18 @@ export default class GameContainer extends GraphicContainer {
 
     if (isHighscore) {
       if (this.gameModel.mode === 'published') {
-        this.gameModel.gameCanvas.dispatch(APIController.RECORD_HIGHSCORE, {
-          id: this.gameModel.id,
-          score,
-          time: this.gameModel.timePlayed
-        }).then($lastPromiseResult => {
-          if ($lastPromiseResult.success) {
-            this.gameModel.highscores = $lastPromiseResult.highscores;
-            console.log('new highscores', this.gameModel.highscores);
-          }
-        });
+        setTimeout(() => {
+          this.gameModel.gameCanvas.dispatch(APIController.RECORD_HIGHSCORE, {
+            id: this.gameModel.id,
+            score,
+            time: this.gameModel.timePlayed
+          }).then($lastPromiseResult => {
+            if ($lastPromiseResult.success) {
+              this.gameModel.highscores = $lastPromiseResult.highscores;
+              console.log('new highscores', this.gameModel.highscores);
+            }
+          });
+        }, 0);
       } else {
         console.log(`You are in development mode, your highscore of ${score} is not recorded.`);
       }

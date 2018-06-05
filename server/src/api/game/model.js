@@ -3,6 +3,8 @@ import { env } from '../../config';
 
 import User from '../user/model';
 
+const HIGHSCORE_MAX_COUNT = 100;
+
 const gameSchema = new Schema({
   title: {
     type: String,
@@ -91,6 +93,14 @@ gameSchema.methods = {
 
     fields.forEach(field => view[field] = this[field]);
 
+    if (!full && view.highscores && view.highscores.length) {
+      view.highscores = view.highscores.map(hs => {
+        let hsClone = {...hs};
+        delete hsClone.screenshot;
+        return hsClone;
+      });
+    }
+
     if (view.ownerUserId) {
       return new Promise(response => {
         User.findById(view.ownerUserId).then(result => {
@@ -102,6 +112,19 @@ gameSchema.methods = {
     }
 
     return Promise.resolve(view);
+  },
+  viewHighscore (userId, timestamp) {
+    let hsFull = this.highscores.find(hs => (hs.timestamp && hs.timestamp.toString()) === timestamp.toString() && (hs.userId && hs.userId.toString()) === userId.toString());
+
+    hsFull = hsFull ? {
+      success: true,
+      highscore: hsFull
+    } : {
+      success: false,
+      message: 'Could not find a matching highscore, it might have been deleted'
+    };
+
+    return Promise.resolve(hsFull);
   },
   clone (userId) {
     return new Promise((response, fail) => {
@@ -138,19 +161,51 @@ gameSchema.methods = {
       this.save().then(() => response({success: true}));
     });
   },
-  highscore (userId, score, time, name) {
+  highscore (userId, score, time, name, screenshot) {
     return new Promise((response) => {
+      if (!screenshot) {
+        return response({
+          success: false,
+          message: 'No screenshot provided, score not recorded'
+        });
+      }
+
       this.highscores = this.highscores || [];
 
-      this.highscores.push({
-        userId,
-        score,
-        time,
-        name,
-        timestamp: new Date().getTime()
+      this.highscores.sort((hs1, hs2) => {
+        return hs1.score < hs2.score ? 1 : -1;
       });
 
-      this.save().then(() => response({success: true, highscores: this.highscores}));
+      const isHighScore = !this.highscores.length ||
+        this.highscores.length < HIGHSCORE_MAX_COUNT ||
+        this.highscores.find(hs => hs.score < score);
+
+      if (isHighScore) {
+        this.highscores.push({
+          userId,
+          score,
+          time,
+          name,
+          timestamp: new Date().getTime(),
+          screenshot
+        });
+
+        this.highscores = this.highscores.slice(0, HIGHSCORE_MAX_COUNT);
+
+        this.save().then(() => response({
+          success: true,
+          highscores: this.highscores.map(hs => {
+            let hsClone = {...hs};
+            delete hsClone.screenshot;
+            return hsClone;
+          })
+        }));
+      } else {
+        return response({
+          success: false,
+          message: `${score} is not in the top ${HIGHSCORE_MAX_COUNT}`
+        });
+      }
     });
   },
   clearHighscores (userId) {

@@ -23,7 +23,8 @@ export default class PlayPage extends RingaComponent {
     super(props);
 
     this.state = {
-      selectedIx: 0
+      selectedIx: 0,
+      ignoreLoginWarning: false
     };
 
     this.depend(dependency(AppModel, ['curGame', 'token', 'user']), dependency(ScreenModel, 'curBreakpointIx'));
@@ -54,7 +55,7 @@ export default class PlayPage extends RingaComponent {
   }
 
   render() {
-    const {curGame, user, curBreakpointIx, selectedIx} = this.state;
+    const {curGame, user, curBreakpointIx, selectedIx, ignoreLoginWarning} = this.state;
 
     if (!curGame) {
       return <div>Loading...</div>;
@@ -65,19 +66,22 @@ export default class PlayPage extends RingaComponent {
     if (curBreakpointIx < 3) {
       return <div className="play-mobile page">
         <div className="play-header">
-          <div className="sub-header">
+          {!user && !ignoreLoginWarning && <div className="sub-header warning">You are not logged in! Your highscores will not be recorded.
+            <Button label="Ignore" onClick={this.ignoreLoginWarning_onClickHandler} />
+          </div>}
+          {(user || ignoreLoginWarning) && <div className="sub-header">
             <h1>
               {curGame.activeTitle} {!curGame.published && <span className="beta-card">Beta</span>}
             </h1>
             <div>
               <Button onClick={this.restart_onClickHandler}>
-                <i class="fa fa-stop" />
+                <i className="fa fa-stop" />
               </Button>
               <Button onClick={this.pausePlay_onClickHandler}>
-                {curGame.paused ? <i class="fa fa-play" /> : <i class="fa fa-pause" />}
+                {curGame.paused ? <i className="fa fa-play" /> : <i className="fa fa-pause" />}
               </Button>
             </div>
-          </div>
+          </div>}
         </div>
         <TabNavigator onChange={this.tabNavigator_onChangeHandler} selectedIx={selectedIx}>
           <Tab label="Play" classes="play">
@@ -102,10 +106,10 @@ export default class PlayPage extends RingaComponent {
           <h1>{curGame.activeTitle} {!curGame.published && <span className="beta-card">Beta</span>}</h1>
           <div>
             <Button onClick={this.restart_onClickHandler}>
-              <i class="fa fa-stop" />
+              <i className="fa fa-stop" />
             </Button>
             <Button onClick={this.pausePlay_onClickHandler}>
-              {curGame.paused ? <i class="fa fa-play" /> : <i class="fa fa-pause" />}
+              {curGame.paused ? <i className="fa fa-play" /> : <i className="fa fa-pause" />}
             </Button>
             {user ? <Button label="Develop" onClick={this.develop_onClickHandler}/> : undefined}
           </div>
@@ -115,6 +119,10 @@ export default class PlayPage extends RingaComponent {
           <div className="details">
             <TabNavigator>
               <Tab label="Highscores">
+                {!user && <div className="warning">
+                  You are not logged in! Your highscores will not be recorded.
+                  <Button label="Login" onClick={this.login_onClickHandler} />
+                </div>}
                 <Highscores game={curGame}/>
               </Tab>
               <Tab label="Instructions">
@@ -159,6 +167,16 @@ export default class PlayPage extends RingaComponent {
 
     this.setState({
       selectedIx: ix
+    });
+  }
+
+  login_onClickHandler() {
+    history.push('/login');
+  }
+
+  ignoreLoginWarning_onClickHandler() {
+    this.setState({
+      ignoreLoginWarning: true
     });
   }
 }

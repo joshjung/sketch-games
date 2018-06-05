@@ -68,7 +68,9 @@ export default class HomePage extends RingaComponent {
           <div className="description">{game.publishedDescription}</div>
           {game.owner && <div className="author">Author: {game.owner.name}</div>}
           <div className="playCount">{game.playCount || 0} Plays</div>
-          <div className="highcore">{hs.score && 'High score of ' + hs.score + ' (' + hs.name + ')'}</div>
+          <div className="highscore">{hs.score && <div>
+            <span className="points">{hs.score}</span> highscore by {hs.name}</div>}
+          </div>
         </div>
       </div>;
     } else {
@@ -80,7 +82,9 @@ export default class HomePage extends RingaComponent {
         <div className="description">{game.publishedDescription}</div>
         {game.owner && <div className="author">Author: {game.owner.name}</div>}
         <div className="playCount">{game.playCount || 0} Plays</div>
-        <div className="highcore">{hs.score && 'High score of ' + hs.score + ' (' + hs.name + ')'}</div>
+        <div className="highscore">{hs.score && <div>
+          <span className="points">{hs.score}</span> highscore by {hs.name}</div>}
+        </div>
       </div>;
     }
 

@@ -70,6 +70,9 @@ export default class GameModel extends Model {
     const hs = this.highscores || [];
 
     return hs.sort((hs1, hs2) => {
+      if (hs1.score === hs2.score) {
+        return hs1.timestamp < hs2.timestamp ? 1 : -1;
+      }
       return hs1.score < hs2.score ? 1 : -1;
     });
   }
@@ -102,7 +105,7 @@ export default class GameModel extends Model {
 
   screenshot() {
     if (this.renderer) {
-      this.image = this.renderer.canvas.toDataURL();
+      return this.renderer.canvas.toDataURL();
     }
   }
 

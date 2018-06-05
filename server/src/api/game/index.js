@@ -2,7 +2,17 @@ import { Router } from 'express'
 import { middleware as query } from 'querymen'
 import { middleware as body } from 'bodymen'
 import { token } from '../../services/passport'
-import { index, show, create, clone, play, highscore, clearHighscores, update, updatePassword, destroy } from './controller'
+import { index,
+  show,
+  create,
+  clone,
+  play,
+  highscore,
+  viewHighscore,
+  clearHighscores,
+  update,
+  updatePassword,
+  destroy } from './controller'
 import { schema } from './model'
 export Game, { schema } from './model'
 
@@ -63,8 +73,17 @@ router.post('/play',
 
 router.post('/highscore',
   token({ required: true }),
-  body({ id: {type: String}, userId: {type: String}, score: {type: Number}, time: {type: Number}, name: {type: String} }),
+  body({
+    id: {type: String},
+    userId: {type: String},
+    score: {type: Number},
+    time: {type: Number},
+    name: {type: String},
+    screenshot: {type: String}}),
   highscore);
+
+router.get('/highscore/:gameId/:userId/:timestamp',
+  viewHighscore);
 
 router.post('/clearHighscores',
   token({ required: true }),

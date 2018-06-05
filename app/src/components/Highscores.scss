@@ -1,3 +1,11 @@
+@import '../styles/variables';
+
+.modal-highscore {
+  img {
+    max-width: 300px;
+  }
+}
+
 .highscores {
   .highscore {
     display: flex;
@@ -5,18 +13,43 @@
     justify-content: space-between;
     align-items: center;
     padding: 5px;
+    color: $black-2;
 
-    .position {
-      width: 30px;
+    .position, .points, .time, .name, .timestamp {
+      padding: $pad1;
+      flex: 0 0 auto;
     }
 
-    .points, .time, .name, .timestamp {
-      width: 25%;
+    .position {
+      width: 15px;
+    }
+
+    .points {
+      width: 40px;
+    }
+
+    .time, .name, .timestamp {
+      width: 20%;
     }
 
     .name, .points {
       font-weight: bold;
-      font-size: 14px;
+    }
+
+    &.hoverable {
+      cursor: pointer;
+      &:hover {
+        background: $selected-1;
+        color: $white;
+      }
+    }
+
+    &.header {
+      border-bottom: 1px solid $grey-1;
+
+      .position, .points, .time, .name, .timestamp {
+        font-weight: bold;
+      }
     }
   }
 }

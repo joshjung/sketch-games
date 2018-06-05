@@ -1,6 +1,15 @@
 @import '../styles/variables';
 
 .play {
+  .warning {
+    background-color: $error-red;
+    color: white;
+    font-weight: bold;
+    opacity: 0.75;
+    padding: $pad3;
+    border-radius: $radius-1;
+  }
+
   h3 {
     color: darkgrey;
     margin: 0;
@@ -111,6 +120,15 @@
       align-items: center;
       justify-content: space-between;
       padding: 0 $pad2;
+    }
+
+    .warning {
+      background-color: $error-red;
+      color: white;
+      font-weight: bold;
+      opacity: 0.75;
+      padding: $pad1 $pad2;
+      border-radius: $radius-1;
     }
 
     h1 {
