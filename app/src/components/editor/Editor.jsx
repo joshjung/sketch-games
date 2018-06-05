@@ -100,6 +100,30 @@ export default class Editor extends RingaComponent {
     </span>;
   }
 
+  renderInstructions() {
+    const {instructions, user, fullScreenEditor} = this.state;
+    const {ownerUserId} = this.props.game;
+
+    const ta = <textarea onChange={this.instructions_onChangeHandler} value={instructions} wrap="soft" />;
+    const preview = <Markdown markdown={instructions}/>;
+
+    if (fullScreenEditor) {
+      return <div className="full-screen-instructions">
+        <div className="edit">{ta}</div>
+        <div className="preview">{preview}</div>
+      </div>;
+    }
+
+    return user && user.id === ownerUserId ? <TabNavigator>
+      <Tab label="Edit">
+        {ta}
+      </Tab>
+      <Tab label="Preview">
+        {preview}
+      </Tab>
+    </TabNavigator> : <Markdown markdown={instructions}/>;
+  }
+
   render() {
     const {title, code, instructions, user, i18NModel, fullScreenEditor} = this.state;
     const {image, owner, syntaxError, runError, published, ownerUserId, publishedDate, description, dirty} = this.props.game;
@@ -130,14 +154,7 @@ export default class Editor extends RingaComponent {
               </div>
             </Tab>
             <Tab label="Instructions" classes="instructions">
-              {user && user.id === ownerUserId ? <TabNavigator>
-                <Tab label="Edit">
-                  <textarea onChange={this.instructions_onChangeHandler} value={instructions} wrap="soft" />
-                </Tab>
-                <Tab label="Preview">
-                  <Markdown markdown={instructions}/>
-                </Tab>
-              </TabNavigator> : <Markdown markdown={instructions}/>}
+              {this.renderInstructions()}
             </Tab>
             <Tab label="Settings" visible={!!(user && (user.id === ownerUserId))}>
               Title: <TextInput defaultValue={title} onChange={this.title_onChangeHandler} />
