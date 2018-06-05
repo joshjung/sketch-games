@@ -140,9 +140,10 @@ export default class GameCanvas extends RingaComponent {
   }
 
   render() {
-    const {curBreakpointIx} = this.state;
+    const {curBreakpointIx, classes} = this.state;
+    const cn = this.calcClassnames('canvas', classes);
 
-    return <div className="canvas">
+    return <div className={cn}>
       <canvas ref="canvas" />
       {curBreakpointIx < 3 && <MobileInputController game={this.props.game} />}
       {this.props.game.paused && <div className="paused" onClick={this.play_clickHandler}>

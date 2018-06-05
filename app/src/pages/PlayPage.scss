@@ -53,6 +53,10 @@
       width: 60%;
       display: flex;
       justify-content: center;
+
+      &.large-screen {
+        width: 100%;
+      }
     }
 
     .details {

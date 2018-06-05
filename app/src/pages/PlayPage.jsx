@@ -24,7 +24,8 @@ export default class PlayPage extends RingaComponent {
 
     this.state = {
       selectedIx: 0,
-      ignoreLoginWarning: false
+      ignoreLoginWarning: false,
+      largeScreen: false
     };
 
     this.depend(dependency(AppModel, ['curGame', 'token', 'user']), dependency(ScreenModel, 'curBreakpointIx'));
@@ -55,13 +56,15 @@ export default class PlayPage extends RingaComponent {
   }
 
   render() {
-    const {curGame, user, curBreakpointIx, selectedIx, ignoreLoginWarning} = this.state;
+    const {curGame, user, curBreakpointIx, selectedIx, ignoreLoginWarning, largeScreen} = this.state;
 
     if (!curGame) {
       return <div>Loading...</div>;
     }
 
-    const gc = <GameCanvas id="primary-game-canvas" game={curGame}/>;
+    const gc = <GameCanvas id="primary-game-canvas"
+                           classes={largeScreen ? 'large-screen' : ''}
+                           game={curGame}/>;
 
     if (curBreakpointIx < 3) {
       return <div className="play-mobile page">
@@ -112,11 +115,14 @@ export default class PlayPage extends RingaComponent {
               {curGame.paused ? <i className="fa fa-play" /> : <i className="fa fa-pause" />}
             </Button>
             {user ? <Button label="Develop" onClick={this.develop_onClickHandler}/> : undefined}
+            <Button onClick={this.toggleLargeScreen_onClickHandler}>
+              <i className={largeScreen ? 'fa fa-window-restore' : 'fa fa-window-maximize'} />
+            </Button>
           </div>
         </div>
         <div className="game-container">
           {gc}
-          <div className="details">
+          {!largeScreen && <div className="details">
             <TabNavigator>
               <Tab label="Highscores">
                 {!user && <div className="warning">
@@ -134,7 +140,7 @@ export default class PlayPage extends RingaComponent {
                 {curGame.published && <div className="published-date">Published: {moment(curGame.publishedDate).format('MMMM Do YYYY')}</div>}
               </Tab>
             </TabNavigator>
-          </div>
+          </div>}
         </div>
       </div>;
     }
@@ -177,6 +183,12 @@ export default class PlayPage extends RingaComponent {
   ignoreLoginWarning_onClickHandler() {
     this.setState({
       ignoreLoginWarning: true
+    });
+  }
+
+  toggleLargeScreen_onClickHandler() {
+    this.setState({
+      largeScreen: !this.state.largeScreen
     });
   }
 }
