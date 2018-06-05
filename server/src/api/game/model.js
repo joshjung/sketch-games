@@ -3,6 +3,8 @@ import { env } from '../../config';
 
 import User from '../user/model';
 
+import * as JsDiff from 'diff';
+
 const HIGHSCORE_MAX_COUNT = 100;
 
 const gameSchema = new Schema({
@@ -57,6 +59,10 @@ const gameSchema = new Schema({
   history: {
     type: [{}]
   },
+  version: {
+    type: Number,
+    default: 1
+  },
   playCount: {
     type: Number
   }
@@ -65,12 +71,35 @@ const gameSchema = new Schema({
 });
 
 gameSchema.methods = {
+  saveWithHistory (body) {
+    /**
+     * If the game code has changed, add it to the history
+     */
+    if (body.gameLoopFnText !== undefined && this.gameLoopFnText !== body.gameLoopFnText) {
+      console.log(JsDiff);
+      const diffs = JsDiff.diffChars(this.gameLoopFnText, body.gameLoopFnText);
+
+      this.history = this.history || [];
+      this.version++;
+      this.history.push({
+        timestamp: new Date().getTime(),
+        gameLoopFnText: body.gameLoopFnText,
+        userId: body.userId,
+        version: this.version,
+        diff: diffs
+      });
+    }
+
+    console.log('Update history', this.history);
+    return Object.assign(this, body).save().then(result => this);
+  },
   view (full) {
     let view = {};
     let fields = [
       'id',
       'title',
       'image',
+      'version',
       'instructions',
       'description',
       'published',
@@ -88,7 +117,7 @@ gameSchema.methods = {
     ];
 
     if (full) {
-      fields = [...fields, 'history', 'createdAt']
+      fields = [...fields, 'version', 'history', 'createdAt']
     }
 
     fields.forEach(field => view[field] = this[field]);

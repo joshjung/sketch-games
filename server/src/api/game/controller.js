@@ -24,6 +24,13 @@ export const show = ({ params }, res, next) =>
     .then(success(res))
     .catch(next);
 
+export const showFull = ({ params }, res, next) =>
+  Game.findById(params.id)
+    .then(notFound(res))
+    .then(game => game ? game.view(true) : null)
+    .then(success(res))
+    .catch(next);
+
 export const showMe = ({ game }, res) =>
   res.json(game.view(true))
 
@@ -92,7 +99,7 @@ export const clearHighscores = ({ bodymen: { body } }, res, next) =>
 export const update = ({ bodymen: { body }, params, game }, res, next) =>
   Game.findById(params.id === 'me' ? game.id : params.id)
     .then(notFound(res))
-    .then((game) => game ? Object.assign(game, body).save() : null)
+    .then((game) => game ? game.saveWithHistory(body) : null)
     .then((game) => game ? game.view(true) : null)
     .then(success(res))
     .catch(next);

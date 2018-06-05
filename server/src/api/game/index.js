@@ -4,6 +4,7 @@ import { middleware as body } from 'bodymen'
 import { token } from '../../services/passport'
 import { index,
   show,
+  showFull,
   create,
   clone,
   play,
@@ -38,6 +39,9 @@ const { title,
 router.get('/',
   query(),
   index);
+
+router.get('/:id/full',
+  showFull);
 
 router.get('/:id',
   show);
@@ -103,8 +107,7 @@ router.put('/:id',
     publishedGameLoopFnText,
     gameLoopFnText,
     ownerUserId,
-    instructions,
-    history
+    instructions
   }),
   update);
 

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {RingaComponent, TextInput, Button, TabNavigator, Tab, Alert, Markdown, I18NModel, Checkbox} from 'ringa-fw-react';
+import {RingaComponent, TextInput, Button, TabNavigator, Tab, Alert, Markdown, I18NModel, List, Checkbox} from 'ringa-fw-react';
 import {dependency} from 'react-ringa';
 import GameController from '../../controllers/GameController';
 import APIController from '../../controllers/APIController';
@@ -38,7 +38,8 @@ export default class Editor extends RingaComponent {
       code: '',
       instructions: 'Enter your instructions using Markdown syntax',
       description: '',
-      title: ''
+      title: '',
+      showHistory: false
     };
 
     this.depend(dependency(AppModel, ['user']), dependency(I18NModel, 'language'));
@@ -86,16 +87,16 @@ export default class Editor extends RingaComponent {
   renderControls() {
     return <span className="controls">
       <Button onClick={this.save_onClickHandler} classes={this.props.game.dirty ? 'highlight' : undefined}>
-        <i class="fa fa-save"></i>
+        <i className="fa fa-save"></i>
       </Button>
       <Button onClick={this.reset_onClickHandler}>
         <i className="fa fa-step-backward" />
       </Button>
       <Button onClick={this.pausePlay_onClickHandler}>
-        {this.props.game.paused ? <i class="fa fa-play" /> : <i class="fa fa-pause" />}
+        {this.props.game.paused ? <i className="fa fa-play" /> : <i class="fa fa-pause" />}
       </Button>
       <Button onClick={this.fullScreenEditor_onClickHandler}>
-        {this.state.fullScreenEditor ? <i class="fa fa-window-restore" /> : <i class="fa fa-window-maximize" />}
+        {this.state.fullScreenEditor ? <i className="fa fa-window-restore" /> : <i class="fa fa-window-maximize" />}
       </Button>
     </span>;
   }
@@ -124,9 +125,52 @@ export default class Editor extends RingaComponent {
     </TabNavigator> : <Markdown markdown={instructions}/>;
   }
 
+  renderHistoryItem(itemClickHandler, history) {
+    const adds = (history.diff || []).filter(d => d.added).length;
+    const deletes = (history.diff || []).filter(d => d.removed).length;
+
+    return <div className="item-renderer history-item"
+                onClick={itemClickHandler}
+                key={history.timestamp}>
+      <div className="date">{moment(history.timestamp).fromNow()}</div>
+      <div>
+        <div className={`adds ${adds && 'at-least-one'}`}>+{adds}</div>
+      </div>
+      <div>
+        <div className={`deletes ${deletes && 'at-least-one'}`}>-{deletes}</div>
+      </div>
+    </div>;
+  }
+
+  renderEditor() {
+    const {code, user, showHistory} = this.state;
+    const {owner, syntaxError, runError, ownerUserId} = this.props.game;
+
+    return <Tab label="Code" classes="code">
+        {(!user || user.id !== ownerUserId) && <div className="code-note">This code belongs to {owner.name}. You are in playground mode and can change the code as much as you like and press Commit Code to see the changes. Login to duplicate this game to your account!</div>}
+        {(user && user.id !== ownerUserId) && <div className="code-note">You can copy this game to your account by clicking Duplicate above.</div>}
+        <div className="controls">
+          <Checkbox label="Show History" onChange={this.history_onChangeHandler} />
+        </div>
+        {showHistory && <div className="history">
+            <List items={this.props.game.sortedHistory}
+                  indexFunction={item => item.timestamp.toString()}
+                  labelField="timestamp"
+                  enableSearch={false}
+                  onChange={this.historyItem_onChangeHandler}
+                  itemRenderer={this.renderHistoryItem}/>
+          </div>}
+        <textarea onChange={this.code_onChangeHandler} value={code} wrap="soft" />
+        <div className="errors">
+          {syntaxError && <div className="error">Syntax Error: {syntaxError.toString()}</div>}
+          {runError && <div className="error">Run Error: {runError.toString()}</div>}
+        </div>
+      </Tab>;
+  }
+
   render() {
-    const {title, code, instructions, user, i18NModel, fullScreenEditor} = this.state;
-    const {image, owner, syntaxError, runError, published, ownerUserId, publishedDate, description, dirty} = this.props.game;
+    const {title, code, user, i18NModel, fullScreenEditor} = this.state;
+    const {image, owner, published, ownerUserId, publishedDate, description, dirty} = this.props.game;
     const codeLength = code ? code.length : 0;
 
     return <div className="editor page">
@@ -144,15 +188,7 @@ export default class Editor extends RingaComponent {
       <div className="workspace">
         <div className={fullScreenEditor ? 'left-pane full-screen' : 'left-pane'}>
           <TabNavigator controls={this.renderControls()}>
-            <Tab label="Code" classes="code">
-              {(!user || user.id !== ownerUserId) && <div className="code-note">This code belongs to {owner.name}. You are in playground mode and can change the code as much as you like and press Commit Code to see the changes. Login to duplicate this game to your account!</div>}
-              {(user && user.id !== ownerUserId) && <div className="code-note">You can copy this game to your account by clicking Duplicate above.</div>}
-              <textarea onChange={this.code_onChangeHandler} value={code} wrap="soft" />
-              <div className="errors">
-                {syntaxError && <div className="error">Syntax Error: {syntaxError.toString()}</div>}
-                {runError && <div className="error">Run Error: {runError.toString()}</div>}
-              </div>
-            </Tab>
+            {this.renderEditor()}
             <Tab label="Instructions" classes="instructions">
               {this.renderInstructions()}
             </Tab>
@@ -345,9 +381,20 @@ export default class Editor extends RingaComponent {
       }
     })
   }
+
   fullScreenEditor_onClickHandler() {
     this.setState({
       fullScreenEditor: !this.state.fullScreenEditor
+    });
+  }
+
+  history_onChangeHandler({checked}) {
+    this.setState({showHistory: checked});
+  }
+
+  historyItem_onChangeHandler(history) {
+    this.setState({
+      code: history.gameLoopFnText
     });
   }
 }

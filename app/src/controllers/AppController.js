@@ -35,7 +35,7 @@ export default class AppController extends Controller {
         this.appModel.curGameController = undefined;
       },
       event(RESTController.GET, id => ({
-        url: `/games/${id}`,
+        url: `/games/${id}/full`,
         credentials: true
       })),
       ($lastPromiseResult, playgroundComponent, $detail) => {

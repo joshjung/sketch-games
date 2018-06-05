@@ -46,6 +46,40 @@
         width: 100%;
       }
 
+      .history {
+        margin: $pad1 0;
+        position: relative;
+        flex: 1 1 auto;
+
+        .list {
+          height: 100%;
+        }
+
+        .adds, .deletes {
+          color: $white;
+          padding: $pad1;
+          border-radius: $radius-1;
+          font-weight: bold;
+        }
+        .adds.at-least-one {
+          background: green;
+        }
+
+        .deletes.at-least-one {
+          background: red;
+        }
+      }
+
+      .history-item {
+        display: flex;
+        flex-direction: row;
+        font-size: 11px;
+
+        > div {
+          width: 33%;
+        }
+      }
+
       .tab-navigator {
         max-height: calc(100vh - 160px);
         height: 100%;
@@ -64,9 +98,9 @@
 
       .code, .instructions {
         textarea {
+          flex: 1 1 auto;
           width: calc(100% - #{$pad1 * 2});
           height: calc(100% - #{$pad1 * 2});
-          min-height: 400px;
           border: none;
           color: yellow;
           font-size: 11px;
@@ -83,12 +117,20 @@
       .code {
         display: flex;
         flex-direction: column;
+        justify-content: space-between;
 
+        .controls {
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-end;
+          margin-bottom: $pad1;
+        }
         .errors {
           flex: 0 0 auto;
           max-height: 400px;
         }
       }
+
       .error {
         padding: 10px 0px;
         font-size: 14px;

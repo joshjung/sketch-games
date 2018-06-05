@@ -41,6 +41,7 @@ export default class GameModel extends Model {
     this.addProperty('highscores', []);
     this.addProperty('playCount', 0);
     this.addProperty('dirty', false);
+    this.addProperty('history', []);
 
     this.addProperty('listeningKeys', undefined);
     this.addProperty('activeKeys', undefined);
@@ -74,6 +75,14 @@ export default class GameModel extends Model {
         return hs1.timestamp < hs2.timestamp ? 1 : -1;
       }
       return hs1.score < hs2.score ? 1 : -1;
+    });
+  }
+
+  get sortedHistory() {
+    const h = this.history || [];
+
+    return h.sort((h1, h2) => {
+      return h1.timestamp < h2.timestamp ? 1 : -1;
     });
   }
 
