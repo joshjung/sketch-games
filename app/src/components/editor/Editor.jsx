@@ -12,6 +12,8 @@ import moment from 'moment';
 import AceEditor from 'react-ace';
 import 'brace/mode/javascript';
 import 'brace/theme/github';
+import 'brace/snippets/javascript';
+import 'brace/ext/language_tools';
 
 import './Editor.scss';
 
@@ -147,6 +149,14 @@ export default class Editor extends RingaComponent {
                    showPrintMargin={false}
                    highlightActiveLine={true}
                    enableBasicAutocompletion={true}
+                   editorProps={{$blockScrolling: Infinity}}
+                   setOptions={{
+                     enableBasicAutocompletion: true,
+                     enableLiveAutocompletion: true,
+                     enableSnippets: true,
+                     showLineNumbers: true,
+                     tabSize: 2
+                   }}
                    name="ace-editor" />
         <div className="errors">
           {syntaxError && <div className="error">Syntax Error: {syntaxError.toString()}</div>}

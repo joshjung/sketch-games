@@ -1,5 +1,4 @@
-export function background(fill) {
-  let ctx = this.renderer.ctx;
+export function background(ctx, fill) {
   ctx.fillStyle = fill;
   ctx.fillRect(0, 0, 800, 600);
 }
