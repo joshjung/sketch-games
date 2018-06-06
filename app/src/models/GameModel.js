@@ -1,5 +1,12 @@
 import {Model} from 'ringa';
 
+// TODO: babel standalone is HUGE. We need to do the following:
+//
+// 1) Save the published transpiled JS to the DB so it doesn't have to be done
+//    when the game is loaded
+// 2) Use the dynamic `import('@babel/standalone).then()` syntax to load the
+//    processor dynamically when the editor is loaded.
+
 import * as Babel from '@babel/standalone';
 
 import NEW_GAME_CODE from '../assets/newGameCode.txt';
@@ -81,8 +88,11 @@ export default class GameModel extends Model {
   get sortedHistory() {
     const h = this.history || [];
 
-    return h.sort((h1, h2) => {
-      return h1.timestamp < h2.timestamp ? 1 : -1;
+    return h.sort((hs1, hs2) => {
+      if (hs1.score === hs2.score) {
+        return hs1.timestamp < hs2.timestamp ? 1 : -1;
+      }
+      return hs1.score < hs2.score ? 1 : -1;
     });
   }
 

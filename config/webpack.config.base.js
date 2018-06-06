@@ -8,6 +8,7 @@ require('babel-polyfill');
 module.exports = {
   name: config.applicationName,
   entry: {
+    editor: ['@babel/standalone', 'brace', 'react-ace'],
     app: path.resolve(ROOT_PATH, 'app/src/index.js')
   },
   resolve: {

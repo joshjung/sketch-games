@@ -28,6 +28,15 @@ export default class PlayPage extends RingaComponent {
       largeScreen: false
     };
 
+    // TODO figure out a better way to keep the buttons from being focused
+    document.addEventListener('click', function(e) {
+      if(document.activeElement.toString() == '[object HTMLButtonElement]') {
+        if (document.activeElement.getAttribute('tabindex') === -1) {
+          document.activeElement.blur();
+        }
+      }
+    });
+
     this.depend(dependency(AppModel, ['curGame', 'token', 'user']), dependency(ScreenModel, 'curBreakpointIx'));
   }
 
@@ -70,17 +79,17 @@ export default class PlayPage extends RingaComponent {
       return <div className="play-mobile page">
         <div className="play-header">
           {!user && !ignoreLoginWarning && <div className="sub-header warning">You are not logged in! Your highscores will not be recorded.
-            <Button label="Ignore" onClick={this.ignoreLoginWarning_onClickHandler} />
+            <Button label="Ignore" onClick={this.ignoreLoginWarning_onClickHandler} focusable={false} tabIndex={-1} />
           </div>}
           {(user || ignoreLoginWarning) && <div className="sub-header">
             <h1>
               {curGame.activeTitle} {!curGame.published && <span className="beta-card">Beta</span>}
             </h1>
             <div>
-              <Button onClick={this.restart_onClickHandler}>
+              <Button onClick={this.restart_onClickHandler} focusable={false} tabIndex={-1}>
                 <i className="fa fa-step-backward" />
               </Button>
-              <Button onClick={this.pausePlay_onClickHandler}>
+              <Button onClick={this.pausePlay_onClickHandler} focusable={false} tabIndex={-1}>
                 {curGame.paused ? <i className="fa fa-play" /> : <i className="fa fa-pause" />}
               </Button>
             </div>
@@ -108,14 +117,14 @@ export default class PlayPage extends RingaComponent {
         <div className="play-header">
           <h1>{curGame.activeTitle} {!curGame.published && <span className="beta-card">Beta</span>}</h1>
           <div>
-            <Button onClick={this.restart_onClickHandler}>
+            <Button onClick={this.restart_onClickHandler} focusable={false} tabIndex={-1}>
               <i className="fa fa-step-backward" />
             </Button>
-            <Button onClick={this.pausePlay_onClickHandler}>
+            <Button onClick={this.pausePlay_onClickHandler} focusable={false} tabIndex={-1}>
               {curGame.paused ? <i className="fa fa-play" /> : <i className="fa fa-pause" />}
             </Button>
-            {user ? <Button onClick={this.develop_onClickHandler}><i className="fa fa-edit" /></Button> : undefined}
-            <Button onClick={this.toggleLargeScreen_onClickHandler}>
+            {user ? <Button onClick={this.develop_onClickHandler} focusable={false} tabIndex={-1}><i className="fa fa-edit" /></Button> : undefined}
+            <Button onClick={this.toggleLargeScreen_onClickHandler} focusable={false} tabIndex={-1} selected={largeScreen}>
               <i className={largeScreen ? 'fa fa-window-restore' : 'fa fa-window-maximize'} />
             </Button>
           </div>
@@ -127,7 +136,7 @@ export default class PlayPage extends RingaComponent {
               <Tab label="Highscores">
                 {!user && <div className="warning">
                   You are not logged in! Your highscores will not be recorded.
-                  <Button label="Login" onClick={this.login_onClickHandler} />
+                  <Button label="Login" onClick={this.login_onClickHandler} focusable={false} tabIndex={-1} />
                 </div>}
                 <Highscores game={curGame}/>
               </Tab>

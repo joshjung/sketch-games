@@ -26,7 +26,21 @@ const finalConfig = Object.assign({
   output: {
     path: path.join(ROOT_PATH, 'dist/'),
     filename: config.artifactRoot + '.[name].[hash].js',
+    chunkFilename: '[name].bundle.js',
     publicPath: '/'
+  },
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          chunks: 'initial',
+          name: 'editor',
+          test: 'editor',
+          enforce: true
+        },
+      }
+    },
+    runtimeChunk: true
   },
   plugins: [
     new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/),
