@@ -15,11 +15,11 @@ body {
   background: white;
 
   .container {
-    width: calc(100% - #{$pad3 * 2});
-    height: calc(100% - 100px);
+    width: calc(100% - #{$pad2 * 2});
+    height: calc(100% - 80px);
     position: relative;
     overflow: auto;
-    padding: $pad3;
+    padding: $pad2;
     overflow: hidden;
 
     @media screen and (max-width: 768px) {

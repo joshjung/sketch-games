@@ -9,23 +9,11 @@ import history from '../../global/history';
 import GameCanvas from '../game/GameCanvas';
 import Highscores from '../../components/Highscores';
 import moment from 'moment';
+import AceEditor from 'react-ace';
+import 'brace/mode/javascript';
+import 'brace/theme/github';
 
 import './Editor.scss';
-
-global.MonacoEnvironment = {
-  getWorkerUrl: function (moduleId, label) {
-    if (label === 'json') {
-      return '/json.worker.bundle.js';
-    }
-    if (label === 'css') {
-      return '/css.worker.bundle.js';
-    }
-    if (label === 'html') {
-      return '/html.worker.bundle.js';
-    }
-    return '/editor.worker.bundle.js';
-  }
-};
 
 export default class Editor extends RingaComponent {
   //-----------------------------------
@@ -48,7 +36,7 @@ export default class Editor extends RingaComponent {
       this.state.code = this.props.game.gameLoopFnText;
       this.state.instructions = this.props.game.instructions;
       this.state.description = this.props.game.description;
-      this.state.title = this.props.game.title;
+      document.title = this.state.title = this.props.game.title;
 
       this.props.game.watch(signal => {
         if (['syntaxError', 'runError', 'published', 'dirty'].indexOf(signal) !== -1) {
@@ -63,6 +51,7 @@ export default class Editor extends RingaComponent {
   //-----------------------------------
   componentWillUpdate(nextProps) {
     if (nextProps.game !== this.props.game) {
+      document.title = nextProps.game ? nextProps.game.title : 'Game Editor';
       this.setState({
         code: nextProps.game ? nextProps.game.gameLoopFnText : '',
         instructions: nextProps.game ? nextProps.game.instructions : '',
@@ -72,19 +61,8 @@ export default class Editor extends RingaComponent {
     }
   }
 
-  componentDidMount() {
-    super.componentDidMount();
-    // monaco.editor.create(document.getElementById('monaco-editor-container'), {
-    //   value: [
-    //     'function x() {',
-    //     '\tconsole.log("Hello world!");',
-    //     '}'
-    //   ].join('\n'),
-    //   language: 'javascript'
-    // });
-  }
-
   renderControls() {
+    const {showHistory, fullScreenEditor} = this.state;
     return <span className="controls">
       <Button onClick={this.save_onClickHandler} classes={this.props.game.dirty ? 'highlight' : undefined}>
         <i className="fa fa-save"></i>
@@ -95,8 +73,11 @@ export default class Editor extends RingaComponent {
       <Button onClick={this.pausePlay_onClickHandler}>
         {this.props.game.paused ? <i className="fa fa-play" /> : <i class="fa fa-pause" />}
       </Button>
-      <Button onClick={this.fullScreenEditor_onClickHandler}>
-        {this.state.fullScreenEditor ? <i className="fa fa-window-restore" /> : <i class="fa fa-window-maximize" />}
+      <Button onClick={this.fullScreenEditor_onClickHandler} selected={fullScreenEditor}>
+        {fullScreenEditor ? <i className="fa fa-window-restore" /> : <i class="fa fa-window-maximize" />}
+      </Button>
+      <Button onClick={this.history_onChangeHandler} selected={showHistory}>
+        <i className="fa fa-history" />
       </Button>
     </span>;
   }
@@ -149,9 +130,6 @@ export default class Editor extends RingaComponent {
     return <Tab label="Code" classes="code">
         {(!user || user.id !== ownerUserId) && <div className="code-note">This code belongs to {owner.name}. You are in playground mode and can change the code as much as you like and press Commit Code to see the changes. Login to duplicate this game to your account!</div>}
         {(user && user.id !== ownerUserId) && <div className="code-note">You can copy this game to your account by clicking Duplicate above.</div>}
-        <div className="controls">
-          <Checkbox label="Show History" onChange={this.history_onChangeHandler} />
-        </div>
         {showHistory && <div className="history">
             <List items={this.props.game.sortedHistory}
                   indexFunction={item => item.timestamp.toString()}
@@ -160,12 +138,43 @@ export default class Editor extends RingaComponent {
                   onChange={this.historyItem_onChangeHandler}
                   itemRenderer={this.renderHistoryItem}/>
           </div>}
-        <textarea onChange={this.code_onChangeHandler} value={code} wrap="soft" />
+        <AceEditor mode="javascript"
+                   theme="github"
+                   value={code}
+                   width="100%"
+                   height="100%"
+                   onChange={this.code_onChangeHandler}
+                   showPrintMargin={false}
+                   highlightActiveLine={true}
+                   enableBasicAutocompletion={true}
+                   name="ace-editor" />
         <div className="errors">
           {syntaxError && <div className="error">Syntax Error: {syntaxError.toString()}</div>}
           {runError && <div className="error">Run Error: {runError.toString()}</div>}
         </div>
       </Tab>;
+  }
+
+  renderHeader() {
+    const {title, code, user, fullScreenEditor} = this.state;
+    const {image, owner, published, dirty} = this.props.game;
+    const codeLength = code ? code.length : 0;
+
+    if (fullScreenEditor) {
+      return null;
+    }
+
+    return <div className="header">
+      <div className="title-container">
+        {image && <div><img className="game-image-small" src={image} /></div>}
+        <h1>Editing {title} {dirty ? '*' : ''}</h1>
+      </div>
+      <h3>Author: {owner.name}, {codeLength} bytes {published ? <span className="published-card">Published</span> : <span className="unpublished-card">Unpublished</span> }</h3>
+      <div className="actions">
+        {(user && user.id !== this.props.game.ownerUserId) && <Button label="Duplicate to my account" onClick={this.duplicate_clickHandler} />}
+        {published && <Button label="Play Published Game" onClick={this.playPublished_onClickHandler} />}
+      </div>
+    </div>;
   }
 
   render() {
@@ -174,17 +183,7 @@ export default class Editor extends RingaComponent {
     const codeLength = code ? code.length : 0;
 
     return <div className="editor page">
-      <div className="header">
-        <div className="title-container">
-          {image && <div><img className="game-image-small" src={image} /></div>}
-          <h1>Editing {title} {dirty ? '*' : ''}</h1>
-        </div>
-        <h3>Author: {owner.name}, {codeLength} bytes {published ? <span className="published-card">Published</span> : <span className="unpublished-card">Unpublished</span> }</h3>
-        <div className="actions">
-          {(user && user.id !== this.props.game.ownerUserId) && <Button label="Duplicate to my account" onClick={this.duplicate_clickHandler} />}
-          {published && <Button label="Play Published Game" onClick={this.playPublished_onClickHandler} />}
-        </div>
-      </div>
+      {this.renderHeader()}
       <div className="workspace">
         <div className={fullScreenEditor ? 'left-pane full-screen' : 'left-pane'}>
           <TabNavigator controls={this.renderControls()}>
@@ -277,12 +276,10 @@ export default class Editor extends RingaComponent {
     this.forceUpdate();
   }
 
-  code_onChangeHandler(event) {
+  code_onChangeHandler(code, event) {
     this.props.game.dirty = true;
 
-    this.setState({
-      code: event.target.value
-    });
+    this.setState({code});
   }
 
   instructions_onChangeHandler(event) {
@@ -388,8 +385,8 @@ export default class Editor extends RingaComponent {
     });
   }
 
-  history_onChangeHandler({checked}) {
-    this.setState({showHistory: checked});
+  history_onChangeHandler() {
+    this.setState({showHistory: !this.state.showHistory});
   }
 
   historyItem_onChangeHandler(history) {

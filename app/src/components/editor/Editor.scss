@@ -81,13 +81,14 @@
       }
 
       .tab-navigator {
-        max-height: calc(100vh - 160px);
         height: 100%;
 
-        .controls {
-          margin-left: $pad2;
-          width: 100%;
-          text-align: right;
+        .tabs {
+          .controls {
+            margin-left: $pad2;
+            width: 100%;
+            text-align: right;
+          }
         }
       }
 
@@ -96,7 +97,7 @@
         margin-bottom: 10px;
       }
 
-      .code, .instructions {
+      .instructions {
         textarea {
           flex: 1 1 auto;
           width: calc(100% - #{$pad1 * 2});
@@ -114,7 +115,9 @@
         }
       }
 
-      .code {
+      .ringa-component.tab-content.code {
+        padding: 0;
+        height: 100%;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -125,6 +128,7 @@
           justify-content: flex-end;
           margin-bottom: $pad1;
         }
+
         .errors {
           flex: 0 0 auto;
           max-height: 400px;

@@ -34,10 +34,10 @@
 }
 
 .page {
-  height: calc(100% - #{$pad3 * 2});
+  height: calc(100% - #{$pad2 * 2});
   border-radius: $radius-1;
   background: $white;
-  padding: $pad3;
+  padding: $pad2;
 
   @media screen and (max-width: 768px) {
     height: calc(100% - #{$pad1 * 2});
