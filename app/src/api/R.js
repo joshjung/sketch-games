@@ -36,6 +36,10 @@ export function poly(ctx, poly, {fill = undefined, angle = 0, center = [0, 0]} =
     ctx.fillStyle = fill;
   }
 
+  if (!poly || !(poly instanceof Array)) {
+    throw new Error('Polygon provided to poly was not an Array!');
+  }
+
   if (angle || center) {
     poly = poly.concat();
 

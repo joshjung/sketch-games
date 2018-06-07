@@ -1,5 +1,133 @@
 @import '../../styles/variables';
 
+.history-item-modal {
+  .modal-contents {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    height: calc(100% - 20px);
+
+    .left-pane, .right-pane {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+    }
+
+    .left-pane {
+      margin-right: $pad2;
+      width: 33%;
+      min-width: 270px;
+
+      .list {
+        height: 100%;
+        width: 100%;
+
+        .history-item {
+          display: flex;
+          flex-direction: row;
+          font-size: 9px;
+
+          > div {
+            width: 20%;
+            padding: $pad1;
+          }
+
+          .adds-cell, .deletes-cell {
+            width: 25px;
+          }
+        }
+      }
+
+      .adds, .deletes {
+        color: $white;
+        padding: $pad1;
+        border-radius: $radius-1;
+        font-weight: bold;
+        width: 20px;
+        text-align: center;
+      }
+
+      .adds.at-least-one {
+        background: green;
+      }
+
+      .deletes.at-least-one {
+        background: red;
+      }
+    }
+
+    .right-pane {
+      width: 67%;
+      min-width: 0;
+      flex: 1 1 auto;
+
+      .ringa-component.dropdown.default {
+        width: auto;
+      }
+
+      .controls {
+        flex: 0 0 auto;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-bottom: $pad2;
+        > * {
+          margin-right: $pad2;
+        }
+      }
+
+      code {
+        width: 100%;
+        height: 100%;
+      }
+
+      pre {
+        margin: 0;
+        flex: 1 1 auto;
+        width: 100%;
+      }
+
+      .diff {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+        min-height: 0;
+
+        .code {
+          width: calc(100% - #{$pad2 * 2});
+          height: calc(100% - #{$pad2 * 2});
+          overflow: scroll;
+          border: 1px solid $grey-1;
+          border-radius: $radius-1;
+          padding: $pad2;
+        }
+
+        .added {
+          font-weight: bold;
+          background: green;
+          color: $white;
+        }
+
+        .removed {
+          font-weight: bold;
+          background: red;
+          color: $white;
+        }
+      }
+
+      .bottom-controls {
+        width: 100%;
+        margin-bottom: 0;
+        margin-top: $pad1;
+        direction: rtl;
+      }
+    }
+  }
+}
+
 .editor {
   display: flex;
   flex-direction: column;
@@ -46,40 +174,6 @@
         width: 100%;
       }
 
-      .history {
-        margin: $pad1 0;
-        position: relative;
-        flex: 1 1 auto;
-
-        .list {
-          height: 100%;
-        }
-
-        .adds, .deletes {
-          color: $white;
-          padding: $pad1;
-          border-radius: $radius-1;
-          font-weight: bold;
-        }
-        .adds.at-least-one {
-          background: green;
-        }
-
-        .deletes.at-least-one {
-          background: red;
-        }
-      }
-
-      .history-item {
-        display: flex;
-        flex-direction: row;
-        font-size: 11px;
-
-        > div {
-          width: 33%;
-        }
-      }
-
       .tab-navigator {
         height: 100%;
 
@@ -88,6 +182,10 @@
             margin-left: $pad2;
             width: 100%;
             text-align: right;
+
+            .dirty {
+              color: $grey-1;
+            }
           }
         }
       }
@@ -136,9 +234,12 @@
       }
 
       .error {
-        padding: 10px 0px;
+        padding: $pad1;
+        margin: $pad1;
+        border-radius: $radius-1;
         font-size: 14px;
-        color: red;
+        background-color: $error-red;
+        color: $white;
       }
 
       .published {

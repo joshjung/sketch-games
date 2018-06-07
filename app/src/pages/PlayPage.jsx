@@ -31,7 +31,9 @@ export default class PlayPage extends RingaComponent {
     // TODO figure out a better way to keep the buttons from being focused
     document.addEventListener('click', function(e) {
       if(document.activeElement.toString() == '[object HTMLButtonElement]') {
-        if (document.activeElement.getAttribute('tabindex') === -1) {
+        const tabindex = document.activeElement.getAttribute('tabindex');
+
+        if (parseInt(tabindex) === -1) {
           document.activeElement.blur();
         }
       }

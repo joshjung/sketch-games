@@ -87,13 +87,14 @@ export default class GameModel extends Model {
 
   get sortedHistory() {
     const h = this.history || [];
-
-    return h.sort((hs1, hs2) => {
+    const sorted = h.sort((hs1, hs2) => {
       if (hs1.score === hs2.score) {
         return hs1.timestamp < hs2.timestamp ? 1 : -1;
       }
       return hs1.score < hs2.score ? 1 : -1;
     });
+
+    return sorted;
   }
 
   get serializeProperties() {

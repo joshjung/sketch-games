@@ -18,12 +18,22 @@ html, body {
     border-radius: $radius-1;
   }
 
+  .overlay.dropdown-overlay.default {
+    z-index: 10001;
+  }
+
   .alert {
     font-weight: bold;
   }
 
   .modal-contents {
     padding: $pad1;
+    width: calc(100% - #{$pad1 * 2});
+    height: calc(100% - #{$pad1 * 2});
+
+    &.show-header {
+      height: calc(100% - #{$pad1 * 2} - 30px);
+    }
   }
 
   .modal-close-btn {
@@ -34,6 +44,8 @@ html, body {
     height: 30px;
     background: $ringa-color;
     color: $white;
+    border-top-left-radius: $radius-1;
+    border-top-right-radius: $radius-1;
 
     .title {
       text-align: left;
@@ -49,6 +61,10 @@ html, body {
   .ringa-component.button, button {
     border-radius: $radius-1;
     padding: 4px 7px;
+
+    &.disabled {
+      background: $grey-1 !important;
+    }
 
     &.highlight, &.green {
       background: green;
@@ -113,13 +129,17 @@ html, body {
     }
   }
 
-  .ringa-component.list .search {
-    border: none;
-    margin: $pad2;
+  .ringa-component.list {
+    border: 1px solid $grey-1;
 
-    input {
-      color: $black;
-      font-weight: bold;
+    .search {
+      border: none;
+      margin: $pad2;
+
+      input {
+        color: $black;
+        font-weight: bold;
+      }
     }
   }
 }

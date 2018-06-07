@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {RingaComponent, TextInput, Button, TabNavigator, Tab, Alert, Markdown, I18NModel, List, Checkbox} from 'ringa-fw-react';
+import {RingaComponent, TextInput, Button, TabNavigator, Tab, Alert, Markdown, I18NModel, List, ModalToggleContainer, Dropdown} from 'ringa-fw-react';
 import {dependency} from 'react-ringa';
 import GameController from '../../controllers/GameController';
 import APIController from '../../controllers/APIController';
@@ -9,6 +9,9 @@ import history from '../../global/history';
 import GameCanvas from '../game/GameCanvas';
 import Highscores from '../../components/Highscores';
 import moment from 'moment';
+import * as JsDiff from 'diff';
+import classnames from 'classnames';
+
 import AceEditor from 'react-ace';
 import 'brace/mode/javascript';
 import 'brace/theme/github';
@@ -29,10 +32,24 @@ export default class Editor extends RingaComponent {
       instructions: 'Enter your instructions using Markdown syntax',
       description: '',
       title: '',
-      showHistory: false
+      showHistory: false,
+      selectedHistoryItem: undefined
     };
 
+    this.diffMap = {};
+
     this.depend(dependency(AppModel, ['user']), dependency(I18NModel, 'language'));
+
+    // TODO figure out a better way to keep the buttons from being focused
+    document.addEventListener('click', function(e) {
+      if(document.activeElement.toString() == '[object HTMLButtonElement]') {
+        const tabindex = document.activeElement.getAttribute('tabindex');
+
+        if (parseInt(tabindex) === -1) {
+          document.activeElement.blur();
+        }
+      }
+    });
 
     if (this.props.game) {
       this.state.code = this.props.game.gameLoopFnText;
@@ -46,6 +63,27 @@ export default class Editor extends RingaComponent {
         }
       })
     }
+  }
+
+  updateCurGameHistory() {
+    const {code} = this.state;
+    const history = this.props.game.sortedHistory.concat();
+
+    history.forEach(h => h.current = false);
+
+    if (history && history.length && code !== history[0].gameLoopFnText) {
+      history.unshift({
+        gameLoopFnText: code,
+        timestamp: new Date().getTime(),
+        version: '"Unsaved"',
+        diff: JsDiff.diffChars(history[0].gameLoopFnText, code),
+        current: true
+      });
+    } else {
+      history[0].current = true;
+    }
+
+    this.history = history;
   }
 
   //-----------------------------------
@@ -66,21 +104,22 @@ export default class Editor extends RingaComponent {
   renderControls() {
     const {showHistory, fullScreenEditor} = this.state;
     return <span className="controls">
-      <Button onClick={this.save_onClickHandler} classes={this.props.game.dirty ? 'highlight' : undefined}>
+      <Button onClick={this.save_onClickHandler} focusable={false} tabindex={-1} classes={this.props.game.dirty ? 'highlight' : undefined}>
         <i className="fa fa-save"></i>
       </Button>
-      <Button onClick={this.reset_onClickHandler}>
+      <Button onClick={this.reset_onClickHandler} focusable={false} tabindex={-1}>
         <i className="fa fa-step-backward" />
       </Button>
-      <Button onClick={this.pausePlay_onClickHandler}>
-        {this.props.game.paused ? <i className="fa fa-play" /> : <i class="fa fa-pause" />}
+      <Button onClick={this.pausePlay_onClickHandler} focusable={false} tabindex={-1}>
+        {this.props.game.paused ? <i className="fa fa-play" /> : <i className="fa fa-pause" />}
       </Button>
-      <Button onClick={this.fullScreenEditor_onClickHandler} selected={fullScreenEditor}>
-        {fullScreenEditor ? <i className="fa fa-window-restore" /> : <i class="fa fa-window-maximize" />}
+      <Button onClick={this.fullScreenEditor_onClickHandler} selected={fullScreenEditor} focusable={false} tabindex={-1}>
+        {fullScreenEditor ? <i className="fa fa-window-restore" /> : <i className="fa fa-window-maximize" />}
       </Button>
-      <Button onClick={this.history_onChangeHandler} selected={showHistory}>
+      <Button onClick={this.history_onChangeHandler} selected={showHistory} focusable={false} tabindex={-1}>
         <i className="fa fa-history" />
       </Button>
+      {this.props.game.dirty && <span className="dirty">Unsaved</span>}
     </span>;
   }
 
@@ -108,18 +147,101 @@ export default class Editor extends RingaComponent {
     </TabNavigator> : <Markdown markdown={instructions}/>;
   }
 
+  renderHistory() {
+    const {showHistory, selectedHistoryItem} = this.state;
+    const history = this.history;
+    const modalContents = showHistory && [<div className="left-pane">
+      {!history.length ? 'No history available yet' : <List items={history}
+                                                            value={selectedHistoryItem}
+                                                            indexFunction={item => item.timestamp.toString()}
+                                                            labelField="timestamp"
+                                                            enableSearch={false}
+                                                            onChange={this.historyItem_onChangeHandler}
+                                                            itemRenderer={this.renderHistoryItem}/>}
+      </div>,
+      this.renderHistoryDiff()
+    ];
+
+    return <ModalToggleContainer show={showHistory}
+                                 width={700}
+                                 height={600}
+                                 updateTrigger={selectedHistoryItem}
+                                 onClose={() => this.setState({showHistory: false})}
+                                 title={`${this.props.game.title} Code History`}
+                                 classes="history-item-modal"
+                                 position="centered">
+        {modalContents}
+      </ModalToggleContainer>;
+  }
+
+  renderHistoryDiff() {
+    const {selectedHistoryItem, compareHistoryItem} = this.state;
+
+    if (!selectedHistoryItem) {
+      return <div>No history item selected.</div>;
+    }
+
+    let diffKey = compareHistoryItem ? `${selectedHistoryItem.version}-${compareHistoryItem.version}` : `${selectedHistoryItem.version}-present`;
+
+    let diff = this.diffMap[diffKey] ||
+      (this.diffMap[diffKey] = compareHistoryItem ?
+        JsDiff.diffChars(selectedHistoryItem.gameLoopFnText, compareHistoryItem.gameLoopFnText) :
+        selectedHistoryItem.diff);
+
+    diff = diff.slice(0, 50);
+
+    const rendered = diff.map(d => {
+      if (d.added) {
+        return <span className="added">{d.value}</span>;
+      }
+      if (d.removed) {
+        return <span className="removed">{d.value}</span>;
+      }
+      return <span style={{color: 'black'}}>{d.value}</span>;
+    });
+
+    const history = this.history;
+
+    return <div className="right-pane">
+        <div className="controls">
+          <div>Compare <strong>Version {selectedHistoryItem.version}</strong> to</div>
+          <Dropdown items={history}
+                    onChange={this.compareHistoryItem_onChangeHandler}
+                    labelFunction={item => `Version ${item.version ? item.version : history[1].version} ${item.current ? '(Current Code)' : ''}`}
+                    value={compareHistoryItem || {version: selectedHistoryItem.version - 1}}/>
+        </div>
+        <div className="diff">
+          <div className="code">
+            <pre>
+              <code>{rendered}</code>
+            </pre>
+          </div>
+          <div className="bottom-controls">
+            <Button onClick={this.restore_onClickHandler.bind(this, selectedHistoryItem)}
+                    label={`Restore Version ${selectedHistoryItem.version}`}
+                    classes="green"
+                    enabled={!selectedHistoryItem.current}/>
+          </div>
+        </div>
+      </div>;
+  }
+
   renderHistoryItem(itemClickHandler, history) {
     const adds = (history.diff || []).filter(d => d.added).length;
     const deletes = (history.diff || []).filter(d => d.removed).length;
-
-    return <div className="item-renderer history-item"
+    const cn = classnames('item-renderer history-item', {
+      selected: history === this.state.selectedHistoryItem
+    });
+    return <div className={cn}
                 onClick={itemClickHandler}
                 key={history.timestamp}>
+      <div className="version">Version {history.version}</div>
+      <div className="size">{history.gameLoopFnText.length} bytes</div>
       <div className="date">{moment(history.timestamp).fromNow()}</div>
-      <div>
+      <div className="adds-cell">
         <div className={`adds ${adds && 'at-least-one'}`}>+{adds}</div>
       </div>
-      <div>
+      <div className="deletes-cell">
         <div className={`deletes ${deletes && 'at-least-one'}`}>-{deletes}</div>
       </div>
     </div>;
@@ -132,14 +254,7 @@ export default class Editor extends RingaComponent {
     return <Tab label="Code" classes="code">
         {(!user || user.id !== ownerUserId) && <div className="code-note">This code belongs to {owner.name}. You are in playground mode and can change the code as much as you like and press Commit Code to see the changes. Login to duplicate this game to your account!</div>}
         {(user && user.id !== ownerUserId) && <div className="code-note">You can copy this game to your account by clicking Duplicate above.</div>}
-        {showHistory && <div className="history">
-            <List items={this.props.game.sortedHistory}
-                  indexFunction={item => item.timestamp.toString()}
-                  labelField="timestamp"
-                  enableSearch={false}
-                  onChange={this.historyItem_onChangeHandler}
-                  itemRenderer={this.renderHistoryItem}/>
-          </div>}
+        {this.renderHistory()}
         <AceEditor mode="javascript"
                    theme="github"
                    value={code}
@@ -181,8 +296,8 @@ export default class Editor extends RingaComponent {
       </div>
       <h3>Author: {owner.name}, {codeLength} bytes {published ? <span className="published-card">Published</span> : <span className="unpublished-card">Unpublished</span> }</h3>
       <div className="actions">
-        {(user && user.id !== this.props.game.ownerUserId) && <Button label="Duplicate to my account" onClick={this.duplicate_clickHandler} />}
-        {published && <Button label="Play Published Game" onClick={this.playPublished_onClickHandler} />}
+        {(user && user.id !== this.props.game.ownerUserId) && <Button label="Duplicate to my account" onClick={this.duplicate_clickHandler} focusable={false} tabindex={-1} />}
+        {published && <Button label="Play Published Game" onClick={this.playPublished_onClickHandler} focusable={false} tabindex={-1} />}
       </div>
     </div>;
   }
@@ -254,6 +369,8 @@ export default class Editor extends RingaComponent {
       body
     }).then($lastPromiseResult => {
       this.props.game.dirty = false;
+
+      this.props.game.history = $lastPromiseResult.history;
 
       history.push(`/games/playground/${$lastPromiseResult.id}`);
 
@@ -396,12 +513,33 @@ export default class Editor extends RingaComponent {
   }
 
   history_onChangeHandler() {
-    this.setState({showHistory: !this.state.showHistory});
+    this.updateCurGameHistory();
+
+    this.setState({
+      showHistory: !this.state.showHistory,
+      selectedHistoryItem: this.history[0],
+      compareHistoryItem: undefined
+    });
+  }
+
+  restore_onClickHandler(history) {
+    this.props.game.dirty = true;
+
+    this.setState({
+      code: history.gameLoopFnText,
+      showHistory: false
+    });
   }
 
   historyItem_onChangeHandler(history) {
     this.setState({
-      code: history.gameLoopFnText
+      selectedHistoryItem: history
+    });
+  }
+
+  compareHistoryItem_onChangeHandler(item, ix) {
+    this.setState({
+      compareHistoryItem: item
     });
   }
 }

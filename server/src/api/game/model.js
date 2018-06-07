@@ -73,6 +73,8 @@ const gameSchema = new Schema({
 gameSchema.methods = {
   saveWithHistory (body) {
     /**
+     * HISTORY MANAGEMENT
+     *
      * If the game code has changed, add it to the history
      */
     if (body.gameLoopFnText !== undefined && this.gameLoopFnText !== body.gameLoopFnText) {
