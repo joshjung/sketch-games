@@ -17,6 +17,7 @@ import 'brace/mode/javascript';
 import 'brace/theme/github';
 import 'brace/snippets/javascript';
 import 'brace/ext/language_tools';
+import 'brace/ext/searchbox';
 
 import './Editor.scss';
 
