@@ -79,7 +79,7 @@ export default class Editor extends RingaComponent {
         diff: JsDiff.diffChars(history[0].gameLoopFnText, code),
         current: true
       });
-    } else {
+    } else if (history.length) {
       history[0].current = true;
     }
 
@@ -116,9 +116,9 @@ export default class Editor extends RingaComponent {
       <Button onClick={this.history_onChangeHandler} selected={showHistory} focusable={false} tabindex={-1}>
         <i className="fa fa-history" />
       </Button>
-      <Button onClick={this.save_onClickHandler} focusable={false} tabindex={-1} classes={this.props.game.dirty ? 'highlight' : undefined}>
+      {this.props.game.dirty && <Button onClick={this.save_onClickHandler} focusable={false} tabindex={-1} classes={this.props.game.dirty ? 'highlight' : undefined}>
         <i className="fa fa-save"></i>
-      </Button>
+      </Button>}
       {this.props.game.dirty && <span className="dirty">Unsaved!</span>}
     </span>;
   }
@@ -151,7 +151,7 @@ export default class Editor extends RingaComponent {
     const {showHistory, selectedHistoryItem} = this.state;
     const history = this.history;
     const modalContents = showHistory && [<div className="left-pane">
-      {!history.length ? 'No history available yet' : <List items={history}
+      {!history.length ? <label>'No history available yet. When you make changes this is where you can see them and revert your code to older versions.'</label> : <List items={history}
                                                             value={selectedHistoryItem}
                                                             indexFunction={item => item.timestamp.toString()}
                                                             labelField="timestamp"
@@ -178,7 +178,7 @@ export default class Editor extends RingaComponent {
     const {selectedHistoryItem, compareHistoryItem} = this.state;
 
     if (!selectedHistoryItem) {
-      return <div>No history item selected.</div>;
+      return undefined;
     }
 
     let diffKey = compareHistoryItem ? `${selectedHistoryItem.version}-${compareHistoryItem.version}` : `${selectedHistoryItem.version}-present`;
@@ -208,7 +208,7 @@ export default class Editor extends RingaComponent {
           <Dropdown items={history}
                     onChange={this.compareHistoryItem_onChangeHandler}
                     labelFunction={item => `Version ${item.version ? item.version : history[1].version} ${item.current ? '(Current Code)' : ''}`}
-                    value={compareHistoryItem || {version: selectedHistoryItem.version - 1}}/>
+                    value={compareHistoryItem || {version: `N/A`}}/>
         </div>
         <div className="diff">
           <div className="code">
@@ -301,7 +301,7 @@ export default class Editor extends RingaComponent {
       <h3>By: {owner.name}, {codeLength} bytes, Editing Version {version}, {published ? <span className="published-card">Version {publishedVersion} is Live!</span> : <span className="unpublished-card">Unpublished</span> }</h3>
       <div className="actions">
         {(user && user.id !== this.props.game.ownerUserId) && <Button label="Duplicate to my account" onClick={this.duplicate_clickHandler} focusable={false} tabindex={-1} />}
-        {published && <Button label="Play Published Game" onClick={this.playPublished_onClickHandler} focusable={false} tabindex={-1} />}
+        {published && <Button label={`Play Published Version ${publishedVersion}`} onClick={this.playPublished_onClickHandler} focusable={false} tabindex={-1} />}
       </div>
     </div>;
   }

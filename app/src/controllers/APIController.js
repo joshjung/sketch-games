@@ -117,11 +117,7 @@ export default class APIController extends Controller {
         credentials: true
       })),
       ($lastPromiseResult, $detail) => {
-        if ($lastPromiseResult.game) {
-          $detail.success = true;
-        } else {
-          $detail.success = false;
-        }
+        $detail.success = !!$lastPromiseResult.game;
       }]);
 
     this.addListener('cloneGame', [

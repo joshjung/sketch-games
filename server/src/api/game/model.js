@@ -64,7 +64,7 @@ const gameSchema = new Schema({
   },
   version: {
     type: Number,
-    default: 1
+    default: 0
   },
   playCount: {
     type: Number
@@ -81,8 +81,7 @@ gameSchema.methods = {
      * If the game code has changed, add it to the history
      */
     if (body.gameLoopFnText !== undefined && this.gameLoopFnText !== body.gameLoopFnText) {
-      console.log(JsDiff);
-      const diffs = JsDiff.diffChars(this.gameLoopFnText, body.gameLoopFnText);
+      const diffs = JsDiff.diffChars(this.gameLoopFnText || '', body.gameLoopFnText);
 
       this.history = this.history || [];
       this.version++;

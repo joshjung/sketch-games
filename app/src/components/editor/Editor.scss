@@ -20,6 +20,10 @@
       width: 33%;
       min-width: 270px;
 
+      label {
+        margin: $pad3 !important;
+      }
+
       .list {
         height: 100%;
         width: 100%;

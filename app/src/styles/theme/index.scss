@@ -100,6 +100,12 @@ html, body {
     border-radius: $radius-1;
     padding: 4px 7px;
 
+    transition: 300ms transform ease-out, 300ms box-shadow ease-out, 300ms filter ease-out, 300ms background ease-out, 300ms border ease-out, 300ms color ease-out, 300ms color ease-out;
+
+    &.selected {
+      font-weight: normal !important;
+    }
+
     &.disabled {
       background: $grey-1 !important;
     }
