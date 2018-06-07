@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {RingaComponent, TextInput, Button, TabNavigator, Tab, Alert, Markdown, I18NModel, List, ModalToggleContainer, Dropdown} from 'ringa-fw-react';
+import {RingaComponent, TextInput, Button, TabNavigator, Tab, Alert, Markdown, I18NModel, List, ModalToggleContainer, Dropdown, Panel} from 'ringa-fw-react';
 import {dependency} from 'react-ringa';
 import GameController from '../../controllers/GameController';
 import APIController from '../../controllers/APIController';
@@ -104,9 +104,6 @@ export default class Editor extends RingaComponent {
   renderControls() {
     const {showHistory, fullScreenEditor} = this.state;
     return <span className="controls">
-      <Button onClick={this.save_onClickHandler} focusable={false} tabindex={-1} classes={this.props.game.dirty ? 'highlight' : undefined}>
-        <i className="fa fa-save"></i>
-      </Button>
       <Button onClick={this.reset_onClickHandler} focusable={false} tabindex={-1}>
         <i className="fa fa-step-backward" />
       </Button>
@@ -119,7 +116,10 @@ export default class Editor extends RingaComponent {
       <Button onClick={this.history_onChangeHandler} selected={showHistory} focusable={false} tabindex={-1}>
         <i className="fa fa-history" />
       </Button>
-      {this.props.game.dirty && <span className="dirty">Unsaved</span>}
+      <Button onClick={this.save_onClickHandler} focusable={false} tabindex={-1} classes={this.props.game.dirty ? 'highlight' : undefined}>
+        <i className="fa fa-save"></i>
+      </Button>
+      {this.props.game.dirty && <span className="dirty">Unsaved!</span>}
     </span>;
   }
 
@@ -227,6 +227,7 @@ export default class Editor extends RingaComponent {
   }
 
   renderHistoryItem(itemClickHandler, history) {
+    const {publishedVersion} = this.props.game;
     const adds = (history.diff || []).filter(d => d.added).length;
     const deletes = (history.diff || []).filter(d => d.removed).length;
     const cn = classnames('item-renderer history-item', {
@@ -235,7 +236,10 @@ export default class Editor extends RingaComponent {
     return <div className={cn}
                 onClick={itemClickHandler}
                 key={history.timestamp}>
-      <div className="version">Version {history.version}</div>
+      <div className="version">
+        Version {history.version}
+        {history.version === publishedVersion && <div className="published-card">Published</div>}
+      </div>
       <div className="size">{history.gameLoopFnText.length} bytes</div>
       <div className="date">{moment(history.timestamp).fromNow()}</div>
       <div className="adds-cell">
@@ -282,7 +286,7 @@ export default class Editor extends RingaComponent {
 
   renderHeader() {
     const {title, code, user, fullScreenEditor} = this.state;
-    const {image, owner, published, dirty} = this.props.game;
+    const {image, owner, published, dirty, publishedVersion, version} = this.props.game;
     const codeLength = code ? code.length : 0;
 
     if (fullScreenEditor) {
@@ -294,7 +298,7 @@ export default class Editor extends RingaComponent {
         {image && <div><img className="game-image-small" src={image} /></div>}
         <h1>Editing {title} {dirty ? '*' : ''}</h1>
       </div>
-      <h3>Author: {owner.name}, {codeLength} bytes {published ? <span className="published-card">Published</span> : <span className="unpublished-card">Unpublished</span> }</h3>
+      <h3>By: {owner.name}, {codeLength} bytes, Editing Version {version}, {published ? <span className="published-card">Version {publishedVersion} is Live!</span> : <span className="unpublished-card">Unpublished</span> }</h3>
       <div className="actions">
         {(user && user.id !== this.props.game.ownerUserId) && <Button label="Duplicate to my account" onClick={this.duplicate_clickHandler} focusable={false} tabindex={-1} />}
         {published && <Button label="Play Published Game" onClick={this.playPublished_onClickHandler} focusable={false} tabindex={-1} />}
@@ -304,7 +308,7 @@ export default class Editor extends RingaComponent {
 
   render() {
     const {title, code, user, i18NModel, fullScreenEditor} = this.state;
-    const {image, owner, published, ownerUserId, publishedDate, description, dirty} = this.props.game;
+    const {image, owner, published, ownerUserId, publishedDate, description, version, publishedVersion, dirty} = this.props.game;
     const codeLength = code ? code.length : 0;
 
     return <div className="editor page">
@@ -317,20 +321,34 @@ export default class Editor extends RingaComponent {
               {this.renderInstructions()}
             </Tab>
             <Tab label="Settings" visible={!!(user && (user.id === ownerUserId))}>
-              Title: <TextInput defaultValue={title} onChange={this.title_onChangeHandler} />
-              Description: <TextInput multiline defaultValue={description} onChange={this.description_onChangeHandler} />
-              {published ?
-                <h3 className="published">Your game is live! It was published {moment(publishedDate).fromNow()}.</h3> :
-                <h3 className="unpublished">Your game is not live.</h3>
-              }
-              <Button label="Publish Latest Changes" onClick={this.publish_onClickHandler} />
-              {published && <Button label="Unpublish" onClick={this.unpublish_onClickHandler} />}
-              <div className="screenshot">
-                <h3>Screenshot <Button label="Take New Screenshot" onClick={this.screenshot_onClickHandler} /></h3>
-                <div>Taking a screenshot records the current contents of the canvas on the right. Use Pause and Resume to get the
-                perfect picture.</div>
-                {image ? <img src={image} /> : 'No screenshot yet'}
-              </div>
+              <Panel label="Details">
+                <label>Title:</label> <TextInput defaultValue={title} onChange={this.title_onChangeHandler} />
+                <label>Description:</label> <TextInput multiline defaultValue={description} onChange={this.description_onChangeHandler} />
+              </Panel>
+              <Panel label="Publishing">
+                {published ?
+                  <label>
+                    Your game is live! Version {publishedVersion || 'N/A'} was published {moment(publishedDate).fromNow()}. You are editing Version {version}.
+                  </label> :
+                  <label>Your game is not live.</label>
+                }
+                {dirty && <label>You must save before publishing!</label>}
+                {version === publishedVersion && <label>You are up to date! There is nothing to publish.</label>}
+                <Button label={`Publish Version ${version}`}
+                        onClick={this.publish_onClickHandler}
+                        enabled={!dirty && version !== publishedVersion}
+                        classes="green" />
+                {published && <Button label="Unpublish" classes="red" onClick={this.unpublish_onClickHandler} />}
+              </Panel>
+              <Panel label="Screenshot">
+                <div className="screenshot">
+                  <label>Taking a screenshot records the current contents of the canvas on the right. Use Pause and Resume to get the perfect picture.</label>
+                  <Button label="Take Screenshot"
+                          onClick={this.screenshot_onClickHandler}
+                          classes="green"/>
+                  {image ? <img src={image} /> : 'No screenshot yet'}
+                </div>
+              </Panel>
             </Tab>
             <Tab label="Highscores">
               <Button label="Clear Highscores" onClick={this.clearHighscores_onClickHandler} />
@@ -484,6 +502,7 @@ export default class Editor extends RingaComponent {
   screenshot_onClickHandler() {
     const {game} = this.props;
 
+    game.dirty = true;
     game.image = game.screenshot();
 
     this.forceUpdate();

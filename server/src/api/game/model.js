@@ -38,6 +38,9 @@ const gameSchema = new Schema({
   published: {
     type: Boolean
   },
+  publishedVersion: {
+    type: Number
+  },
   publishedDate: {
     type: Date
   },
@@ -106,6 +109,7 @@ gameSchema.methods = {
       'description',
       'published',
       'publishedDate',
+      'publishedVersion',
       'publishedTitle',
       'publishedInstructions',
       'publishedDescription',
@@ -119,7 +123,7 @@ gameSchema.methods = {
     ];
 
     if (full) {
-      fields = [...fields, 'version', 'history', 'createdAt']
+      fields = [...fields, 'history', 'createdAt']
     }
 
     fields.forEach(field => view[field] = this[field]);

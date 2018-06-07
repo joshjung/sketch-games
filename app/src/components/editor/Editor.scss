@@ -34,6 +34,12 @@
             padding: $pad1;
           }
 
+          .version {
+            .published-card {
+              font-size: 8px;
+              height: 8px;
+            }
+          }
           .adds-cell, .deletes-cell {
             width: 25px;
           }
@@ -146,7 +152,7 @@
 
     h3 {
       margin: 0;
-      color: darkgrey;
+      color: $black-3;
     }
 
     .title-container {
@@ -184,7 +190,7 @@
             text-align: right;
 
             .dirty {
-              color: $grey-1;
+              color: $black-3;
             }
           }
         }
@@ -247,7 +253,7 @@
       }
 
       .unpublished {
-        color: darkgrey;
+        color: $black-3;
       }
 
       .screenshot {

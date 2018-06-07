@@ -39,8 +39,10 @@ export default class GameModel extends Model {
     this.addProperty('owner', undefined);
     this.addProperty('startTime', 0);
     this.addProperty('timePlayed', 0);
+    this.addProperty('version', 0);
     this.addProperty('published', false);
     this.addProperty('publishedDate', undefined);
+    this.addProperty('publishedVersion', undefined);
     this.addProperty('publishedTitle', undefined);
     this.addProperty('publishedInstructions', undefined);
     this.addProperty('publishedDescription', undefined);
@@ -107,6 +109,7 @@ export default class GameModel extends Model {
       'description',
       'published',
       'publishedDate',
+      'publishedVersion',
       'publishedTitle',
       'publishedInstructions',
       'publishedDescription',
@@ -121,6 +124,7 @@ export default class GameModel extends Model {
     this.publishedDescription = this.description;
     this.publishedInstructions = this.instructions;
     this.publishedGameLoopFnText = this.gameLoopFnText;
+    this.publishedVersion = this.version;
   }
 
   screenshot() {
@@ -131,6 +135,7 @@ export default class GameModel extends Model {
 
   unpublish() {
     this.published = false;
+    this.publishedVersion = undefined;
   }
 
   reset() {
