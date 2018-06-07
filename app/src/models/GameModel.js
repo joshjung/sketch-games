@@ -56,6 +56,10 @@ export default class GameModel extends Model {
     this.addProperty('activeKeys', undefined);
   }
 
+  get development() {
+    return this.mode === 'development';
+  }
+
   get indexedText() {
     return `${this.activeTitle} ${this.activeDescription} ${this.owner.name}`;
   }

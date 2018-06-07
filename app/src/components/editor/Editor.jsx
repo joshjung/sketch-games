@@ -107,7 +107,7 @@ export default class Editor extends RingaComponent {
       <Button onClick={this.reset_onClickHandler} focusable={false} tabindex={-1}>
         <i className="fa fa-step-backward" />
       </Button>
-      <Button onClick={this.pausePlay_onClickHandler} focusable={false} tabindex={-1}>
+      <Button onClick={this.pausePlay_onClickHandler} focusable={false} tabindex={-1} classes={this.props.game.paused ? 'green' : 'red'}>
         {this.props.game.paused ? <i className="fa fa-play" /> : <i className="fa fa-pause" />}
       </Button>
       <Button onClick={this.fullScreenEditor_onClickHandler} selected={fullScreenEditor} focusable={false} tabindex={-1}>
