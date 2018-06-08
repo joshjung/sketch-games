@@ -68,6 +68,9 @@ const gameSchema = new Schema({
   },
   playCount: {
     type: Number
+  },
+  assets: {
+    type: [{}]
   }
 }, {
   timestamps: true
@@ -94,10 +97,33 @@ gameSchema.methods = {
       });
     }
 
-    console.log('Update history', this.history);
-    return Object.assign(this, body).save().then(result => this);
+    return Object.assign(this, body).save().then(() => {
+      return this.view(true);
+    });
   },
-  view (full) {
+  getAsset() {
+    return Promise.resolve(this.assets);
+  },
+  addAsset (title, assetId, asset, type, groupId) {
+    this.assets.push({
+      assetId,
+      title,
+      asset,
+      type,
+      groupId
+    });
+
+    return this.save().then(result => this);
+  },
+  getAsset(assetId) {
+    const asset = this.assets.find(a => a.assetId === assetId);
+
+    return Promise.resolve(asset);
+  },
+  deleteResource(resourceId) {
+
+  },
+  view (full, includeAssets) {
     let view = {};
     let fields = [
       'id',

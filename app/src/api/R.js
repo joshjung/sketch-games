@@ -13,20 +13,44 @@ export function text(ctx, text, x, y, color, font, baseline) {
   ctx.fillText(text, x, y);
 }
 
-export function circle(ctx, center, radius, stroke, fill) {
-  if (fill) {
-    ctx.fillStyle = fill;
+export function circle(ctx, center, radius, strokeStyle, fillStyle) {
+  if (fillStyle) {
+    ctx.fillStyle = fillStyle;
+  }
+
+  if (strokeStyle) {
+    ctx.strokeStyle = strokeStyle;
   }
 
   ctx.beginPath();
   ctx.arc(center[0], center[1], radius, 0, 2 * Math.PI);
   ctx.closePath();
 
-  if (fill) {
+  if (fillStyle) {
     ctx.fill();
   }
 
-  if (stroke) {
+  if (strokeStyle) {
+    ctx.stroke();
+  }
+}
+
+export function rect(ctx, topLeft, widthHeight, strokeStyle, fillStyle) {
+  if (fillStyle) {
+    ctx.fillStyle = fillStyle;
+  }
+
+  if (strokeStyle) {
+    ctx.strokeStyle = strokeStyle;
+  }
+
+  ctx.fillRect(topLeft[0], topLeft[1], widthHeight[0], widthHeight[1]);
+
+  if (fillStyle) {
+    ctx.fill();
+  }
+
+  if (strokeStyle) {
     ctx.stroke();
   }
 }

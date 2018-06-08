@@ -76,7 +76,8 @@ export default class GameContainer extends GraphicContainer {
       text: RenderAPI.text.bind(this, this.renderer.ctx),
       poly: RenderAPI.poly.bind(this, this.renderer.ctx),
       circle: RenderAPI.circle.bind(this, this.renderer.ctx),
-      bg: RenderAPI.background.bind(this, this.renderer.ctx)
+      bg: RenderAPI.background.bind(this, this.renderer.ctx),
+      rect: RenderAPI.rect.bind(this, this.renderer.ctx)
     };
 
     const C = this.renderer.ctx;

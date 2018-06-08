@@ -11,6 +11,7 @@ class Document extends Dispatcher {
   //---------------------------------------------
   constructor() {
     super();
+    this._focus = true;
     this.listenForDocumentFocusChange();
   }
 
@@ -79,6 +80,7 @@ class Document extends Dispatcher {
    * @param {Event} event
    */
   onFocusChangeHandler(property, event) {
+    console.log('onFocusChangeHandler', property, event);
     var v = false;
     var h = true;
     var eventMap = {focus: v, focusin: v, pageshow: v, blur: h, focusout: h, pagehide: h};

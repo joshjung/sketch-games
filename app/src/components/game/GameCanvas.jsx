@@ -8,6 +8,9 @@ import APIController from '../../controllers/APIController';
 
 import MobileInputController from '../../input/MobileInputController';
 
+import Document from '../../core/Document';
+import DocumentEvent from '../../core/events/DocumentEvents';
+
 import './GameCanvas.scss';
 
 class GameCanvasRenderer extends GraphicRenderer {
@@ -94,6 +97,16 @@ export default class GameCanvas extends RingaComponent {
     super(props);
 
     this.depend(dependency(ScreenModel, 'curBreakpointIx'));
+
+    this.document = new Document();
+    this.document.addListener(DocumentEvent.FOCUS_CHANGE, () => {
+      console.log('Focus changed!', this.document.focus);
+      if (!this.document.focus) {
+        this.pausedBeforeUnfocus = this.props.game.paused;
+      } else if (this.document.focus) {
+        this.props.game.paused = this.pausedBeforeUnfocus;
+      }
+    });
   }
 
   //-----------------------------------
