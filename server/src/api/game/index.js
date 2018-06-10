@@ -41,8 +41,8 @@ router.get('/',
   query(),
   index);
 
-router.get('/:id/full',
-  showFull);
+router.get('/:id/:addFields',
+  show);
 
 router.get('/:id',
   show);

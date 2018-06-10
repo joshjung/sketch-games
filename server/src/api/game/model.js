@@ -97,9 +97,7 @@ gameSchema.methods = {
       });
     }
 
-    return Object.assign(this, body).save().then(() => {
-      return this.view(true);
-    });
+    return Object.assign(this, body).save().then(() => this);
   },
   getAsset() {
     return Promise.resolve(this.assets);
@@ -120,10 +118,10 @@ gameSchema.methods = {
 
     return Promise.resolve(asset);
   },
-  deleteResource(resourceId) {
+  deleteAsset(assetId) {
 
   },
-  view (full, includeAssets) {
+  view (addFields) {
     let view = {};
     let fields = [
       'id',
@@ -147,13 +145,16 @@ gameSchema.methods = {
       'playCount'
     ];
 
-    if (full) {
-      fields = [...fields, 'history', 'createdAt']
+    if (addFields) {
+      addFields = addFields.split(',');
+      fields = [...fields, ...addFields];
     }
 
     fields.forEach(field => view[field] = this[field]);
 
-    if (!full && view.highscores && view.highscores.length) {
+    const showFullHighscores = addFields && addFields.indexOf('highscoresFull') !== -1;
+
+    if (!showFullHighscores && view.highscores && view.highscores.length) {
       view.highscores = view.highscores.map(hs => {
         let hsClone = {...hs};
         delete hsClone.screenshot;

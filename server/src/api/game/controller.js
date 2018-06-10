@@ -20,26 +20,16 @@ export const index = ({ querymen: { query, select, cursor } }, res, next) =>
 export const show = ({ params }, res, next) =>
   Game.findById(params.id)
     .then(notFound(res))
-    .then(game => game ? game.view() : null)
+    .then(game => game ? game.view(params.addFields) : null)
     .then(success(res))
     .catch(next);
-
-export const showFull = ({ params }, res, next) =>
-  Game.findById(params.id)
-    .then(notFound(res))
-    .then(game => game ? game.view(true) : null)
-    .then(success(res))
-    .catch(next);
-
-export const showMe = ({ game }, res) =>
-  res.json(game.view(true))
 
 export const create = ({ bodymen: { body } }, res, next) =>
   Game.create(body)
     .then(game => {
       sign(game.id)
         .then((token) => {
-          return game.view(true).then(game => ({token, game}));
+          return game.view('history,createdAt').then(game => ({token, game}));
         })
         .then(success(res, 201))
         .catch(next);
@@ -100,7 +90,7 @@ export const update = ({ bodymen: { body }, params, game }, res, next) =>
   Game.findById(params.id === 'me' ? game.id : params.id)
     .then(notFound(res))
     .then((game) => game ? game.saveWithHistory(body) : null)
-    .then((game) => game ? game.view(true) : null)
+    .then((game) => game ? game.view('history,createdAt') : null)
     .then(success(res))
     .catch(next);
 
