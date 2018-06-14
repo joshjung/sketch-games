@@ -4,6 +4,7 @@ import {RingaComponent, TextInput, Button, TabNavigator, Tab, Alert, Markdown, I
 import {dependency} from 'react-ringa';
 import GameController from '../../controllers/GameController';
 import APIController from '../../controllers/APIController';
+import Assets from '../../components/editor/Assets';
 import AppModel from '../../models/AppModel';
 import history from '../../global/history';
 import GameCanvas from '../game/GameCanvas';
@@ -354,6 +355,9 @@ export default class Editor extends RingaComponent {
             <Tab label="Highscores">
               <Button label="Clear Highscores" onClick={this.clearHighscores_onClickHandler} />
               <Highscores game={this.props.game} />
+            </Tab>
+            <Tab label="Assets" classes="assets">
+              <Assets game={this.props.game} />
             </Tab>
             <Tab label="API">
               <Markdown markdown={i18NModel.i18n('api')}/>

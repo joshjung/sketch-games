@@ -1,0 +1,39 @@
+@import '../../styles/theme/variables';
+
+.assets {
+  .total-size {
+    width: 100%;
+    text-align: right;
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  .assets-tile {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    .asset {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: $pad1;
+      margin: $pad3;
+      width: 100px;
+      height: 100px;
+      border: 1px solid $ringa-color;
+      border-radius: $radius-1;
+      cursor: pointer;
+
+      &:hover {
+        background: $hover-1;
+      }
+
+      img {
+        max-width: 90px;
+        max-height: 90px;
+      }
+    }
+  }
+}

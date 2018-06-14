@@ -4,7 +4,6 @@ import { middleware as body } from 'bodymen'
 import { token } from '../../services/passport'
 import { index,
   show,
-  showFull,
   create,
   clone,
   play,
@@ -13,7 +12,8 @@ import { index,
   clearHighscores,
   update,
   updatePassword,
-  destroy } from './controller'
+  destroy,
+  addAsset} from './controller'
 import { schema } from './model'
 export Game, { schema } from './model'
 
@@ -116,5 +116,9 @@ router.put('/:id',
 router.delete('/:id',
   token({ required: true }),
   destroy);
+
+router.post('/:gameId/asset',
+  token({ required: true }),
+  addAsset);
 
 export default router;

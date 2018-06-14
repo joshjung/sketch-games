@@ -57,7 +57,26 @@ export default class RESTController extends Ringa.Controller {
           throw new Error(`POST Parameter '${bodyParam}' was not provided on RingaEvent detail!`);
         }
 
-        return this.request({url, type: 'POST', body: $ringaEvent.detail[bodyParam], headers: $ringaEvent.detail.headers});
+        let body;
+
+        if ($ringaEvent.detail.contentType === 'multipart/form-data') {
+          body = new FormData();
+          const b = $ringaEvent.detail[bodyParam];
+
+          console.log('CONVERTING', b);
+          for (let key in b) {
+            body.append(key, b[key]);
+          }
+        } else {
+          body = $ringaEvent.detail[bodyParam];
+        }
+
+        return this.request({url,
+          type: 'POST',
+          body,
+          headers: $ringaEvent.detail.headers,
+          contentType: $ringaEvent.detail.contentType || 'application/json'
+        });
       },
       finRequest
     ]);
@@ -102,7 +121,11 @@ export default class RESTController extends Ringa.Controller {
 
       xhr.open(props.type, url, true);
 
-      xhr.setRequestHeader('Content-type', 'application/json');
+      // Retarded but needed: https://stackoverflow.com/questions/39280438/fetch-missing-boundary-in-multipart-form-data-post
+      if (props.contentType !== 'multipart/form-data') {
+        xhr.setRequestHeader('Content-type', props.contentType);
+      }
+
       xhr.setRequestHeader('Accept', 'application/json');
 
       if (props.headers) {
@@ -145,7 +168,9 @@ export default class RESTController extends Ringa.Controller {
         reject(e);
       };
 
-      xhr.send(props.body ? JSON.stringify(props.body) : undefined);
+      let body = props.body ? (props.contentType !== 'multipart/form-data' ? JSON.stringify(props.body) : props.body) : undefined;
+
+      xhr.send(body);
     });
   }
 }

@@ -51,6 +51,7 @@ export default class GameModel extends Model {
     this.addProperty('playCount', 0);
     this.addProperty('dirty', false);
     this.addProperty('history', []);
+    this.addProperty('assets', []);
 
     this.addProperty('listeningKeys', undefined);
     this.addProperty('activeKeys', undefined);

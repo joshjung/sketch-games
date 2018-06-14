@@ -207,6 +207,24 @@ export default class APIController extends Controller {
       ($lastPromiseResult) => {
         console.log($lastPromiseResult);
       }]);
+
+    this.addListener('addAsset', [
+      event(RESTController.POST, (gameId, assetId, description, file, type, groupId) => ({
+        url: `/games/${gameId}/asset`,
+        credentials: true,
+        bodyParam: 'body',
+        contentType: 'multipart/form-data',
+        body: {
+          assetId,
+          description,
+          file,
+          type,
+          groupId
+        }
+      })),
+      ($lastPromiseResult) => {
+        console.log($lastPromiseResult);
+      }]);
   }
 
   busMounted(bus) {

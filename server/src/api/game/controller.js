@@ -1,6 +1,8 @@
 import { success, notFound } from '../../services/response/'
 import { Game } from '.'
 import { sign } from '../../services/jwt'
+import fileForm from '../fileForm';
+import streamToBuf from 'stream-to-buf';
 
 export const index = ({ querymen: { query, select, cursor } }, res, next) =>
   Game.count(query)
@@ -90,7 +92,6 @@ export const update = ({ bodymen: { body }, params, game }, res, next) =>
   Game.findById(params.id === 'me' ? game.id : params.id)
     .then(notFound(res))
     .then((game) => game ? game.saveWithHistory(body) : null)
-    .then((game) => game ? game.view('history,createdAt') : null)
     .then(success(res))
     .catch(next);
 
@@ -99,4 +100,26 @@ export const destroy = ({ params }, res, next) =>
     .then(notFound(res))
     .then((game) => game ? game.remove() : null)
     .then(success(res, 204))
+    .catch(next);
+
+export const addAsset = (req, res, next) =>
+  Game.findById(req.params.gameId)
+    .then(notFound(res))
+    .then(game => {
+      if (!game) return null;
+
+      return fileForm(req, res, next).then(multiparty => {
+        console.log(multiparty.files[0]);
+
+        const {assetId, description,type,groupId} = multiparty.fields;
+
+        return game.addAsset(assetId,
+          description,
+          multiparty.files[0].buffer,
+          type,
+          multiparty.files[0].contentType,
+          groupId);
+      });
+    })
+    .then(success(res, 201))
     .catch(next);

@@ -70,7 +70,26 @@ const gameSchema = new Schema({
     type: Number
   },
   assets: {
-    type: [{}]
+    type: [{
+      assetId: {
+        type: String
+      },
+      description: {
+        type: String
+      },
+      groupId: {
+        type: String
+      },
+      type: {
+        type: String
+      },
+      contentType: {
+        type: String
+      },
+      asset: {
+        type: Buffer
+      }
+    }]
   }
 }, {
   timestamps: true
@@ -97,21 +116,26 @@ gameSchema.methods = {
       });
     }
 
-    return Object.assign(this, body).save().then(() => this);
+    return new Promise(resolve => {
+      Object.assign(this, body).save().then(() => this.view('history, createdAt').then(view => {
+        resolve(view);
+      }));
+    });
   },
-  getAsset() {
+  getAssets() {
     return Promise.resolve(this.assets);
   },
-  addAsset (title, assetId, asset, type, groupId) {
+  addAsset (assetId, description, asset, type, contentType, groupId) {
     this.assets.push({
       assetId,
-      title,
+      description,
       asset,
       type,
+      contentType,
       groupId
     });
 
-    return this.save().then(result => this);
+    return this.save().then(result => this.view('assets, history, createdAt'));
   },
   getAsset(assetId) {
     const asset = this.assets.find(a => a.assetId === assetId);
@@ -119,7 +143,9 @@ gameSchema.methods = {
     return Promise.resolve(asset);
   },
   deleteAsset(assetId) {
+    this.assets = this.assets.filter(a => a.assetId !== assetId);
 
+    return this.save().then(result => this);
   },
   view (addFields) {
     let view = {};
@@ -151,6 +177,35 @@ gameSchema.methods = {
     }
 
     fields.forEach(field => view[field] = this[field]);
+
+    if (view.assets) {
+      view.assets = view.assets.map(asset => {
+        if (!asset.asset || asset.asset.length > 50000) {
+          return {
+            assetId: asset.assetId,
+            groupId: asset.groupId,
+            description: asset.description,
+            type: asset.type,
+            contentType: asset.contentType,
+            byteSize: asset.asset ? asset.asset.length : -1,
+            overflow: true
+          };
+        }
+
+        return {
+          assetId: asset.assetId,
+          groupId: asset.groupId,
+          description: asset.description,
+          type: asset.type,
+          contentType: asset.contentType,
+          overflow: false,
+          byteSize: asset.asset ? asset.asset.length : -1,
+          asset: asset.asset ? asset.asset.toString('base64') : ''
+        };
+      });
+
+      console.log(view.assets);
+    }
 
     const showFullHighscores = addFields && addFields.indexOf('highscoresFull') !== -1;
 

@@ -57,6 +57,7 @@
     "mongoose-create-unique": "^0.4.4",
     "mongoose-keywords": "^0.3.2",
     "morgan": "^1.7.0",
+    "multiparty": "^4.1.4",
     "passport": "^0.4.0",
     "passport-http": "^0.3.0",
     "passport-http-bearer": "^1.0.1",
@@ -66,6 +67,8 @@
     "rand-token": "^0.4.0",
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
-    "sendgrid": "^4.0.2"
+    "sendgrid": "^4.0.2",
+    "stream-to-array": "^2.3.0",
+    "stream-to-buf": "^1.0.0"
   }
 }
