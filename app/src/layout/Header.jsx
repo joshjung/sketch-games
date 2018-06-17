@@ -59,7 +59,7 @@ class Header extends RingaComponent {
         {user ? <div>
             <span className="username">{user.name}</span>
             {curBreakpointIx >= 3 && <Button label="My Games" onClick={this.myGames_onClickHandler} />}
-            {curBreakpointIx >= 4 && <Button label="Create Game" onClick={this.newGame_onClickHandler} />}
+            {curBreakpointIx >= 3 && <Button label="Create Game" onClick={this.newGame_onClickHandler} />}
             <Button label="Logout" onClick={this.logout_onClickHandler} />
           </div> :
           <Button label="Login" onClick={this.login_onClickHandler} />}

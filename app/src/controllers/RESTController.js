@@ -122,8 +122,10 @@ export default class RESTController extends Ringa.Controller {
       xhr.open(props.type, url, true);
 
       // Retarded but needed: https://stackoverflow.com/questions/39280438/fetch-missing-boundary-in-multipart-form-data-post
-      if (props.contentType !== 'multipart/form-data') {
-        xhr.setRequestHeader('Content-type', props.contentType);
+      if (props.contentType === 'multipart/form-data') {
+        //xhr.setRequestHeader('Content-type', undefined);
+      } else {
+        xhr.setRequestHeader('Content-type', 'application/json');
       }
 
       xhr.setRequestHeader('Accept', 'application/json');

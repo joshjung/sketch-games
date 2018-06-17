@@ -122,6 +122,41 @@ export default class GameModel extends Model {
     ];
   }
 
+  getAssetUrl(asset) {
+    // TODO ensure that contentType is an image!
+    if (asset.asset && asset.contentType) {
+      return asset.dataUrl = `data:${asset.contentType};base64,${asset.asset}`;
+    }
+
+    return '';
+  }
+
+  initialize() {
+    return new Promise(resolve => {
+      if (this.assets && this.assets.length) {
+        let processed = 0;
+        const toProcess = this.assets.length;
+
+        this.assets.forEach(asset => {
+          const image = asset._image = new Image();
+
+          image.onload = function() {
+            processed++;
+
+            if (processed == toProcess) {
+              resolve();
+            }
+          };
+
+          image.src = this.getAssetUrl(asset);
+        });
+
+      }
+
+      resolve();
+    });
+  }
+
   publish() {
     this.published = true;
     this.publishedDate = new Date().getTime();

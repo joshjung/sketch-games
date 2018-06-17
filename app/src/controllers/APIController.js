@@ -225,6 +225,15 @@ export default class APIController extends Controller {
       ($lastPromiseResult) => {
         console.log($lastPromiseResult);
       }]);
+
+    this.addListener('deleteAsset', [
+      event(RESTController.DELETE, (gameId, assetId) => ({
+        url: `/games/${gameId}/asset/${assetId}`,
+        credentials: true
+      })),
+      ($lastPromiseResult) => {
+        console.log($lastPromiseResult);
+      }]);
   }
 
   busMounted(bus) {

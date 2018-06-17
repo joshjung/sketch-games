@@ -90,3 +90,43 @@ export function poly(ctx, poly, {fill = undefined, angle = 0, center = [0, 0]} =
     ctx.fill();
   }
 }
+
+export function drawImage(ctx, game, assetId, {
+  sourceX = 0,
+  sourceY = 0,
+  sourceWidth,
+  sourceHeight,
+  x = 0,
+  y = 0,
+  width,
+  height,
+  angle = 0,
+  originX = 'center',
+  originY = 'center'
+}) {
+  ctx.save();
+  const {assets} = game;
+  const asset = assets.find(a => a.assetId = assetId);
+
+  sourceWidth = sourceWidth || asset._image.width;
+  sourceHeight = sourceHeight || asset._image.height;
+
+  if (!asset) {
+    throw new Error(`R.drawImage(): Could not find asset with id '${assetId}' in the game assets. Make sure you spelled it properly!`);
+  }
+
+  let centerX = sourceX + ((width || sourceWidth) / 2);
+  let centerY = sourceY + ((height || sourceHeight) / 2);
+
+  originX = originX === 'center' ? centerX : originX;
+  originY = originY === 'center' ? centerY : originY;
+
+  let ih = asset._image.height / 2;
+
+  ctx.translate(x, y);
+  ctx.rotate( angle );
+  ctx.translate(-x, -y);
+  ctx.drawImage(asset._image, sourceX, sourceY, sourceWidth, sourceHeight, x - originX, y - originY, width || sourceWidth, height || sourceHeight);
+
+  ctx.restore();
+}

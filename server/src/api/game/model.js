@@ -96,6 +96,25 @@ const gameSchema = new Schema({
 });
 
 gameSchema.methods = {
+  preSaveCheck() {
+    if (this.assets) {
+      let maxAssetNum = 0;
+
+      // Determine the highest asset number currently stored in the assets,
+      // so that we never accidentally overwrite another number.
+      this.assets.forEach(asset => {
+        if (/asset[0-9]+/.test(asset.assetId)) {
+          const num = parseInt(asset.assetId.replace('asset', ''));
+          maxAssetNum = Math.max(num, maxAssetNum);
+        }
+      });
+
+      // If an asset does not have an id, go ahead and give it one
+      this.assets.forEach(asset => {
+        asset.assetId = asset.assetId || `asset${++maxAssetNum}`;
+      });
+    }
+  },
   saveWithHistory (body) {
     /**
      * HISTORY MANAGEMENT
@@ -116,11 +135,9 @@ gameSchema.methods = {
       });
     }
 
-    return new Promise(resolve => {
-      Object.assign(this, body).save().then(() => this.view('history, createdAt').then(view => {
-        resolve(view);
-      }));
-    });
+    this.preSaveCheck();
+
+    return Object.assign(this, body).save().then(() => this.view('assets, history, createdAt'));
   },
   getAssets() {
     return Promise.resolve(this.assets);
@@ -135,6 +152,8 @@ gameSchema.methods = {
       groupId
     });
 
+    this.preSaveCheck();
+
     return this.save().then(result => this.view('assets, history, createdAt'));
   },
   getAsset(assetId) {
@@ -143,11 +162,20 @@ gameSchema.methods = {
     return Promise.resolve(asset);
   },
   deleteAsset(assetId) {
-    this.assets = this.assets.filter(a => a.assetId !== assetId);
+    console.log('Deleting asset', assetId, this.assets.length);
 
-    return this.save().then(result => this);
+    this.assets = this.assets.filter(a => {
+      console.log('Compare', a.assetId, assetId);
+      return a.assetId !== assetId
+    });
+
+    console.log('Deleted asset, now', this.assets.length);
+
+    this.preSaveCheck();
+
+    return this.save().then(result => this.view('assets'));
   },
-  view (addFields) {
+  view(addFields) {
     let view = {};
     let fields = [
       'id',
@@ -179,8 +207,8 @@ gameSchema.methods = {
     fields.forEach(field => view[field] = this[field]);
 
     if (view.assets) {
-      view.assets = view.assets.map(asset => {
-        if (!asset.asset || asset.asset.length > 50000) {
+      view.assets = view.assets.map((asset, ix) => {
+        if (!asset.asset || asset.asset.length > (1024 * 1024)) {
           return {
             assetId: asset.assetId,
             groupId: asset.groupId,
@@ -203,8 +231,6 @@ gameSchema.methods = {
           asset: asset.asset ? asset.asset.toString('base64') : ''
         };
       });
-
-      console.log(view.assets);
     }
 
     const showFullHighscores = addFields && addFields.indexOf('highscoresFull') !== -1;
@@ -274,6 +300,8 @@ gameSchema.methods = {
       this.playCount = this.playCount || 0;
       this.playCount++;
 
+      this.preSaveCheck();
+
       this.save().then(() => response({success: true}));
     });
   },
@@ -308,6 +336,8 @@ gameSchema.methods = {
 
         this.highscores = this.highscores.slice(0, HIGHSCORE_MAX_COUNT);
 
+        this.preSaveCheck();
+
         this.save().then(() => response({
           success: true,
           highscores: this.highscores.map(hs => {
@@ -330,6 +360,8 @@ gameSchema.methods = {
         response({success:false});
       } else {
         this.highscores = [];
+
+        this.preSaveCheck();
 
         this.save().then(() => response({success: true}));
       }

@@ -109,7 +109,7 @@ export const addAsset = (req, res, next) =>
       if (!game) return null;
 
       return fileForm(req, res, next).then(multiparty => {
-        console.log(multiparty.files[0]);
+        console.log('Parsing file', multiparty.files[0].filename);
 
         const {assetId, description,type,groupId} = multiparty.fields;
 
@@ -120,6 +120,17 @@ export const addAsset = (req, res, next) =>
           multiparty.files[0].contentType,
           groupId);
       });
+    })
+    .then(success(res, 201))
+    .catch(next);
+
+export const deleteAsset = (req, res, next) =>
+  Game.findById(req.params.gameId)
+    .then(notFound(res))
+    .then(game => {
+      if (!game) return null;
+
+      return game.deleteAsset(req.params.assetId);
     })
     .then(success(res, 201))
     .catch(next);

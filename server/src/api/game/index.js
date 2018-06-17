@@ -13,7 +13,8 @@ import { index,
   update,
   updatePassword,
   destroy,
-  addAsset} from './controller'
+  addAsset,
+  deleteAsset} from './controller'
 import { schema } from './model'
 export Game, { schema } from './model'
 
@@ -120,5 +121,9 @@ router.delete('/:id',
 router.post('/:gameId/asset',
   token({ required: true }),
   addAsset);
+
+router.delete('/:gameId/asset/:assetId',
+  token({ required: true }),
+  deleteAsset);
 
 export default router;

@@ -54,9 +54,7 @@ const config = {
   development: {
     mongo: {
       uri: 'mongodb://localhost/super-mini-games-server-dev',
-      options: {
-        debug: true
-      }
+      options: {}
     }
   },
   production: {

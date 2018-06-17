@@ -97,6 +97,24 @@ R.poly([100, 100, 200, 200, 100, 200], {
 });
 ```
 
+*R.drawImage(assetId, options)*
+
+The `drawImage(assetId, options)` method lets you draw image assets you have uploaded in your assets library to the canvas.
+
+For example:
+
+    R.drawImage('asset0', {
+      sourceX: 0,        // (optional) The clipping pixel x location to read from in the asset image
+      sourceY: 0,        // (optional) The clipping pixel y location to read from in the asset image
+      sourceWidth: 30,   // (optional) The clipping pixel width to read from in the asset image
+      sourceHeight: 30,  // (optional) The clipping pixel height to read from in the asset image
+      x: 5,              // The canvas pixel x location to draw the image
+      y: 5,              // The canvas pixel y location to draw the image
+      width: 200,        // (optional) The width to draw the image on the canvas
+      height: 200,       // (optional) The height to draw the image on the canvas
+      angle: G.box.angle // (optional) An angle to rotate the image (in radians)
+    });
+
 ## `C`
 
 The `C` object is the canvas context object used to draw onto the game canvas. You can read more about it [here](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D).
