@@ -9,21 +9,69 @@ import './Assets.scss';
 class AssetModalImage extends RingaComponent {
   constructor(props) {
     super(props);
+
+    this.state = {
+      assetChanged: false
+    };
   }
 
   componentDidUpdate() {
     const {modal, asset} = this.props;
     const {naturalWidth, naturalHeight} = this.refs.image;
 
-    modal.title = `${asset.assetId}, ${naturalWidth}x${naturalHeight}, ${asset.byteSize} bytes, ${asset.contentType}`;
+    modal.title = `${asset.assetId} ${naturalWidth} x ${naturalHeight} pixels`;
   }
 
   render() {
     const {asset} = this.props;
+    const {assetChanged} = this.state;
 
     const dataUrl = asset.asset ? `data:${asset.contentType};base64,${asset.asset}` : '';
 
-    return <div className="content">{dataUrl ? <img src={dataUrl} ref="image" /> : undefined}</div>;
+    return <div className="content">
+      <div className="details">
+        <div className="title">
+          <span className="label">assetId:</span>
+          <TextInput defaultValue={asset.assetId} onChange={this.assetId_onChangeHandler}/>
+        </div>
+        <div className="size">
+          <span className="label">Size:</span>
+          {asset.byteSize} bytes
+        </div>
+        <div className="content-type">
+          <span className="label">Content-Type:</span>
+          {asset.contentType}
+          </div>
+      </div>
+      <div className="img">
+        {dataUrl ? <img src={dataUrl} ref="image" /> : undefined}
+      </div>
+      {assetChanged ? <div className="save">
+        <Button label="Save" className="green" onClick={this.save_onClickHandler} />
+      </div> : undefined}
+      </div>;
+  }
+
+  assetId_onChangeHandler(event) {
+    this.setState({assetChanged: true, newAssetId: event.target.value});
+  }
+
+  save_onClickHandler() {
+    const {asset, game} = this.props;
+    const {newAssetId} = this.state;
+
+    const assetAlreadyExists = game.assets.filter(a => a !== asset).find(a => a.assetId === newAssetId);
+
+    if (!assetAlreadyExists) {
+      asset.assetId = newAssetId;
+      asset.dirty = true;
+
+      this.props.assetIdChanged(asset);
+
+      this.props.modal.remove();
+    } else {
+      Alert.show(`The asset '${newAssetId} already exists. Please choose a different name.'`, Alert.OK, {}, this.rootDomNode);
+    }
   }
 }
 
@@ -48,8 +96,10 @@ export default class Assets extends RingaComponent {
   renderAsset(asset, ix, arr) {
     const dataUrl = asset.asset ? `data:${asset.contentType};base64,${asset.asset}` : '';
 
-    return <div className="asset" onClick={this.asset_onClickHandler.bind(this, asset)} key={asset.assetId}>
-      {dataUrl ? <img src={dataUrl} ref={`img${asset.assetId}`} /> : undefined}
+    return <div className="asset" onClick={this.asset_onClickHandler.bind(this, asset)} key={asset.id}>
+      {dataUrl ? <div className="img">
+        <img src={dataUrl} ref={`img${asset.id}`} />
+      </div> : undefined}
       <div className="assetId">{asset.assetId || 'Untitled'}</div>
       <div className="size">{Math.round(asset.byteSize / 1024)}kb</div>
       <Button className="delete"
@@ -75,10 +125,9 @@ export default class Assets extends RingaComponent {
 
     return <div className="assets">
       <div className="actions">
-        <Button label="Upload Asset"
-                className="green"
-                onClick={this.upload_onClickHandler}/>
         <div className="total-size">{assets.length} Assets, {Math.round(totalSize / 1024)} kb Total</div>
+        <Button label="Upload..."
+                onClick={this.upload_onClickHandler}/>
       </div>
       {this.renderAssets()}
       <ModalToggleContainer title="Upload Assets"
@@ -102,6 +151,8 @@ export default class Assets extends RingaComponent {
   }
 
   fileSelector_onChangeHandler(event) {
+    this.setState({showUpload: false});
+
     this.dispatch(APIController.ADD_ASSET, {
       gameId: this.props.game.id,
       assetId: this.state.assetId,
@@ -111,24 +162,48 @@ export default class Assets extends RingaComponent {
       file: this.refs.fileInput.files[0]
     }).then($lastPromiseResult => {
       this.props.game.assets = $lastPromiseResult.assets;
-      this.setState({showUpload: false});
+      this.props.game.initializeAssets().then(() => {
+        this.forceUpdate();
+      });
     });
   }
 
   asset_onClickHandler(asset) {
-    const img = this.refs[`img${asset.assetId}`];
+    const img = this.refs[`img${asset.id}`];
+    const {game} = this.props;
 
-    const assetModal = ModalModel.show({
+    if (asset._modal) {
+      return;
+    }
+
+    asset.edited = true;
+
+    asset._modal = ModalModel.show({
       title: '',
       classes: 'asset-modal',
       renderer: AssetModalImage,
       rendererProps: {
-        asset
+        asset,
+        game,
+        assetIdChanged: this.assetIdChangedHandler
       },
       position: 'centered',
       draggable: true,
-      width: Math.min(img.naturalWidth + 50, window.innerWidth - 100),
-      height: Math.min(img.naturalHeight + 50, window.innerHeight - 100)
+      width: Math.max(Math.min(img.naturalWidth + 50, window.innerWidth - 100), 250),
+      height: Math.min(img.naturalHeight + 150, window.innerHeight - 100),
+      singletonGroup: asset.id
+    });
+
+    asset._modal.addEventListener('remove', () => {
+      delete asset._modal;
+    });
+  }
+
+  assetIdChangedHandler() {
+    this.props.game.dirty = true;
+
+    this.props.game.initializeAssets().then(() => {
+      this.forceUpdate();
     });
   }
 
@@ -139,10 +214,12 @@ export default class Assets extends RingaComponent {
       if (result.id === 'yes') {
         this.dispatch(APIController.DELETE_ASSET, {
           gameId: this.props.game.id,
-          assetId: asset.assetId
+          assetId: asset.id
         }).then($lastPromiseResult => {
           this.props.game.assets = $lastPromiseResult.assets;
-          this.forceUpdate();
+          this.props.game.initializeAssets().then(() => {
+            this.forceUpdate();
+          });
         });
       }
     });

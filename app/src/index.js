@@ -12,4 +12,6 @@ import 'typeface-roboto';
 import 'font-awesome/scss/font-awesome.scss';
 import './styles/index.scss';
 
+import './styles/globals';
+
 render(<Router history={history}>{routes}</Router>, document.querySelector('.react-app'));

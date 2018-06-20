@@ -122,6 +122,19 @@ export default class GameModel extends Model {
     ];
   }
 
+  serialize(options) {
+    const serialized = super.serialize(options);
+
+    // Find all dirty assets and send those
+    const updatedAssets = this.assets ? this.assets.filter(a => a.dirty) : undefined;
+
+    if (updatedAssets) {
+      serialized.assets = updatedAssets;
+    }
+
+    return serialized;
+  }
+
   getAssetUrl(asset) {
     // TODO ensure that contentType is an image!
     if (asset.asset && asset.contentType) {
@@ -131,7 +144,12 @@ export default class GameModel extends Model {
     return '';
   }
 
-  initialize() {
+  /**
+   * This function exists so we can reset game assets while the game is running.
+   *
+   * @returns {Promise}
+   */
+  initializeAssets() {
     return new Promise(resolve => {
       if (this.assets && this.assets.length) {
         let processed = 0;
@@ -154,6 +172,14 @@ export default class GameModel extends Model {
       }
 
       resolve();
+    });
+  }
+
+  initialize() {
+    return new Promise(resolve => {
+      this.initializeAssets().then(() => {
+        resolve();
+      });
     });
   }
 

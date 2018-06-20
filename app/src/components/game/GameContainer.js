@@ -118,11 +118,17 @@ export default class GameContainer extends GraphicContainer {
     }
 
     if (this.gameModel.gameLoopFn) {
+      // Whenever we set runError we risk forcing a rerender of the Editor...
+      let errorThisLoop = undefined;
       try {
         this.gameModel.listeningKeys = undefined;
         this.gameModel.gameLoopFn.apply(this.gameModel.gameLoopFn, args);
       } catch (error) {
-        this.gameModel.runError = error;
+        errorThisLoop = this.gameModel.runError = error;
+      }
+
+      if (!errorThisLoop) {
+        this.gameModel.runError = undefined;
       }
     }
   }

@@ -71,6 +71,9 @@ const gameSchema = new Schema({
   },
   assets: {
     type: [{
+      id: {
+        type: String
+      },
       assetId: {
         type: String
       },
@@ -135,15 +138,34 @@ gameSchema.methods = {
       });
     }
 
+    // Note this code is only good for updating the 'assetId' of an existing asset.
+    if (body.assets) {
+      if (this.assets && this.assets.length) {
+        body.assets.forEach(asset => {
+          const foundAsset = this.assets.find(a => {
+            return a.id === asset.id;
+          });
+
+          // If we found the matching asset, update it in our data
+          if (foundAsset) {
+            foundAsset.assetId = asset.assetId;
+          }
+        });
+      }
+
+      delete body.assets;
+    }
+
     this.preSaveCheck();
 
-    return Object.assign(this, body).save().then(() => this.view('assets, history, createdAt'));
+    return Object.assign(this, body).save().then(() => this.view('assets,history,createdAt'));
   },
   getAssets() {
     return Promise.resolve(this.assets);
   },
   addAsset (assetId, description, asset, type, contentType, groupId) {
     this.assets.push({
+      id: mongoose.Types.ObjectId().toString(),
       assetId,
       description,
       asset,
@@ -154,22 +176,15 @@ gameSchema.methods = {
 
     this.preSaveCheck();
 
-    return this.save().then(result => this.view('assets, history, createdAt'));
+    return this.save().then(result => this.view('assets,history,createdAt'));
   },
   getAsset(assetId) {
     const asset = this.assets.find(a => a.assetId === assetId);
 
     return Promise.resolve(asset);
   },
-  deleteAsset(assetId) {
-    console.log('Deleting asset', assetId, this.assets.length);
-
-    this.assets = this.assets.filter(a => {
-      console.log('Compare', a.assetId, assetId);
-      return a.assetId !== assetId
-    });
-
-    console.log('Deleted asset, now', this.assets.length);
+  deleteAsset(id) {
+    this.assets = this.assets.filter(a => a.id !== id);
 
     this.preSaveCheck();
 
@@ -208,8 +223,13 @@ gameSchema.methods = {
 
     if (view.assets) {
       view.assets = view.assets.map((asset, ix) => {
+        if (!asset.id) {
+          asset.id = mongoose.Types.ObjectId().toString();
+        }
+
         if (!asset.asset || asset.asset.length > (1024 * 1024)) {
           return {
+            id: asset.id,
             assetId: asset.assetId,
             groupId: asset.groupId,
             description: asset.description,
@@ -221,6 +241,7 @@ gameSchema.methods = {
         }
 
         return {
+          id: asset.id,
           assetId: asset.assetId,
           groupId: asset.groupId,
           description: asset.description,

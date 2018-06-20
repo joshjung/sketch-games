@@ -5,14 +5,52 @@
     height: 100%;
     width: calc(100% - #{$pad1 * 2});
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
     padding: $pad1;
 
-    img {
-      max-width: 100%;
-      max-height: 100%;
+    .details {
+      border-bottom: 1px solid $grey-1;
+      width: 100%;
+
+      .label {
+        font-weight: bold;
+        margin-right: $pad1;
+      }
+
+      .title {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .size, .content-type {
+        margin: $pad1 0;
+      }
+    }
+
+    .img {
+      flex: 1 1 auto;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      img {
+        max-width: 100%;
+        max-height: 100%;
+      }
+    }
+
+    .save {
+      flex: 0 0 auto;
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
     }
   }
 }
@@ -29,11 +67,14 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    border-bottom: 1px solid $grey-1;
+    padding-bottom: $pad2;
+    margin-bottom: $pad2;
+
   }
 
   .total-size {
     width: 100%;
-    text-align: right;
     font-size: 16px;
     font-weight: bold;
   }
@@ -50,26 +91,45 @@
       align-items: center;
       justify-content: space-between;
       padding: $pad1;
-      margin: $pad3;
-      width: 100px;
-      height: 100px;
-      border: 1px solid $ringa-color;
+      margin: $pad1;
+      width: 125px;
+      height: 125px;
+      border: 1px solid $grey-3;
       border-radius: $radius-1;
       cursor: pointer;
 
       &:hover {
         background: $hover-1;
+
+        .delete {
+          display: block;
+        }
       }
 
-      img {
-        max-width: 90px;
-        max-height: 90px;
+      .img {
+        flex: 1 1 auto;
+        min-height: 0;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        img {
+          flex: 1 1 auto;
+          max-width: 90px;
+          max-height: 80px;
+        }
+      }
+
+      .assetId, .size {
+        margin: $pad1 0;
       }
 
       .delete {
+        display: none;
         position: absolute;
-        top: 5px;
-        right: 5px;
+        top: 0;
+        right: 0;
       }
     }
   }

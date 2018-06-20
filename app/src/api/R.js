@@ -106,7 +106,7 @@ export function drawImage(ctx, game, assetId, {
 }) {
   ctx.save();
   const {assets} = game;
-  const asset = assets.find(a => a.assetId = assetId);
+  const asset = assets.find(a => a.assetId === assetId);
 
   sourceWidth = sourceWidth || asset._image.width;
   sourceHeight = sourceHeight || asset._image.height;

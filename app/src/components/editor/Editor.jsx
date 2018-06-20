@@ -60,6 +60,17 @@ export default class Editor extends RingaComponent {
       document.title = this.state.title = this.props.game.title;
 
       this.props.game.watch(signal => {
+        if (signal === 'runError') {
+          const lastErr = this.lastRunError ? this.lastRunError.message : undefined;
+          const err = this.props.game.runError ? this.props.game.runError.message : undefined;
+
+          if (lastErr !== err) {
+            this.lastRunError = this.props.game.runError;
+          } else {
+            return;
+          }
+        }
+
         if (['syntaxError', 'runError', 'published', 'dirty'].indexOf(signal) !== -1) {
           this.forceUpdate();
         }
@@ -106,22 +117,21 @@ export default class Editor extends RingaComponent {
   renderControls() {
     const {showHistory, fullScreenEditor} = this.state;
     return <span className="controls">
-      <Button onClick={this.reset_onClickHandler} focusable={false} tabindex={-1}>
+      <Button onClick={this.reset_onClickHandler} focusable="false" tabIndex={-1}>
         <i className="fa fa-step-backward" />
       </Button>
-      <Button onClick={this.pausePlay_onClickHandler} focusable={false} tabindex={-1} classes={this.props.game.paused ? 'green' : 'red'}>
+      <Button onClick={this.pausePlay_onClickHandler} focusable="false" tabIndex={-1} classes={this.props.game.paused ? 'green' : 'red'}>
         {this.props.game.paused ? <i className="fa fa-play" /> : <i className="fa fa-pause" />}
       </Button>
-      <Button onClick={this.fullScreenEditor_onClickHandler} selected={fullScreenEditor} focusable={false} tabindex={-1}>
+      <Button onClick={this.fullScreenEditor_onClickHandler} selected={fullScreenEditor} focusable="false" tabIndex={-1}>
         {fullScreenEditor ? <i className="fa fa-window-restore" /> : <i className="fa fa-window-maximize" />}
       </Button>
-      <Button onClick={this.history_onChangeHandler} selected={showHistory} focusable={false} tabindex={-1}>
+      <Button onClick={this.history_onChangeHandler} selected={showHistory} focusable="false" tabIndex={-1}>
         <i className="fa fa-history" />
       </Button>
-      {this.props.game.dirty && <Button onClick={this.save_onClickHandler} focusable={false} tabindex={-1} classes={this.props.game.dirty ? 'highlight' : undefined}>
-        <i className="fa fa-save"></i>
+      {this.props.game.dirty && <Button onClick={this.save_onClickHandler} focusable="false" tabIndex={-1} classes={this.props.game.dirty ? 'highlight' : undefined}>
+        <i className="fa fa-save"></i> Save!
       </Button>}
-      {this.props.game.dirty && <span className="dirty">Unsaved!</span>}
     </span>;
   }
 
@@ -302,8 +312,8 @@ export default class Editor extends RingaComponent {
       </div>
       <h3>By: {owner.name}, {codeLength} bytes, Editing Version {version}, {published ? <span className="published-card">Version {publishedVersion} is Live!</span> : <span className="unpublished-card">Unpublished</span> }</h3>
       <div className="actions">
-        {(user && user.id !== this.props.game.ownerUserId) && <Button label="Duplicate to my account" onClick={this.duplicate_clickHandler} focusable={false} tabindex={-1} />}
-        {published && <Button label={`Play Published Version ${publishedVersion}`} onClick={this.playPublished_onClickHandler} focusable={false} tabindex={-1} />}
+        {(user && user.id !== this.props.game.ownerUserId) && <Button label="Duplicate to my account" onClick={this.duplicate_clickHandler} focusable="false" tabIndex={-1} />}
+        {published && <Button label={`Play Published Version ${publishedVersion}`} onClick={this.playPublished_onClickHandler} focusable="false" tabIndex={-1} />}
       </div>
     </div>;
   }
@@ -319,8 +329,8 @@ export default class Editor extends RingaComponent {
         <div className={fullScreenEditor ? 'left-pane full-screen' : 'left-pane'}>
           <TabNavigator controls={this.renderControls()}>
             {this.renderEditor()}
-            <Tab label="Instructions" classes="instructions">
-              {this.renderInstructions()}
+            <Tab label="Assets" classes="assets">
+              <Assets game={this.props.game} />
             </Tab>
             <Tab label="Settings" visible={!!(user && (user.id === ownerUserId))}>
               <Panel label="Details">
@@ -352,12 +362,12 @@ export default class Editor extends RingaComponent {
                 </div>
               </Panel>
             </Tab>
-            <Tab label="Highscores">
+            <Tab label="Instructions" classes="instructions">
+              {this.renderInstructions()}
+            </Tab>
+            <Tab label="Scores">
               {this.props.game.highscores && this.props.game.highscores.length ? <Button label="Clear Highscores" onClick={this.clearHighscores_onClickHandler} /> : undefined}
               <Highscores game={this.props.game} />
-            </Tab>
-            <Tab label="Assets" classes="assets">
-              <Assets game={this.props.game} />
             </Tab>
             <Tab label="API">
               <Markdown markdown={i18NModel.i18n('api')}/>
@@ -395,9 +405,11 @@ export default class Editor extends RingaComponent {
 
       this.props.game.history = $lastPromiseResult.history;
 
-      history.push(`/games/playground/${$lastPromiseResult.id}`);
+      this.props.game.initializeAssets().then(() => {
+        this.forceUpdate();
+      });
 
-      this.forceUpdate();
+      history.push(`/games/playground/${$lastPromiseResult.id}`);
     });
   }
 

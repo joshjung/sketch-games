@@ -74,11 +74,11 @@ html, body {
     }
   }
 
-  .modal-close-btn {
-    color: $white;
-  }
-
   .modal-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
     height: 30px;
     background: $ringa-color;
     color: $white;
@@ -86,9 +86,22 @@ html, body {
     border-top-right-radius: $radius-1;
 
     .title {
+      flex: 0 1 auto;
+      text-wrap: none;
       text-align: left;
       font-size: 16px;
       padding: $pad1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .modal-close-btn {
+      position: relative;
+      right: auto;
+      top: auto;
+      cursor: pointer;
+      margin-right: $pad1;
     }
   }
 
