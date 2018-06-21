@@ -52,8 +52,8 @@ export default class AppController extends Controller {
           this.appModel.curGame.mode = 'development';
         }
 
-        this.appModel.curGame.reset();
-
+        return this.appModel.curGame.reset();
+      }, (playgroundComponent) => {
         this.appModel.curGameController = GameController.fromGameModel(this.appModel.curGame);
 
         playgroundComponent.attach(this.appModel.curGameController);

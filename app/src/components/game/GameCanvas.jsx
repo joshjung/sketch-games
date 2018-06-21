@@ -116,8 +116,6 @@ export default class GameCanvas extends RingaComponent {
     super.componentDidMount();
 
     if (!this.props.game.renderer) {
-      this.props.game.reset();
-
       this.renderer = new GameCanvasRenderer(this, this.props.game, this.refs.canvas, {
         debug: false,
         canvasAutoClear: true,
@@ -130,7 +128,19 @@ export default class GameCanvas extends RingaComponent {
 
       if (this.props.game && this.props.game.gameContainer) {
         this.addGameContainer(this.props.game.gameContainer);
+      } else {
+        this.props.game.watch(signal => {
+          if (signal === 'gameContainer') {
+            this.addGameContainer(this.props.game.gameContainer);
+          }
+        });
       }
+
+      this.props.game.watch(signal => {
+        if (signal === 'loadingItems') {
+          this.forceUpdate();
+        }
+      });
     } else {
       this.renderer = this.props.game.renderer;
 
@@ -159,6 +169,7 @@ export default class GameCanvas extends RingaComponent {
     return <div className={cn}>
       <canvas ref="canvas" />
       {curBreakpointIx < 3 && <MobileInputController game={this.props.game} />}
+      {this.props.game.loading && <div className="loading">Building Game...</div> }
       {this.props.game.paused && !this.props.game.development && <div className="paused" onClick={this.play_clickHandler}>
         <div className="game-paused">Game Paused</div>
         <div className="click-to-resume">Click to Resume</div>

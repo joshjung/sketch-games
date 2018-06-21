@@ -8,10 +8,6 @@ export default class GameController extends Controller {
   //-----------------------------------
   constructor() {
     super('GameController');
-
-    this.addListener('setLoopFn', (gameLoopFn, $detail) => {
-      $detail.success = this.gameModel.setGameFunctionFromString(gameLoopFn);
-    });
   }
 
   //-----------------------------------

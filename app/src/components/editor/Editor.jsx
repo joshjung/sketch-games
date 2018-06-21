@@ -13,13 +13,6 @@ import moment from 'moment';
 import * as JsDiff from 'diff';
 import classnames from 'classnames';
 
-import AceEditor from 'react-ace';
-import 'brace/mode/javascript';
-import 'brace/theme/github';
-import 'brace/snippets/javascript';
-import 'brace/ext/language_tools';
-import 'brace/ext/searchbox';
-
 import './Editor.scss';
 
 export default class Editor extends RingaComponent {
@@ -30,6 +23,7 @@ export default class Editor extends RingaComponent {
     super(props);
 
     this.state = {
+      aceLoaded: false,
       code: '',
       instructions: 'Enter your instructions using Markdown syntax',
       description: '',
@@ -76,6 +70,8 @@ export default class Editor extends RingaComponent {
         }
       })
     }
+
+    this.loadAceEditor();
   }
 
   updateCurGameHistory() {
@@ -264,12 +260,15 @@ export default class Editor extends RingaComponent {
   }
 
   renderEditor() {
-    const {code, user, showHistory} = this.state;
+    const {code, user, aceLoaded, AceEditor} = this.state;
     const {owner, syntaxError, runError, ownerUserId} = this.props.game;
 
+    if (!aceLoaded) {
+      return <Tab label="Code" classes="code">Loading...</Tab>;
+    }
+
     return <Tab label="Code" classes="code">
-        {(!user || user.id !== ownerUserId) && <div className="code-note">This code belongs to {owner.name}. You are in playground mode and can change the code as much as you like and press Commit Code to see the changes. Login to duplicate this game to your account!</div>}
-        {(user && user.id !== ownerUserId) && <div className="code-note">You can copy this game to your account by clicking Duplicate above.</div>}
+        {(!user || user.id !== ownerUserId) && <div className="code-note">This code belongs to {owner.name}. You are in playground mode and can edit the code and press Commit to see the changes.</div>}
         {this.renderHistory()}
         <AceEditor mode="javascript"
                    theme="github"
@@ -298,7 +297,7 @@ export default class Editor extends RingaComponent {
 
   renderHeader() {
     const {title, code, user, fullScreenEditor} = this.state;
-    const {image, owner, published, dirty, publishedVersion, version} = this.props.game;
+    const {image, owner, published, publishedVersion, version} = this.props.game;
     const codeLength = code ? code.length : 0;
 
     if (fullScreenEditor) {
@@ -308,12 +307,18 @@ export default class Editor extends RingaComponent {
     return <div className="header">
       <div className="title-container">
         {image && <div><img className="game-image-small" src={image} /></div>}
-        <h1>Editing {title} {dirty ? '*' : ''}</h1>
+        <h1>{title}</h1>
       </div>
       <h3>By: {owner.name}, {codeLength} bytes, Editing Version {version}, {published ? <span className="published-card">Version {publishedVersion} is Live!</span> : <span className="unpublished-card">Unpublished</span> }</h3>
       <div className="actions">
-        {(user && user.id !== this.props.game.ownerUserId) && <Button label="Duplicate to my account" onClick={this.duplicate_clickHandler} focusable="false" tabIndex={-1} />}
-        {published && <Button label={`Play Published Version ${publishedVersion}`} onClick={this.playPublished_onClickHandler} focusable="false" tabIndex={-1} />}
+        {(user && user.id !== this.props.game.ownerUserId) && <Button label="Duplicate to your account"
+                                                                      onClick={this.duplicate_clickHandler}
+                                                                      focusable="false"
+                                                                      tabIndex={-1} />}
+        {published && <Button label={`Play Published Version ${publishedVersion || 1}`}
+                              onClick={this.playPublished_onClickHandler}
+                              focusable="false"
+                              tabIndex={-1} />}
       </div>
     </div>;
   }
@@ -413,16 +418,31 @@ export default class Editor extends RingaComponent {
     });
   }
 
+  loadAceEditor() {
+    Promise.all([import('react-ace').then(AceEditor => {
+      this.setState({
+        AceEditor: AceEditor.default
+      });
+    }),
+    import('brace/mode/javascript'),
+    import('brace/theme/github'),
+    import('brace/snippets/javascript'),
+    import('brace/ext/language_tools'),
+    import('brace/ext/searchbox')]).then(() => {
+      this.setState({
+        aceLoaded: true
+      });
+    });
+  }
+
   //-----------------------------------
   // Events
   //-----------------------------------
   save_onClickHandler(event) {
-    this.dispatch(GameController.SET_LOOP_FN, {
-      gameLoopFn: this.state.code
-    }).then(success => {
-      if (success) {
-        this.saveGame();
-      }
+    const {game} = this.props;
+
+    game.setGameFunctionFromString(this.state.code).then(() => {
+      this.saveGame();
     });
   }
 
@@ -433,9 +453,9 @@ export default class Editor extends RingaComponent {
   }
 
   reset_onClickHandler() {
-    this.props.game.reset();
-
-    this.forceUpdate();
+    this.props.game.reset().then(() => {
+      this.forceUpdate();
+    });
   }
 
   code_onChangeHandler(code, event) {

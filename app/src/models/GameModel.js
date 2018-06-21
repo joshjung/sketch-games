@@ -7,8 +7,6 @@ import {Model} from 'ringa';
 // 2) Use the dynamic `import('@babel/standalone).then()` syntax to load the
 //    processor dynamically when the editor is loaded.
 
-import * as Babel from '@babel/standalone';
-
 import NEW_GAME_CODE from '../assets/newGameCode.txt';
 import NEW_GAME_INSTRUCTIONS from '../assets/newGameInstructions.txt';
 
@@ -21,6 +19,8 @@ export default class GameModel extends Model {
     this.options = options;
 
     this.addProperty('mode', 'development');
+
+    this.addProperty('loadingItems', []);
 
     this.addProperty('gameLoopFn', '');
     this.addProperty('gameLoopFnText', NEW_GAME_CODE);
@@ -122,6 +122,10 @@ export default class GameModel extends Model {
     ];
   }
 
+  get loading() {
+    return !!this.loadingItems.length;
+  }
+
   serialize(options) {
     const serialized = super.serialize(options);
 
@@ -144,6 +148,24 @@ export default class GameModel extends Model {
     return '';
   }
 
+  beginLoadingItem(item) {
+    let ix = this.loadingItems.indexOf(item);
+
+    if (ix !== -1) {
+      console.error(`Attempting to load ${item} twice at the same time?`);
+    }
+    this.loadingItems.push(item);
+
+    this.notify('loadingItems');
+  }
+
+  endLoadingItem(item) {
+    let ix = this.loadingItems.indexOf(item);
+    this.loadingItems.splice(ix, 1);
+
+    this.notify('loadingItems');
+  }
+
   /**
    * This function exists so we can reset game assets while the game is running.
    *
@@ -158,8 +180,23 @@ export default class GameModel extends Model {
         this.assets.forEach(asset => {
           const image = asset._image = new Image();
 
-          image.onload = function() {
+          this.beginLoadingItem(asset.assetId || asset.id);
+
+          image.onerror = (error) => {
+            console.error('Error loading image asset', asset, error);
             processed++;
+
+            this.endLoadingItem(asset.assetId || asset.id);
+
+            if (processed == toProcess) {
+              resolve();
+            }
+          };
+
+          image.onload = () => {
+            processed++;
+
+            this.endLoadingItem(asset.assetId || asset.id);
 
             if (processed == toProcess) {
               resolve();
@@ -176,11 +213,7 @@ export default class GameModel extends Model {
   }
 
   initialize() {
-    return new Promise(resolve => {
-      this.initializeAssets().then(() => {
-        resolve();
-      });
-    });
+    return this.initializeAssets();
   }
 
   publish() {
@@ -205,8 +238,6 @@ export default class GameModel extends Model {
   }
 
   reset() {
-    this.setGameFunctionFromString(this.activeGameLoopFnText);
-
     this.playRecorded = false;
 
     this.syntaxError = this.runError = undefined;
@@ -215,29 +246,40 @@ export default class GameModel extends Model {
     this.startTime = new Date().getTime();
     this.timePlayed = 0;
 
-    this.notify('reset');
+    return this.setGameFunctionFromString(this.activeGameLoopFnText).then(result => {
+      this.notify('reset');
+    });
   }
 
   setGameFunctionFromString(gameLoopFnString) {
-    let fn;
+    return new Promise((resolve, reject) => {
 
-    // We reset the state completely when the function changes (e.g. during editor mode)
-    this.exposedState = {};
+      this.beginLoadingItem('@babel/standalone');
 
-    try {
-      const es5Output = Babel.transform(gameLoopFnString, { presets: ['es2015'] }).code;
-      fn = new Function('E', 'R', 'C', 'G', 'I', 'T', 'M', 'S', es5Output);
-      this.gameLoopFn = fn;
+      import('@babel/standalone').then(Babel => {
+        this.endLoadingItem('@babel/standalone');
 
-      this.gameLoopFnText = gameLoopFnString;
-      this.syntaxError = this.runError = undefined;
+        let fn;
 
-      return true;
-    } catch (error) {
-      console.error(error);
-      this.syntaxError = error.toString();
-    }
+        // We reset the state completely when the function changes (e.g. during editor mode)
+        this.exposedState = {};
 
-    return false;
+        try {
+          const es5Output = Babel.transform(gameLoopFnString, { presets: ['es2015'] }).code;
+          fn = new Function('E', 'R', 'C', 'G', 'I', 'T', 'M', 'S', es5Output);
+          this.gameLoopFn = fn;
+
+          this.gameLoopFnText = gameLoopFnString;
+          this.syntaxError = this.runError = undefined;
+
+          return resolve();
+        } catch (error) {
+          console.error(error);
+          this.syntaxError = error.toString();
+        }
+
+        reject();
+      });
+    });
   }
 }

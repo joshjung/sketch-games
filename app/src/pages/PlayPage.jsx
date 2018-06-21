@@ -70,7 +70,7 @@ export default class PlayPage extends RingaComponent {
     const {curGame, user, curBreakpointIx, selectedIx, ignoreLoginWarning, largeScreen} = this.state;
 
     if (!curGame) {
-      return <div>Loading...</div>;
+      return <div className="play-mobile page">Loading...</div>;
     }
 
     const gc = <GameCanvas id="primary-game-canvas"
