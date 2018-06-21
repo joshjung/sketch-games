@@ -8,6 +8,8 @@ import AppModel from '../models/AppModel';
 
 import Editor from '../components/editor/Editor';
 
+import Loader from '../components/Loader';
+
 import './PlaygroundPage.scss';
 
 export default class PlaygroundPage extends RingaComponent {
@@ -39,12 +41,9 @@ export default class PlaygroundPage extends RingaComponent {
   render() {
     const {curGame} = this.state;
 
-    if (!curGame) {
-      return <div>Loading...</div>;
-    }
-
     return <div className="playground">
-      <Editor game={curGame} />
+      {curGame ? <Editor game={curGame} /> : undefined}
+      <Loader show={!curGame}/>
     </div>;
   }
 

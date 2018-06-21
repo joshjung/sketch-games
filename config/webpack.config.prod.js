@@ -1,9 +1,7 @@
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const config = require('./config.json');
-
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const buildInfo = require('./util/buildInfo');
 
 const baseConfig = require('./webpack.config.base.js');
@@ -12,12 +10,12 @@ const path = require('path');
 const ROOT_PATH = path.resolve(process.env.PWD);
 
 baseConfig.module.rules.push({
-  test: /\.s?css$/,
-  loader: ExtractTextPlugin.extract({
-    fallback: 'style-loader',
-    //resolve-url-loader may be chained before sass-loader if necessary
-    use: ['css-loader', 'sass-loader']
-  })
+  test: /\.(sa|sc|c)ss$/,
+  use: [
+    MiniCssExtractPlugin.loader,
+    'css-loader',
+    'sass-loader',
+  ]
 });
 
 const finalConfig = Object.assign({
@@ -31,16 +29,8 @@ const finalConfig = Object.assign({
   },
   optimization: {
     splitChunks: {
-      cacheGroups: {
-        vendor: {
-          chunks: 'initial',
-          name: 'editor',
-          test: 'editor',
-          enforce: true
-        },
-      }
-    },
-    runtimeChunk: true
+      chunks: 'all'
+    }
   },
   plugins: [
     new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/),
@@ -49,9 +39,11 @@ const finalConfig = Object.assign({
       template: path.resolve(ROOT_PATH, 'app/src/templates/index.ejs'),
       inject: false
     }),
-    new ExtractTextPlugin({
-      filename: config.artifactRoot + '.css',
-      allChunks: true
+    new MiniCssExtractPlugin({
+      // Options similar to the same options in webpackOptions.output
+      // both options are optional
+      filename: "[name].css",
+      chunkFilename: "[id].css"
     })
   ]
 }, baseConfig);

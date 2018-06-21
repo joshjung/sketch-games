@@ -1,0 +1,30 @@
+@import '../styles/variables';
+
+.loader {
+  border-radius: $radius-1;
+
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0);
+  pointer-events: none;
+  opacity: 0;
+
+  transition: opacity 0.5s ease-in-out, background 0.5s ease-out;
+
+  &.show {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.9);
+  }
+
+  svg {
+    width: 40px;
+    height: 40px;
+  }
+}

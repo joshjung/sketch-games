@@ -12,6 +12,7 @@ import Highscores from '../../components/Highscores';
 import moment from 'moment';
 import * as JsDiff from 'diff';
 import classnames from 'classnames';
+import Loader from '../Loader';
 
 import './Editor.scss';
 
@@ -263,35 +264,36 @@ export default class Editor extends RingaComponent {
     const {code, user, aceLoaded, AceEditor} = this.state;
     const {owner, syntaxError, runError, ownerUserId} = this.props.game;
 
-    if (!aceLoaded) {
-      return <Tab label="Code" classes="code">Loading...</Tab>;
-    }
+    let contents = aceLoaded ? [
+      (!user || user.id !== ownerUserId) && <div className="code-note">This code belongs to {owner.name}. You are in playground mode and can edit the code and press Commit to see the changes.</div>,
+      this.renderHistory(),
+      <AceEditor mode="javascript"
+                 theme="github"
+                 value={code}
+                 width="100%"
+                 height="100%"
+                 onChange={this.code_onChangeHandler}
+                 showPrintMargin={false}
+                 highlightActiveLine={true}
+                 enableBasicAutocompletion={true}
+                 editorProps={{$blockScrolling: Infinity}}
+                 setOptions={{
+                   enableBasicAutocompletion: true,
+                   enableLiveAutocompletion: true,
+                   enableSnippets: true,
+                   showLineNumbers: true,
+                   tabSize: 2
+                 }}
+                 name="ace-editor" />,
+      <div className="errors">
+        {syntaxError && <div className="error">Syntax Error: {syntaxError.toString()}</div>}
+        {runError && <div className="error">Run Error: {runError.toString()}</div>}
+      </div>
+    ] : undefined;
 
     return <Tab label="Code" classes="code">
-        {(!user || user.id !== ownerUserId) && <div className="code-note">This code belongs to {owner.name}. You are in playground mode and can edit the code and press Commit to see the changes.</div>}
-        {this.renderHistory()}
-        <AceEditor mode="javascript"
-                   theme="github"
-                   value={code}
-                   width="100%"
-                   height="100%"
-                   onChange={this.code_onChangeHandler}
-                   showPrintMargin={false}
-                   highlightActiveLine={true}
-                   enableBasicAutocompletion={true}
-                   editorProps={{$blockScrolling: Infinity}}
-                   setOptions={{
-                     enableBasicAutocompletion: true,
-                     enableLiveAutocompletion: true,
-                     enableSnippets: true,
-                     showLineNumbers: true,
-                     tabSize: 2
-                   }}
-                   name="ace-editor" />
-        <div className="errors">
-          {syntaxError && <div className="error">Syntax Error: {syntaxError.toString()}</div>}
-          {runError && <div className="error">Run Error: {runError.toString()}</div>}
-        </div>
+        {contents}
+        <Loader show={!aceLoaded} />
       </Tab>;
   }
 
@@ -419,18 +421,20 @@ export default class Editor extends RingaComponent {
   }
 
   loadAceEditor() {
-    Promise.all([import('react-ace').then(AceEditor => {
+    import('react-ace').then(AceEditor => {
       this.setState({
         AceEditor: AceEditor.default
       });
-    }),
-    import('brace/mode/javascript'),
-    import('brace/theme/github'),
-    import('brace/snippets/javascript'),
-    import('brace/ext/language_tools'),
-    import('brace/ext/searchbox')]).then(() => {
-      this.setState({
-        aceLoaded: true
+
+      Promise.all([
+        import('brace/mode/javascript'),
+        import('brace/theme/github'),
+        import('brace/snippets/javascript'),
+        import('brace/ext/language_tools'),
+        import('brace/ext/searchbox')]).then(() => {
+        this.setState({
+          aceLoaded: true
+        });
       });
     });
   }

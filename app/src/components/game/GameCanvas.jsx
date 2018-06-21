@@ -11,6 +11,8 @@ import MobileInputController from '../../input/MobileInputController';
 import Document from '../../core/Document';
 import DocumentEvent from '../../core/events/DocumentEvents';
 
+import Loader from '../../components/Loader';
+
 import './GameCanvas.scss';
 
 class GameCanvasRenderer extends GraphicRenderer {
@@ -169,12 +171,12 @@ export default class GameCanvas extends RingaComponent {
     return <div className={cn}>
       <canvas ref="canvas" />
       {curBreakpointIx < 3 && <MobileInputController game={this.props.game} />}
-      {this.props.game.loading && <div className="loading">Building Game...</div> }
       {this.props.game.paused && !this.props.game.development && <div className="paused" onClick={this.play_clickHandler}>
         <div className="game-paused">Game Paused</div>
         <div className="click-to-resume">Click to Resume</div>
         <div><i className="fa fa-pause" /></div>
       </div> }
+      <Loader show={this.props.game.loading}/>
     </div>;
   }
 

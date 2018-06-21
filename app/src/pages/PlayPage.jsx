@@ -11,6 +11,8 @@ import GameCanvas from '../components/game/GameCanvas';
 import Highscores from '../components/Highscores';
 import history from '../global/history';
 
+import Loader from '../components/Loader';
+
 import moment from 'moment';
 
 import './PlayPage.scss';
@@ -70,7 +72,9 @@ export default class PlayPage extends RingaComponent {
     const {curGame, user, curBreakpointIx, selectedIx, ignoreLoginWarning, largeScreen} = this.state;
 
     if (!curGame) {
-      return <div className="play-mobile page">Loading...</div>;
+      return <div className="play-mobile page">
+        <Loader key="loader" show />
+      </div>;
     }
 
     const gc = <GameCanvas id="primary-game-canvas"
@@ -113,6 +117,7 @@ export default class PlayPage extends RingaComponent {
             {curGame.published && <div className="published-date">Published: {moment(curGame.publishedDate).format('MMMM Do YYYY')}</div>}
           </Tab>
         </TabNavigator>
+        <Loader key="loader" />
       </div>;
     } else {
       return <div className="play page">
@@ -153,6 +158,7 @@ export default class PlayPage extends RingaComponent {
             </TabNavigator>
           </div>}
         </div>
+        <Loader key="loader" />
       </div>;
     }
   }
