@@ -52,6 +52,11 @@ html, body {
     }
   }
 
+  .checkbox-container {
+    label {
+      display: inline;
+    }
+  }
   .modal {
     border-radius: $radius-1;
   }

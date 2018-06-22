@@ -52,6 +52,9 @@ export default class GameModel extends Model {
     this.addProperty('dirty', false);
     this.addProperty('history', []);
     this.addProperty('assets', []);
+    this.addProperty('lib', []); // A string list of node_modules that can be loaded. Right now only 'phaser' is allowed.
+
+    this._libs = []; // This is where the LOADED libraries get stored.
 
     this.addProperty('listeningKeys', undefined);
     this.addProperty('activeKeys', undefined);
@@ -118,7 +121,8 @@ export default class GameModel extends Model {
       'publishedTitle',
       'publishedInstructions',
       'publishedDescription',
-      'publishedGameLoopFnText'
+      'publishedGameLoopFnText',
+      'lib'
     ];
   }
 
@@ -212,8 +216,22 @@ export default class GameModel extends Model {
     });
   }
 
+  initializeLibs() {
+    const promises = this.lib.map(lib => {
+      switch (lib) {
+        case 'phaser':
+          return import('phaser').then(library => this._libs.Phaser = library);
+      }
+    }).filter(p => !!p);
+
+    return Promise.all(promises);
+  }
+
   initialize() {
-    return this.initializeAssets();
+    return Promise.all([
+      this.initializeAssets(),
+      this.initializeLibs()
+    ]);
   }
 
   publish() {
@@ -237,7 +255,7 @@ export default class GameModel extends Model {
     this.publishedVersion = undefined;
   }
 
-  reset() {
+  restart() {
     this.playRecorded = false;
 
     this.syntaxError = this.runError = undefined;
@@ -245,10 +263,16 @@ export default class GameModel extends Model {
     this.paused = false;
     this.startTime = new Date().getTime();
     this.timePlayed = 0;
+  }
 
-    return this.setGameFunctionFromString(this.activeGameLoopFnText).then(result => {
-      this.notify('reset');
-    });
+  reset() {
+    this.restart();
+
+    if (this.gameLoopFn !== this.activeGameLoopFnText) {
+      return this.setGameFunctionFromString(this.activeGameLoopFnText).then(result => {
+        this.notify('reset');
+      });
+    }
   }
 
   setGameFunctionFromString(gameLoopFnString) {
@@ -266,7 +290,7 @@ export default class GameModel extends Model {
 
         try {
           const es5Output = Babel.transform(gameLoopFnString, { presets: ['es2015'] }).code;
-          fn = new Function('E', 'R', 'C', 'G', 'I', 'T', 'M', 'S', es5Output);
+          fn = new Function('E', 'R', 'C', 'G', 'I', 'T', 'M', 'S', 'L', 'A', es5Output);
           this.gameLoopFn = fn;
 
           this.gameLoopFnText = gameLoopFnString;
@@ -281,5 +305,17 @@ export default class GameModel extends Model {
         reject();
       });
     });
+  }
+
+  addPhaser() {
+    this.lib = ['phaser'];
+
+    return this.initialize();
+  }
+
+  removePhaser() {
+    this.lib = [];
+
+    return this.initialize();
   }
 }

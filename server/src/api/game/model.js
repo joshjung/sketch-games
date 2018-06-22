@@ -62,6 +62,9 @@ const gameSchema = new Schema({
   history: {
     type: [{}]
   },
+  lib: {
+    type: [{}]
+  },
   version: {
     type: Number,
     default: 0
@@ -211,7 +214,8 @@ gameSchema.methods = {
       'originalGameId',
       'clonedFromGameId',
       'highscores',
-      'playCount'
+      'playCount',
+      'lib'
     ];
 
     if (addFields) {
@@ -304,6 +308,7 @@ gameSchema.methods = {
           published: false,
           publishedDate: undefined,
           highscores: [],
+          lib: this.lib,
           playCount: 0
         };
 

@@ -8,14 +8,12 @@ export default class Loader extends Component {
   }
 
   render() {
-    const {show} = this.props;
+    const {show, zIndex} = this.props;
 
-    return <div className={`loader ${show ? 'show' : ''}`}>
+    return <div className={`loader ${show ? 'show' : ''}`} style={{ zIndex }}>
       <svg version="1.1" id="L3"
-                x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 0 0" space="preserve">
-        <circle fill="#eee" stroke="#333" strokeWidth="4" cx="50" cy="50" r="44" style={{ opacity: 0.5 }}/>
-        <circle fill="#eee" stroke="#333" strokeWidth="2" cx="50" cy="50" r="22" style={{ opacity: 0.5 }}/>
-        <circle fill="#000" stroke="#1b73b3" strokeWidth="3" cx="8" cy="54" r="6" >
+                x="0px" y="0px" viewBox="0 0 100 100" space="preserve">
+        <circle fill="#000" stroke="#1b73b3" strokeWidth="2" cx="8" cy="54" r="7" >
           <animateTransform
             attributeName="transform"
             dur="1.75s"
@@ -24,7 +22,25 @@ export default class Loader extends Component {
             to="360 50 50"
             repeatCount="indefinite" />
         </circle>
+        <circle fill="#000" stroke="#1b73b3" strokeWidth="2" cx="18" cy="54" r="6" >
+          <animateTransform
+            attributeName="transform"
+            dur="1.5s"
+            type="rotate"
+            from="0 50 50"
+            to="360 50 50"
+            repeatCount="indefinite" />
+        </circle>
         <circle fill="#000" stroke="#1b73b3" strokeWidth="2" cx="30" cy="54" r="4" >
+          <animateTransform
+            attributeName="transform"
+            dur="1.1s"
+            type="rotate"
+            from="180 50 50"
+            to="540 50 50"
+            repeatCount="indefinite" />
+        </circle>
+        <circle fill="#000" stroke="#1b73b3" strokeWidth="2" cx="35" cy="54" r="3" >
           <animateTransform
             attributeName="transform"
             dur="0.75s"

@@ -7,7 +7,14 @@ import AppModel from '../models/AppModel';
 import APIController from '../controllers/APIController';
 import AppController from '../controllers/AppController';
 
+import Loader from '../components/Loader';
+import Video from '../components/Video';
+
 import classnames from 'classnames';
+
+import ASTEROIDS_MP4 from '../assets/videos/asteroids.mp4';
+import EDITOR_MP4 from '../assets/videos/editor.mp4';
+import PUBLISHING_MP4 from '../assets/videos/publishing.mp4';
 
 import './HomePage.scss';
 
@@ -38,18 +45,57 @@ export default class HomePage extends RingaComponent {
     games = games.filter(game => game.published);
 
     return <div className="home">
+      {this.renderSplash()}
       <List items={games.concat()}
             indexField="id"
             indexFunction={game => `${game.publishedTitle} ${game.publishedDescription} ${game.owner.name}`}
             labelField="title"
             onChange={this.list_onChangeHandler}
             itemRenderer={this.gameListItemRenderer}/>
+      <Loader show={!games.length} />
     </div>;
   }
 
   //-----------------------------------
   // Methods
   //-----------------------------------
+  renderSplash() {
+    const {curBreakpointIx} = this.state;
+
+    if (curBreakpointIx < 3) {
+      return undefined;
+    }
+
+    return <div className="splash">
+      <div className="card white">
+        <Video src={ASTEROIDS_MP4} autoPlay muted loop />
+        <div className="contents">
+          <div className="heading">Kick Back</div>
+          <div className="description">
+            <ul>
+              <li>Play games</li>
+              <li>Record high scores</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div className="card white">
+        <Video src={EDITOR_MP4} autoPlay muted loop />
+        <div className="contents">
+          <div className="heading bubble-text">Be Inspired</div>
+          <div className="description bubble-text">Follow easy tutorials and build a simple game in less than 1 hour</div>
+        </div>
+      </div>
+      <div className="card white">
+        <Video src={PUBLISHING_MP4} autoPlay muted loop />
+        <div className="contents">
+          <div className="heading bubble-text">Share your Creation</div>
+          <div className="description bubble-text">Share your game with your friends and the world</div>
+        </div>
+      </div>
+    </div>;
+  }
+
   gameListItemRenderer(itemClickHandler, game) {
     const {curBreakpointIx} = this.state;
     const cn = classnames('item-renderer', {

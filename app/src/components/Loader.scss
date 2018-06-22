@@ -1,8 +1,6 @@
 @import '../styles/variables';
 
 .loader {
-  border-radius: $radius-1;
-
   position: absolute;
   left: 0;
   right: 0;
@@ -16,11 +14,12 @@
   pointer-events: none;
   opacity: 0;
 
-  transition: opacity 0.5s ease-in-out, background 0.5s ease-out;
+  transition: opacity 1s ease-out, background 1s ease-out;
 
   &.show {
     opacity: 1;
     background: rgba(0, 0, 0, 0.9);
+    pointer-events: all;
   }
 
   svg {

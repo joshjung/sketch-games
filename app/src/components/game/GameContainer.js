@@ -62,6 +62,14 @@ export default class GameContainer extends GraphicContainer {
     return false;
   }
 
+  restart() {
+    this.gameModel.restart();
+  }
+
+  getAsset(assetId) {
+    return this.gameModel.assets.find(a => a.assetId === assetId);
+  }
+
   //-----------------------------------
   // Events
   //-----------------------------------
@@ -84,6 +92,7 @@ export default class GameContainer extends GraphicContainer {
     const C = this.renderer.ctx;
 
     const G = Object.assign(this.gameModel.exposedState, {
+      restart: this.restart.bind(this),
       recordScore: this.recordScore.bind(this),
       paused: this.gameModel.paused
     });
@@ -110,7 +119,13 @@ export default class GameContainer extends GraphicContainer {
 
     const S = {};
 
-    const args = [E, R, C, G, I, T, M, S];
+    const L = this.gameModel._libs;
+
+    const A = {
+      getAsset: this.getAsset.bind(this)
+    };
+
+    const args = [E, R, C, G, I, T, M, S, L, A];
 
     if (this.gameModel.paused) {
       args[0] = 0; // elapsed to 0

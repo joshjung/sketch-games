@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {RingaComponent, TextInput, Button, TabNavigator, Tab, Alert, Markdown, I18NModel, List, ModalToggleContainer, Dropdown, Panel} from 'ringa-fw-react';
+import {RingaComponent, TextInput, Button, TabNavigator, Tab, Alert, Markdown, I18NModel, List, ModalToggleContainer, Dropdown, Panel, Checkbox} from 'ringa-fw-react';
 import {dependency} from 'react-ringa';
 import GameController from '../../controllers/GameController';
 import APIController from '../../controllers/APIController';
@@ -293,7 +293,7 @@ export default class Editor extends RingaComponent {
 
     return <Tab label="Code" classes="code">
         {contents}
-        <Loader show={!aceLoaded} />
+        <Loader zIndex={20000} show={!aceLoaded} />
       </Tab>;
   }
 
@@ -327,8 +327,7 @@ export default class Editor extends RingaComponent {
 
   render() {
     const {title, code, user, i18NModel, fullScreenEditor} = this.state;
-    const {image, owner, published, ownerUserId, publishedDate, description, version, publishedVersion, dirty} = this.props.game;
-    const codeLength = code ? code.length : 0;
+    const {image, lib, published, ownerUserId, publishedDate, description, version, publishedVersion, dirty} = this.props.game;
 
     return <div className="editor page">
       {this.renderHeader()}
@@ -343,6 +342,11 @@ export default class Editor extends RingaComponent {
               <Panel label="Details">
                 <label>Title:</label> <TextInput defaultValue={title} onChange={this.title_onChangeHandler} />
                 <label>Description:</label> <TextInput multiline defaultValue={description} onChange={this.description_onChangeHandler} />
+              </Panel>
+              <Panel label="Libraries">
+                <Checkbox label="Use Phaser Game Library"
+                          value={lib.indexOf('phaser') !== -1}
+                          onChange={this.phaser_onChangeHandler} />
               </Panel>
               <Panel label="Publishing">
                 {published ?
@@ -601,5 +605,19 @@ export default class Editor extends RingaComponent {
     this.setState({
       compareHistoryItem: item
     });
+  }
+
+  phaser_onChangeHandler({checked}) {
+    const {game} = this.props;
+
+    if (checked) {
+      game.addPhaser();
+    } else {
+      game.removePhaser();
+    }
+
+    game.dirty = true;
+
+    this.forceUpdate();
   }
 }

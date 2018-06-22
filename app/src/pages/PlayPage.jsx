@@ -158,7 +158,7 @@ export default class PlayPage extends RingaComponent {
             </TabNavigator>
           </div>}
         </div>
-        <Loader key="loader" />
+        <Loader key="loader" zIndex={20000} />
       </div>;
     }
   }
