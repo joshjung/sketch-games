@@ -36,10 +36,11 @@
   }
 
   .paused {
+    border-radius: $radius-1;
     position: absolute;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.75);
 
     display: flex;
     align-items: center;
@@ -48,14 +49,16 @@
     text-align: center;
 
     font-size: 40px;
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 1);
 
     .game-paused {
-      font-size: 16px;
+      font-size: 22px;
+      margin: $pad1 0;
     }
 
     .click-to-resume {
-      font-size: 12px;
+      font-size: 16px;
+      margin: $pad1 0;
     }
   }
 }

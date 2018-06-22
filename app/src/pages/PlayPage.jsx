@@ -84,7 +84,7 @@ export default class PlayPage extends RingaComponent {
     if (curBreakpointIx < 3) {
       return <div className="play-mobile page">
         <div className="play-header">
-          {!user && !ignoreLoginWarning && <div className="sub-header warning">You are not logged in! Your highscores will not be recorded.
+          {!user && !ignoreLoginWarning && <div className="sub-header warning">You are not logged in! No highscores will be recorded.
             <Button label="Ignore" onClick={this.ignoreLoginWarning_onClickHandler} focusable="false" tabIndex={-1} />
           </div>}
           {(user || ignoreLoginWarning) && <div className="sub-header">
@@ -93,10 +93,11 @@ export default class PlayPage extends RingaComponent {
             </h1>
             <div>
               <Button onClick={this.restart_onClickHandler} focusable="false" tabIndex={-1}>
-                <i className="fa fa-step-backward" />
+                <i className="fa fa-step-backward" /> Reset
               </Button>
               <Button onClick={this.pausePlay_onClickHandler} focusable="false" tabIndex={-1}>
                 {curGame.paused ? <i className="fa fa-play" /> : <i className="fa fa-pause" />}
+                {curGame.paused ? ' Resume' : ' Pause'}
               </Button>
             </div>
           </div>}
@@ -125,14 +126,15 @@ export default class PlayPage extends RingaComponent {
           <h1>{curGame.activeTitle} {!curGame.published && <span className="beta-card">Beta</span>}</h1>
           <div>
             <Button onClick={this.restart_onClickHandler} focusable="false" tabIndex={-1}>
-              <i className="fa fa-step-backward" />
+              <i className="fa fa-step-backward" /> Reset
             </Button>
             <Button onClick={this.pausePlay_onClickHandler} focusable="false" tabIndex={-1}>
-              {curGame.paused ? <i className="fa fa-play" /> : <i className="fa fa-pause" />}
+              {curGame.paused ? [<i className="fa fa-play" />, ' Resume'] : [<i className="fa fa-pause"/>, ' Pause']}
             </Button>
-            {user ? <Button onClick={this.develop_onClickHandler} focusable="false" tabIndex={-1}><i className="fa fa-edit" /></Button> : undefined}
+            {user ? <Button onClick={this.develop_onClickHandler} focusable="false" tabIndex={-1}><i className="fa fa-edit" /> Edit</Button> : undefined}
             <Button onClick={this.toggleLargeScreen_onClickHandler} focusable="false" tabIndex={-1} selected={largeScreen}>
               <i className={largeScreen ? 'fa fa-window-restore' : 'fa fa-window-maximize'} />
+              {largeScreen ? ' View All' : ' Theatre Mode'}
             </Button>
           </div>
         </div>
@@ -142,7 +144,7 @@ export default class PlayPage extends RingaComponent {
             <TabNavigator>
               <Tab label="Highscores">
                 {!user && <div className="warning">
-                  You are not logged in! Your highscores will not be recorded.
+                  You are not logged in! No highscores will not recorded.
                   <Button label="Login" onClick={this.login_onClickHandler} focusable="false" tabIndex={-1} />
                 </div>}
                 <Highscores game={curGame}/>

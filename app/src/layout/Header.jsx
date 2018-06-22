@@ -50,8 +50,8 @@ class Header extends RingaComponent {
         </a>
       </div>
       {curBreakpointIx > 2 && <div>
-        <Button label="Games" onClick={this.home_onClickHandler} />
-        {curBreakpointIx >= 4 && <Button label="Explore" onClick={this.games_onClickHandler} />}
+        <Button label="Home" onClick={this.home_onClickHandler} />
+        {curBreakpointIx >= 4 && <Button label="Games" onClick={this.games_onClickHandler} />}
         <Button label="About" onClick={this.about_onClickHandler} />
         {curBreakpointIx >= 4 && <Button label="API" onClick={this.api_onClickHandler} />}
       </div>}

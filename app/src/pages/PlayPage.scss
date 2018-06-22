@@ -2,8 +2,8 @@
 
 .play {
   .warning {
-    background-color: $error-red;
-    color: white;
+    background-color: $warning-color;
+    color: $black;
     font-weight: bold;
     opacity: 0.75;
     padding: $pad3;
@@ -127,11 +127,12 @@
     }
 
     .warning {
-      background-color: $error-red;
-      color: white;
+      background-color: $warning-color;
+      color: $black;
       font-weight: bold;
       opacity: 0.75;
-      padding: $pad1 $pad2;
+      padding: $pad2;
+      margin: 0 $pad2;
       border-radius: $radius-1;
     }
 

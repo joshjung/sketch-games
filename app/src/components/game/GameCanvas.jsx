@@ -174,7 +174,7 @@ export default class GameCanvas extends RingaComponent {
       {this.props.game.paused && !this.props.game.development && <div className="paused" onClick={this.play_clickHandler}>
         <div className="game-paused">Game Paused</div>
         <div className="click-to-resume">Click to Resume</div>
-        <div><i className="fa fa-pause" /></div>
+        <div><i className="fa fa-play" /></div>
       </div> }
       <Loader show={this.props.game.loading}/>
     </div>;
