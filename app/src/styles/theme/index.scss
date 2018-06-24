@@ -14,6 +14,13 @@ html, body {
 }
 
 .classic {
+  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#303030+77,909090+100 */
+  background: #303030; /* Old browsers */
+  background: -moz-linear-gradient(top, #303030 77%, #909090 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(top, #303030 77%,#909090 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to bottom, #303030 77%,#909090 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#303030', endColorstr='#909090',GradientType=0 ); /* IE6-9 */
+
   label {
     display: block;
     margin: $pad2 0;

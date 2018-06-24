@@ -33,17 +33,17 @@
     align-items: center;
     padding: $pad2;
 
-    i {
-      font-size: 34px;
+    img {
+      height: 32px;
 
       @media screen and (max-width: $break-small) {
-        font-size: 26px;
+        height: 18px;
       }
     }
 
     .title {
       padding-left: $pad2;
-      font-size: 18px;
+      font-size: 20px;
       font-weight: bold;
       height: 40px;
       flex: 0 0 auto;
@@ -54,10 +54,12 @@
       flex-direction: column;
       justify-content: center;
       position: relative;
+      letter-spacing: 2px;
 
       .tagline {
         font-size: 12px;
         color: $white-2;
+        letter-spacing: 1px;
       }
 
       @media screen and (max-width: $break-small) {

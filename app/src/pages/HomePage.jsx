@@ -12,6 +12,8 @@ import Video from '../components/Video';
 
 import classnames from 'classnames';
 
+import LOGO from '../assets/logo.svg';
+
 import ASTEROIDS_MP4 from '../assets/videos/asteroids.mp4';
 import EDITOR_MP4 from '../assets/videos/editor.mp4';
 import PUBLISHING_MP4 from '../assets/videos/publishing.mp4';
@@ -67,6 +69,14 @@ export default class HomePage extends RingaComponent {
     }
 
     return <div className="splash">
+      <div className="card white">
+        <img src={LOGO} />
+        <div className="contents">
+          <div className="heading bubble-text">
+            GamePen is a site where you can <span className="blue">build, play</span>, and <span className="blue">share</span> community <span className="blue">web games</span> on mobile or desktop.
+          </div>
+        </div>
+      </div>
       <div className="card white">
         <Video src={ASTEROIDS_MP4} autoPlay muted loop />
         <div className="contents">

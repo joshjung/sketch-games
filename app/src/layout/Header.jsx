@@ -7,6 +7,8 @@ import APIController from '../controllers/APIController';
 
 import history from '../global/history';
 
+import LOGO_WHITE from '../assets/logo-white.svg';
+
 import './Header.scss';
 
 class Header extends RingaComponent {
@@ -40,13 +42,10 @@ class Header extends RingaComponent {
 
       <div className="logo">
         <a onClick={this.home_onClickHandler}>
-          <i className="fa fa-play-circle"></i>
-          {curBreakpointIx >= 2 && <div className="title">
-
-              {i18NModel.i18n('header.title')}
-
+          <img src={LOGO_WHITE} />
+          <div className="title">{i18NModel.i18n('header.title')}
             {curBreakpointIx > 2 && <div className="tagline">{i18NModel.i18n('header.tagline')}</div>}
-          </div>}
+          </div>
         </a>
       </div>
       {curBreakpointIx > 2 && <div>
