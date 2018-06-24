@@ -55,8 +55,8 @@ module.exports = new Promise(resolve => {
       __BUILD__: JSON.stringify(build),
       __BUILD_EPOCH__: new Date().getTime(),
       RINGA_CURRENT_WHITELIST: JSON.stringify(require('./uglifyMangleWhitelist.json')),
-      PASSWORD_RESET_REDIRECT_URI: "'https://www.supermini.games/account/password/validate-reset'",
-      API_ROOT: `'https://www.supermini.games/api'`,
+      PASSWORD_RESET_REDIRECT_URI: "'https://www.gamepen.io/account/password/validate-reset'",
+      API_ROOT: `'https://www.gamepen.io/api'`,
       'process.env': {
         NODE_ENV: '"production"'
       }

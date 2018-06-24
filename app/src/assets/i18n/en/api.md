@@ -1,6 +1,6 @@
 # Overview
 
-The SuperMini Games API has been designed so that you can write compact games very quickly.
+The GamePen API has been designed so that you can write compact games very quickly.
 
 ## Game Development 101
 
@@ -14,7 +14,7 @@ sprites (images), characters, the starting score, etc.
 
 The **game loop** is a special function that runs all your AI, rendering, and game logic.
 
-**All the code you edit in SuperMini Games is contained within the game loop.**
+**All the code you edit in GamePen is contained within the game loop.**
 
 ## Game Loop
 
@@ -57,7 +57,7 @@ for you to render, store state, and check on user input:
 
 The elapsed time number `E` is the time since the last game loop, in seconds. You can use this to create smooth movements.
 
-[Live Example Here](http://www.supermini.games/games/playground/5b0eee1c0268512aee299516)
+[Live Example Here](http://www.gamepen.io/games/playground/5b0eee1c0268512aee299516)
 
 ```
 if (!G.init) {
@@ -80,7 +80,7 @@ R.poly(points, {
 
 The `R` object contains render methods you can use to draw things on the screen, like text or circles:
 
-[Live Example Here](http://www.supermini.games/games/playground/5b0ef4d90268512aee299518)
+[Live Example Here](http://www.gamepen.io/games/playground/5b0ef4d90268512aee299518)
 
 ```
 // text, x, y, fill, font
@@ -119,7 +119,7 @@ For example:
 
 The `C` object is the canvas context object used to draw onto the game canvas. You can read more about it [here](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D).
 
-[Live Example Here](http://www.supermini.games/games/playground/5b0ef6080268512aee299519)
+[Live Example Here](http://www.gamepen.io/games/playground/5b0ef6080268512aee299519)
 
 ```
 C.fillStyle = 'rgba(0, 120, 0, 0.5)';
@@ -134,7 +134,7 @@ When the game is reset, the object is cleared to an empty Javascript object.
 
 You can use the G object, if it is empty, to determine when your game has first started.
 
-[Live Example Here](http://www.supermini.games/games/playground/5b0ef6760268512aee29951a)
+[Live Example Here](http://www.gamepen.io/games/playground/5b0ef6760268512aee29951a)
 
 ```
 if (!G.init) {
@@ -155,7 +155,7 @@ Coming soon:
 
 * Touch events (mobile)
 
-[Live Example Here](http://www.supermini.games/games/playground/5b0ef6f80268512aee29951b)
+[Live Example Here](http://www.gamepen.io/games/playground/5b0ef6f80268512aee29951b)
 
 ```
 if (I.keyDown(I.DOWN)) R.text('DOWN is pressed', 0, 0);

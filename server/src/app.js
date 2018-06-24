@@ -27,12 +27,12 @@ setImmediate(() => {
 
     https.createServer(csrOptions, app)
       .listen(ssl.port, () => {
-        console.log(`Supermini Games production SSL server started at https://localhost:${ssl.port}`, ip, env);
+        console.log(`GamePen production SSL server started at https://localhost:${ssl.port}`, ip, env);
       });
   } else {
     const server = http.createServer(app);
     server.listen(port, ip, () => {
-      console.log('Supermini Games server listening on http://%s:%d, in %s mode', ip, port, env)
+      console.log('GamePen server listening on http://%s:%d, in %s mode', ip, port, env)
     })
   }
 });

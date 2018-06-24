@@ -13,7 +13,7 @@ export const create = ({ bodymen: { body: { email, link } } }, res, next) =>
       link = `${link.replace(/\/$/, '')}/${token}`
       const content = `
         Hey, ${user.name}.<br><br>
-        You requested a new password for your SuperMini Games account.<br>
+        You requested a new password for your GamePen account.<br>
         Please use the following link to set a new password. It will expire in 1 hour.<br><br>
         <a href="${link}">${link}</a><br><br>
         If you didn't make this request then you can safely ignore this email. :)<br><br>

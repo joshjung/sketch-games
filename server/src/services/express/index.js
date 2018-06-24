@@ -22,7 +22,7 @@ export default (apiRoot, routes) => {
 
   var corsOptions = {
     origin: function (origin, callback) {
-      if (['http://localhost:8080', 'http://www.supermini.games'].indexOf(origin) !== -1) {
+      if (['http://localhost:8080', 'https://www.supermini.games', 'https://www.gamepen.io'].indexOf(origin) !== -1) {
         callback(null, true)
       } else {
         callback(new Error(`Not allowed by CORS: ${origin}`))
