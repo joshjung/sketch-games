@@ -8,6 +8,7 @@ import APIController from '../controllers/APIController';
 import history from '../global/history';
 
 import LOGO_WHITE from '../assets/logo-white.svg';
+import LOGO_TEXT_WHITE from '../assets/logo-text-white.svg';
 
 import './Header.scss';
 
@@ -39,11 +40,11 @@ class Header extends RingaComponent {
     }
 
     return <header className="app-header">
-
       <div className="logo">
         <a onClick={this.home_onClickHandler}>
-          <img src={LOGO_WHITE} />
-          <div className="title">{i18NModel.i18n('header.title')}
+          <img className="logo" src={LOGO_WHITE} />
+          <div className="title">
+            <img src={LOGO_TEXT_WHITE} />
             {curBreakpointIx > 2 && <div className="tagline">{i18NModel.i18n('header.tagline')}</div>}
           </div>
         </a>

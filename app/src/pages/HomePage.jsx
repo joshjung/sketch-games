@@ -70,10 +70,9 @@ export default class HomePage extends RingaComponent {
 
     return <div className="splash">
       <div className="card white">
-        <img src={LOGO} />
-        <div className="contents">
-          <div className="heading bubble-text">
-            GamePen is a site where you can <span className="blue">build, play</span>, and <span className="blue">share</span> community <span className="blue">web games</span> on mobile or desktop.
+        <div className="contents centered">
+          <div className="content">
+            At GamePen you can <span className="blue">build, play</span>, and <span className="blue">share</span> community <span className="blue">web games</span> on mobile or desktop.
           </div>
         </div>
       </div>
@@ -89,14 +88,14 @@ export default class HomePage extends RingaComponent {
           </div>
         </div>
       </div>
-      <div className="card white">
+      <div className="card fade">
         <Video src={EDITOR_MP4} autoPlay muted loop />
         <div className="contents">
           <div className="heading bubble-text">Be Inspired</div>
           <div className="description bubble-text">Follow easy tutorials and build a simple game in less than 1 hour</div>
         </div>
       </div>
-      <div className="card white">
+      <div className="card fade">
         <Video src={PUBLISHING_MP4} autoPlay muted loop />
         <div className="contents">
           <div className="heading bubble-text">Share your Creation</div>

@@ -200,6 +200,8 @@ html, body {
 
   .ringa-component.list {
     border: 1px solid $grey-1;
+    overflow-y: scroll; /* has to be scroll, not auto */
+    -webkit-overflow-scrolling: touch;
 
     .search {
       border: none;

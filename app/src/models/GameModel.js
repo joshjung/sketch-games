@@ -13,6 +13,9 @@ import NEW_GAME_INSTRUCTIONS from '../assets/newGameInstructions.txt';
 export default class GameModel extends Model {
   static STATE_NOT_STARTED = 0;
 
+  //-----------------------------------
+  // Constructor
+  //-----------------------------------
   constructor(name, values, options) {
     super(name, values);
 
@@ -60,6 +63,9 @@ export default class GameModel extends Model {
     this.addProperty('activeKeys', undefined);
   }
 
+  //-----------------------------------
+  // Properties
+  //-----------------------------------
   get development() {
     return this.mode === 'development';
   }
@@ -130,6 +136,9 @@ export default class GameModel extends Model {
     return !!this.loadingItems.length;
   }
 
+  //-----------------------------------
+  // Methods
+  //-----------------------------------
   serialize(options) {
     const serialized = super.serialize(options);
 

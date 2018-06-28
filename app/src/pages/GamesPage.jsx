@@ -10,6 +10,7 @@ import AppController from '../controllers/AppController';
 import history from '../global/history';
 
 import './GamesPage.scss';
+import Loader from "../components/Loader";
 
 export default class GamesPage extends RingaComponent {
   //-----------------------------------
@@ -19,7 +20,8 @@ export default class GamesPage extends RingaComponent {
     super(props);
 
     this.state = {
-      filter: 'all'
+      filter: 'all',
+      loading: false
     };
 
     this.depend(
@@ -32,7 +34,15 @@ export default class GamesPage extends RingaComponent {
   // Lifecycle
   //-----------------------------------
   componentDispatchReady() {
-    this.dispatch(APIController.GET_GAMES);
+    this.setState({
+      loading: true
+    });
+
+    this.dispatch(APIController.GET_GAMES).then(() => {
+      this.setState({
+        loading: false
+      });
+    });
   }
 
   componentWillUpdate(nextProps) {
@@ -42,13 +52,23 @@ export default class GamesPage extends RingaComponent {
   }
 
   render() {
-    let { filter, user } = this.state;
+    let { filter, user, loading } = this.state;
 
     if (this.props.match.params.filter) {
       filter = this.props.match.params.filter;
     }
 
     const renderedGames = this.getFilteredGames();
+
+    let content;
+
+    if (!loading) {
+      content = renderedGames.length ? <List items={renderedGames}
+                                             labelField="title"
+                                             onChange={this.list_onChangeHandler}
+                                             itemRenderer={this.gameListItemRenderer}/>
+        : <div className="filter-empty">There are no games available for this filter.</div>;
+    }
 
     return <div className="games">
       <div className="header">
@@ -74,10 +94,8 @@ export default class GamesPage extends RingaComponent {
                   onClick={() => this.setFilter('mine-development')} />}
         </div>
       </div>
-      {renderedGames.length ? <List items={renderedGames}
-                                    labelField="title"
-                                    onChange={this.list_onChangeHandler}
-                                    itemRenderer={this.gameListItemRenderer}/> : <div className="filter-empty">There are no games available for this filter.</div>}
+      {content}
+      <Loader show={loading} />
     </div>;
   }
 

@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="538px" height="523px" viewBox="0 0 538 523" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="2804px" height="523px" viewBox="0 0 2804 523" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
-    <title>Slice</title>
+    <title>logo</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <path d="M269,523 C120.435402,523 0,405.922462 0,261.5 C0,117.077538 120.435402,0 269,0 C417.564598,0 538,117.077538 538,261.5 C538,405.922462 417.564598,523 269,523 Z M118.238868,367.666667 L75,388.687684 C117.046372,449.20854 188.255821,489 269.023636,489 C398.245214,489 503,387.144781 503,261.5 C503,135.855219 398.245214,34 269.023636,34 C188.255821,34 117.046372,73.7914597 75,134.312316 L116.34815,154.414141 L269.496315,154.414141 L269.496315,195.777778 L201.430464,195.777778 L336.616808,261.5 L203.321182,326.30303 L269.496315,326.30303 L269.496315,367.666667 L118.238868,367.666667 Z" id="Combined-Shape" fill="#1B73B3"></path>
+        <text id="GamePen" font-family="STHeitiTC-Medium, Heiti TC" font-size="450" font-weight="bold" letter-spacing="-0.3613139">
+            <tspan x="580" y="435" fill="#0A2463">Game</tspan>
+            <tspan x="1992.90474" y="435" fill="#1B73B3">Pen</tspan>
+        </text>
         <ellipse id="Oval-2" fill="#1B73B3" cx="379" cy="170" rx="19" ry="18"></ellipse>
     </g>
 </svg>
