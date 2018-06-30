@@ -28,7 +28,7 @@ export default class Highscores extends RingaComponent {
     return <div className="highscores">
       {!game.sortedHighscores.length && <label>No highscores yet.</label>}
       <div className="highscore header">
-        <div className="position"></div>
+        <div className="position" />
         <div className="points">Score</div>
         <div className="name">Name</div>
         <div className="time">Game Time</div>

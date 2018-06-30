@@ -5,17 +5,13 @@ import {Model} from 'ringa';
 import {RingaComponent, I18NModel, TextInput, Button, ScreenModel} from 'ringa-fw-react';
 import {dependency} from 'react-ringa';
 
-import history from '../global/history';
+import history from '../util/history';
 
 import APIController from '../controllers/APIController';
 
 import './Login.scss';
 
-const LoginModel = Model.construct('LoginModel', [{
-  name: 'email'
-}, {
-  name: 'password'
-}]);
+const LoginModel = Model.construct('LoginModel', ['email', 'password']);
 
 export default class Login extends RingaComponent {
   //-----------------------------------

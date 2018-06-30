@@ -6,7 +6,7 @@ import {setup as setupI18N} from '../i18n';
 
 import Header from './Header';
 
-import AppController from '../controllers/AppController';
+import GamePenController from '../controllers/GamePenController';
 import APIController from '../controllers/APIController';
 import RestController from '../controllers/RESTController';
 
@@ -27,10 +27,10 @@ export default class ApplicationLayout extends DefaultApplicationRoot {
     setupI18N(this.i18NModel);
 
     attach(this, this.restController = new RestController());
-    attach(this, this.appController = new AppController());
-    attach(this, new APIController(this.appController.appModel));
+    attach(this, this.appController = new GamePenController());
+    attach(this, new APIController(this.appController.gamePenModel));
 
-    this.restController.appModel = this.appController.appModel;
+    this.restController.gamePenModel = this.appController.gamePenModel;
   }
 
   //-----------------------------------

@@ -2,12 +2,10 @@ import React from 'react';
 
 import {RingaComponent, TextInput, Button, TabNavigator, Tab, Alert, Markdown, I18NModel, List, ModalToggleContainer, Dropdown, Panel, Checkbox} from 'ringa-fw-react';
 import {dependency} from 'react-ringa';
-import GameController from '../../controllers/GameController';
 import APIController from '../../controllers/APIController';
 import Assets from '../../components/editor/Assets'
-import AppModel from '../../models/AppModel';
-import history from '../../global/history';
-import GameCanvas from '../game/GameCanvas';
+import GamePenModel from '../../models/GamePenModel';
+import history from '../../util/history';
 import Highscores from '../../components/Highscores';
 import moment from 'moment';
 import * as JsDiff from 'diff';
@@ -35,11 +33,11 @@ export default class Editor extends RingaComponent {
 
     this.diffMap = {};
 
-    this.depend(dependency(AppModel, ['user']), dependency(I18NModel, 'language'));
+    this.depend(dependency(GamePenModel, ['user']), dependency(I18NModel, 'language'));
 
     // TODO figure out a better way to keep the buttons from being focused
     document.addEventListener('click', function(e) {
-      if(document.activeElement.toString() == '[object HTMLButtonElement]') {
+      if(document.activeElement.toString() === '[object HTMLButtonElement]') {
         const tabindex = document.activeElement.getAttribute('tabindex');
 
         if (parseInt(tabindex) === -1) {
@@ -326,8 +324,11 @@ export default class Editor extends RingaComponent {
   }
 
   render() {
-    const {title, code, user, i18NModel, fullScreenEditor} = this.state;
-    const {image, lib, published, ownerUserId, publishedDate, description, version, publishedVersion, dirty} = this.props.game;
+    const {title, user, i18NModel, fullScreenEditor} = this.state;
+    const {game} = this.props;
+    const {image, lib, published, ownerUserId, publishedDate, description, version, publishedVersion, dirty} = game;
+
+    const {EngineCanvasComponent} = game.engine;
 
     return <div className="editor page">
       {this.renderHeader()}
@@ -386,7 +387,7 @@ export default class Editor extends RingaComponent {
           </TabNavigator>
         </div>
         {!fullScreenEditor && <div className="right-pane">
-          <GameCanvas game={this.props.game}/>
+          <EngineCanvasComponent game={game}/>
         </div>}
       </div>
     </div>;

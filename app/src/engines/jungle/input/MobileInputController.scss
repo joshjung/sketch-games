@@ -1,0 +1,78 @@
+@import '../../../styles/variables';
+
+.mobile-input-controller {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: calc(100% - 40px);
+  padding: 20px;
+  height: 100%;
+
+  * {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+  }
+
+  .fixed-directional-pad {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    position: relative;
+    width: 160px;
+    height: 160px;
+
+    .up, .left, .right, .down {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      border-radius: 40px;
+      background: $black;
+      border: 5px solid $black;
+      color: white;
+      font-size: 11px;
+    }
+
+    .up {
+      left: calc(80px - 30px);
+      top: 0;
+    }
+
+    .left {
+      left: 0;
+      top: calc(80px - 30px);
+    }
+
+    .right {
+      left: calc(160px - 60px);
+      top: calc(80px - 30px);
+    }
+
+    .down {
+      left: calc(80px - 30px);
+      top: calc(160px - 60px);
+    }
+  }
+
+  .key {
+    margin: 10px;
+    background: lightblue;
+    min-width: 60px;
+    min-height: 60px;
+    max-height: 80px;
+    border-radius: 20px;
+    font-size: 15px;
+    font-weight: bold;
+  }
+
+  .action-pad {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}

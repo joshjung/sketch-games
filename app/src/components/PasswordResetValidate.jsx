@@ -7,7 +7,7 @@ import APIController from '../controllers/APIController';
 
 import './PasswordResetValidate.scss';
 
-import history from '../global/history';
+import history from '../util/history';
 
 export default class PasswordResetValidate extends RingaComponent {
   //-----------------------------------

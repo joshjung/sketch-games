@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {RingaComponent, I18NModel, Button} from 'ringa-fw-react';
+import {RingaComponent, I18NModel} from 'ringa-fw-react';
 
 import moment from 'moment';
 

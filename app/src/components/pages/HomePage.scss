@@ -1,0 +1,247 @@
+@import '../../styles/variables';
+
+.classic {
+  .home {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+
+    .splash {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-around;
+      transition: height 0.4s ease;
+      height: 275px;
+
+      &:hover {
+        height: 490px;
+      }
+
+      .card {
+        position: relative;
+        border-radius: $radius-1;
+        margin: 0 calc(#{$pad3 / 2});
+        margin-bottom: $pad2;
+        padding: $pad2;
+        height: calc(100% - #{$pad2 * 2} - #{$pad3});
+        width: 33%;
+        max-width: 330px;
+        overflow: hidden;
+        color: $white;
+
+        &.fade .contents {
+          background :rgba(0, 0, 0, 0.6);
+        }
+
+        .contents {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          z-index: 300000;
+          padding: $pad2;
+
+          &.centered {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+          }
+
+          .blue {
+            color: $selected-1;
+            font-weight: bold;
+          }
+
+          .heading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+
+            font-size: 20px;
+            letter-spacing: 2px;
+            text-align: center;
+            padding: $pad2;
+          }
+
+          .content {
+            font-size: 20px;
+            letter-spacing: 2px;
+            text-align: center;
+            padding: $pad2;
+          }
+
+          .description {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 300000;
+            text-align: center;
+            padding: $pad3;
+            font-size: 18px;
+
+            ul, li {
+              text-align: left;
+              margin: 0;
+            }
+          }
+
+          .heading, .description {
+            &.bubble-text {
+              opacity: 0.9;
+            }
+          }
+
+          .heading {
+            &.bubble-text {
+            }
+          }
+
+          .description {
+            &.bubble-text {
+            }
+          }
+        }
+
+        .video, img {
+          z-index: 500;
+          position: absolute;
+          left: -5px;
+          right: -5px;
+          top: -5px;
+        }
+
+        img {
+          width: 100%;
+        }
+
+        .video {
+          min-width: 400px;
+        }
+
+        &:first-child {
+          margin-left: 0;
+        }
+
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+    }
+    .ringa-component.list {
+      height: 100%;
+      width: 100%;
+
+      @media screen and (max-width: 768px) {
+        border: none;
+        border-radius: 0;
+      }
+    }
+
+    .game-item {
+      width: calc(100% - 20px);
+      height: 80px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+
+      .image {
+        flex: 0 0 auto;
+        width: 110px;
+      }
+
+      .title {
+        font-size: 22px;
+        width: 25%;
+        flex: 0 0 auto;
+      }
+
+      .description {
+        font-size: 16px;
+        color: darkgrey;
+      }
+
+      .title, .author, .description, .playCount {
+        width: 25%;
+      }
+
+      .author, .playCount {
+        text-align: center;
+        font-size: 10px;
+        color: grey;
+      }
+
+      .highscore {
+        color: grey;
+        min-width: 150px;
+        text-align: right;
+        font-size: 12px;
+
+        .points {
+          font-weight: bold;
+          font-size: 16px;
+        }
+      }
+    }
+
+    .game-item-mobile {
+      width: calc(100% - 20px);
+      display: flex;
+      flex-direction: row;
+      padding: 20px 10px !important;
+
+      .image {
+        width: 140px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        img {
+          border: 1px solid $ringa-color-2;
+        }
+      }
+
+      .details {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        padding-left: 20px;
+
+        .title {
+          display: flex;
+          align-items: center;
+          font-size: 16px;
+        }
+
+        .description {
+          font-size: 11px;
+          color: black;
+          margin: 5px 0;
+        }
+
+        .author, .playCount {
+          font-size: 10px;
+          color: grey;
+          margin: 5px 0;
+        }
+
+        .highscore {
+          color: grey;
+          font-size: 11px;
+
+          .points {
+            font-weight: bold;
+            font-size: 16px;
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,12 @@
+@import '../../styles/variables';
+
+.playground {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+
+  .editor {
+    flex: 1 1 auto;
+    width: 100%;
+  }
+}

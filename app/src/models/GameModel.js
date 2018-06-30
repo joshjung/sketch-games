@@ -7,11 +7,17 @@ import {Model} from 'ringa';
 // 2) Use the dynamic `import('@babel/standalone).then()` syntax to load the
 //    processor dynamically when the editor is loaded.
 
-import NEW_GAME_CODE from '../assets/newGameCode.txt';
-import NEW_GAME_INSTRUCTIONS from '../assets/newGameInstructions.txt';
+import NEW_GAME_CODE from '../../assets/newGameCode.txt';
+import NEW_GAME_INSTRUCTIONS from '../../assets/newGameInstructions.txt';
+
+import Jungle from '../engines/jungle';
 
 export default class GameModel extends Model {
   static STATE_NOT_STARTED = 0;
+
+  static ENGINES = {
+    'jungle': Jungle
+  };
 
   //-----------------------------------
   // Constructor
@@ -56,6 +62,7 @@ export default class GameModel extends Model {
     this.addProperty('history', []);
     this.addProperty('assets', []);
     this.addProperty('lib', []); // A string list of node_modules that can be loaded. Right now only 'phaser' is allowed.
+    this.addProperty('engineId', 'jungle');
 
     this._libs = []; // This is where the LOADED libraries get stored.
 
@@ -66,6 +73,10 @@ export default class GameModel extends Model {
   //-----------------------------------
   // Properties
   //-----------------------------------
+  get engine() {
+    return GameModel.ENGINES[this.engineId];
+  }
+
   get development() {
     return this.mode === 'development';
   }

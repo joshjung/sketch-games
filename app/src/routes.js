@@ -2,17 +2,17 @@ import React from 'react';
 import { Route, Switch } from 'react-router';
 
 import ApplicationLayout from './layout/ApplicationLayout';
-import HomePage from './pages/HomePage';
-import AboutPage from './pages/AboutPage';
-import PlaygroundPage from './pages/PlaygroundPage';
-import PlayPage from './pages/PlayPage';
-import LoginPage from './pages/LoginPage';
-import PasswordResetPage from './pages/PasswordResetPage';
-import PasswordResetValidatePage from './pages/PasswordResetValidatePage';
-import NewUserPage from './pages/NewUserPage';
-import NewGamePage from './pages/NewGamePage';
-import GamesPage from './pages/GamesPage';
-import APIPage from "./pages/APIPage";
+import HomePage from './components/pages/HomePage';
+import AboutPage from './components/pages/AboutPage';
+import PlaygroundPage from './components/pages/PlaygroundPage';
+import PlayPage from './components/pages/PlayPage';
+import LoginPage from './components/pages/LoginPage';
+import PasswordResetPage from './components/pages/PasswordResetPage';
+import PasswordResetValidatePage from './components/pages/PasswordResetValidatePage';
+import NewUserPage from './components/pages/NewUserPage';
+import NewGamePage from './components/pages/NewGamePage';
+import GamesPage from './components/pages/GamesPage';
+import APIPage from "./components/pages/APIPage";
 
 export default (
   <Route path="/">

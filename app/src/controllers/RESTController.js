@@ -14,8 +14,7 @@ export default class RESTController extends Ringa.Controller {
       timeout: 10000
     });
 
-    this.restModel = new RESTModel();
-    this.addModel(this.restModel);
+    this.restModel = this.addModel(new RESTModel());
 
     //------------------------------------
     // GET, POST, PUT, DELETE
@@ -27,7 +26,7 @@ export default class RESTController extends Ringa.Controller {
 
       if ($detail.credentials) {
         $detail.headers = $detail.headers || {};
-        $detail.headers['Authorization'] = `Bearer ${this.appModel.token}`;
+        $detail.headers['Authorization'] = `Bearer ${this.gamePenModel.token}`;
       }
     };
 

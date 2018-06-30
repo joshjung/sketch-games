@@ -1,14 +1,14 @@
 import React from 'react';
-import {RingaComponent, I18NModel, I18NSwitcher, ScreenModel, Button} from 'ringa-fw-react';
+import {RingaComponent, I18NModel, ScreenModel, Button} from 'ringa-fw-react';
 import {depend, dependency} from 'react-ringa';
 
-import AppModel from '../models/AppModel';
+import GamePenModel from '../models/GamePenModel';
 import APIController from '../controllers/APIController';
 
-import history from '../global/history';
+import history from '../util/history';
 
-import LOGO_WHITE from '../assets/logo-white.svg';
-import LOGO_TEXT_WHITE from '../assets/logo-text-white.svg';
+import LOGO_WHITE from '../../assets/logo-white.svg';
+import LOGO_TEXT_WHITE from '../../assets/logo-text-white.svg';
 
 import './Header.scss';
 
@@ -22,7 +22,7 @@ class Header extends RingaComponent {
     depend(this, [
       dependency(I18NModel, 'language'),
       dependency(ScreenModel, 'curBreakpointIx'),
-      dependency(AppModel, ['token', 'user', 'fullscreen']),
+      dependency(GamePenModel, ['token', 'user', 'fullscreen']),
       dependency(ScreenModel, 'curBreakpointIx')
     ]);
   }

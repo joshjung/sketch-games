@@ -3,11 +3,11 @@ import React from 'react';
 import {RingaComponent, TextInput, Button} from 'ringa-fw-react';
 import {dependency} from 'react-ringa';
 import APIController from '../../controllers/APIController';
-import AppModel from '../../models/AppModel';
+import GamePenModel from '../../models/GamePenModel';
 
 import GameModel from '../../models/GameModel';
 
-import history from '../../global/history';
+import history from '../../util/history';
 
 import './NewGame.scss';
 
@@ -19,7 +19,7 @@ export default class NewGame extends RingaComponent {
     super(props);
 
     this.gameModel = new GameModel();
-    this.depend(dependency(AppModel, 'user'));
+    this.depend(dependency(GamePenModel, 'user'));
   }
 
   //-----------------------------------

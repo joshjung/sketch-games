@@ -2,16 +2,16 @@ import { Controller, event, iif } from 'ringa';
 
 import RESTController from './RESTController';
 
-import {getCookie, setCookie} from '../global/cookie';
+import {getCookie, setCookie} from '../util/cookie';
 
 export default class APIController extends Controller {
   //-----------------------------------
   // Constructor
   //-----------------------------------
-  constructor(appModel) {
+  constructor(gamePenModel) {
     super('APIController');
 
-    this.appModel = appModel;
+    this.gamePenModel = gamePenModel;
 
     //---------------------------------
     // AuthController.LOGIN
@@ -23,8 +23,8 @@ export default class APIController extends Controller {
       }),
       ($lastPromiseResult, $detail) => {
         if ($lastPromiseResult && $lastPromiseResult.token) {
-          appModel.token = $lastPromiseResult.token;
-          setCookie('smg_auth_token', appModel.token);
+          gamePenModel.token = $lastPromiseResult.token;
+          setCookie('smg_auth_token', gamePenModel.token);
           $detail.success = true;
           this.dispatch(APIController.ME);
         } else if ($lastPromiseResult.message) {
@@ -80,8 +80,8 @@ export default class APIController extends Controller {
       }),
       ($lastPromiseResult, $detail) => {
         if ($lastPromiseResult && $lastPromiseResult.token) {
-          appModel.token = $lastPromiseResult.token;
-          setCookie('smg_auth_token', appModel.token);
+          gamePenModel.token = $lastPromiseResult.token;
+          setCookie('smg_auth_token', gamePenModel.token);
           $detail.success = true;
           this.dispatch(APIController.ME);
         } else {
@@ -92,7 +92,7 @@ export default class APIController extends Controller {
 
     this.addListener('logout', [
       () => {
-        appModel.token = appModel.user = undefined;
+        gamePenModel.token = gamePenModel.user = undefined;
         setCookie('smg_auth_token', undefined);
       }]);
 
@@ -103,7 +103,7 @@ export default class APIController extends Controller {
       }),
       ($lastPromiseResult, $detail) => {
         $detail.success = true;
-        appModel.user = $lastPromiseResult;
+        gamePenModel.user = $lastPromiseResult;
       }]);
 
     this.addListener('saveGame', [
@@ -126,7 +126,7 @@ export default class APIController extends Controller {
         bodyParam: 'body',
         body: {
           id,
-          userId: this.appModel.user.id
+          userId: this.gamePenModel.user.id
         },
         credentials: true
       })),
@@ -140,7 +140,7 @@ export default class APIController extends Controller {
         bodyParam: 'body',
         body: {
           id,
-          userId: this.appModel.user && this.appModel.user.id
+          userId: this.gamePenModel.user && this.gamePenModel.user.id
         },
         credentials: true
       })),
@@ -156,9 +156,9 @@ export default class APIController extends Controller {
           id,
           score,
           time,
-          screenshot: this.appModel.curGame.screenshot(),
-          userId: this.appModel.user && this.appModel.user.id,
-          name: (this.appModel.user && this.appModel.user.name) || 'Anonymous'
+          screenshot: this.gamePenModel.curGame.screenshot(),
+          userId: this.gamePenModel.user && this.gamePenModel.user.id,
+          name: (this.gamePenModel.user && this.gamePenModel.user.name) || 'Anonymous'
         },
         credentials: true
       })),
@@ -172,7 +172,7 @@ export default class APIController extends Controller {
         bodyParam: 'body',
         body: {
           id,
-          userId: this.appModel.user.id
+          userId: this.gamePenModel.user.id
         },
         credentials: true
       })),
@@ -195,7 +195,7 @@ export default class APIController extends Controller {
       }),
       ($lastPromiseResult) => {
         if ($lastPromiseResult.rows) {
-          appModel.games = $lastPromiseResult.rows;
+          gamePenModel.games = $lastPromiseResult.rows;
         }
       }]);
 
@@ -237,10 +237,10 @@ export default class APIController extends Controller {
   }
 
   busMounted(bus) {
-    let token = getCookie('smg_auth_token', this.appModel.token);
+    let token = getCookie('smg_auth_token', this.gamePenModel.token);
 
     if (token) {
-      this.appModel.token = token;
+      this.gamePenModel.token = token;
 
       this.dispatch(APIController.ME);
     }

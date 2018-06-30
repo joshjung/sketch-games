@@ -1,10 +1,10 @@
-import ENGLISH_LANGUAGE_PACK from './assets/i18n/en/pack.json';
-//import SWEDISH_LANGUAGE_PACK from './assets/i18n/sv/pack.json';
+import ENGLISH_LANGUAGE_PACK from '../assets/i18n/en/pack.json';
+//import SWEDISH_LANGUAGE_PACK from '../assets/i18n/sv/pack.json';
 
-import EN_HOME_PAGE_CONTENT from './assets/i18n/en/home.md';
-import EN_GAMES_PAGE_CONTENT from './assets/i18n/en/gamesPage.md';
-import EN_API from './assets/i18n/en/api.md';
-//import SV_HOME_PAGE_CONTENT from './assets/i18n/sv/home.md';
+import EN_HOME_PAGE_CONTENT from '../assets/i18n/en/home.md';
+import EN_GAMES_PAGE_CONTENT from '../assets/i18n/en/gamesPage.md';
+import EN_API from '../assets/i18n/en/api.md';
+//import SV_HOME_PAGE_CONTENT from '../assets/i18n/sv/home.md';
 
 const EN = 'en';
 const SV = 'sv';
