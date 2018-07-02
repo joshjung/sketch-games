@@ -1,0 +1,13 @@
+@import '../styles/variables';
+
+.item.engine {
+  .title {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: $pad1;
+  }
+
+  .description {
+    font-size: 11px;
+  }
+}

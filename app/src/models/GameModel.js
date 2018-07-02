@@ -7,17 +7,13 @@ import {Model} from 'ringa';
 // 2) Use the dynamic `import('@babel/standalone).then()` syntax to load the
 //    processor dynamically when the editor is loaded.
 
+import Engines from '../engines';
+
 import NEW_GAME_CODE from '../../assets/newGameCode.txt';
 import NEW_GAME_INSTRUCTIONS from '../../assets/newGameInstructions.txt';
 
-import Jungle from '../engines/jungle';
-
 export default class GameModel extends Model {
   static STATE_NOT_STARTED = 0;
-
-  static ENGINES = {
-    'jungle': Jungle
-  };
 
   //-----------------------------------
   // Constructor
@@ -74,7 +70,7 @@ export default class GameModel extends Model {
   // Properties
   //-----------------------------------
   get engine() {
-    return GameModel.ENGINES[this.engineId];
+    return Engines.find(engine => engine.id === this.engineId);
   }
 
   get development() {
@@ -237,17 +233,40 @@ export default class GameModel extends Model {
   }
 
   initializeLibs() {
-    const promises = this.lib.map(lib => {
+    const promiseTriggers = this.lib.map(lib => {
       switch (lib) {
         case 'phaser':
-          return import('phaser').then(library => this._libs.Phaser = library);
+          return () => {
+            return import('phaser').then(library => window.Phaser = this._libs.Phaser = library);
+          };
+        case 'phaser-ce':
+          return () => {
+            return import('phaser-ce').then(library => window.Phaser = this._libs.Phaser = library);
+          };
+        case 'pixi.js':
+          return () => {
+            return import('phaser-ce/build/custom/pixi.js').then(library => {
+              console.log('PIXI', library);
+              window.PIXI = this._libs.Phaser = library.PIXI;
+            });
+          };
+        case 'p2':
+          return () => {
+            return import('phaser-ce/build/custom/p2.js').then(library => window.p2 = this._libs.Phaser = library);
+          };
       }
     }).filter(p => !!p);
 
-    return Promise.all(promises);
+    // Run all of them sequentially
+    // See: https://stackoverflow.com/questions/30823653/is-node-js-native-promise-all-processing-in-parallel-or-sequentially
+    return promiseTriggers.reduce((r, pt) => r.then(() => pt()), Promise.resolve()).then(() => {
+      this.notify('libsLoaded'); // Gotta load them liberals...
+    });
   }
 
   initialize() {
+    this.restart();
+
     return Promise.all([
       this.initializeAssets(),
       this.initializeLibs()
@@ -327,14 +346,14 @@ export default class GameModel extends Model {
     });
   }
 
-  addPhaser() {
-    this.lib = ['phaser'];
+  changeEngine(engine) {
+    if (this.engine) {
+      this.engine.destroy(this);
+    }
 
-    return this.initialize();
-  }
-
-  removePhaser() {
-    this.lib = [];
+    this.engineId = engine.id;
+    this.lib = engine.lib;
+    this.dirty = true;
 
     return this.initialize();
   }

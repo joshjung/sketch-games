@@ -1,6 +1,7 @@
 import React from 'react';
 
-import {RingaComponent, TextInput, Button, TabNavigator, Tab, Alert, Markdown, I18NModel, List, ModalToggleContainer, Dropdown, Panel, Checkbox} from 'ringa-fw-react';
+import {RingaComponent, TextInput, Button, TabNavigator, Tab, Alert, Markdown,
+  I18NModel, List, ModalToggleContainer, Dropdown, Panel} from 'ringa-fw-react';
 import {dependency} from 'react-ringa';
 import APIController from '../../controllers/APIController';
 import Assets from '../../components/editor/Assets'
@@ -11,6 +12,9 @@ import moment from 'moment';
 import * as JsDiff from 'diff';
 import classnames from 'classnames';
 import Loader from '../Loader';
+import Engines from '../../engines';
+
+import GameEngineDropdown from '../GameEngineDropdown';
 
 import './Editor.scss';
 
@@ -27,6 +31,7 @@ export default class Editor extends RingaComponent {
       instructions: 'Enter your instructions using Markdown syntax',
       description: '',
       title: '',
+      loading: false,
       showHistory: false,
       selectedHistoryItem: undefined
     };
@@ -111,6 +116,7 @@ export default class Editor extends RingaComponent {
 
   renderControls() {
     const {showHistory, fullScreenEditor} = this.state;
+
     return <span className="controls">
       <Button onClick={this.reset_onClickHandler} focusable="false" tabIndex={-1}>
         <i className="fa fa-step-backward" />
@@ -323,12 +329,58 @@ export default class Editor extends RingaComponent {
     </div>;
   }
 
-  render() {
-    const {title, user, i18NModel, fullScreenEditor} = this.state;
+  renderSettingsTab() {
+    const {title, user} = this.state;
     const {game} = this.props;
-    const {image, lib, published, ownerUserId, publishedDate, description, version, publishedVersion, dirty} = game;
+    const {image, engineId, published, ownerUserId, publishedDate, description, version, publishedVersion, dirty} = game;
 
-    const {EngineCanvasComponent} = game.engine;
+    const selectedEngine = Engines.find(engine => engine.id === engineId);
+
+    return <Tab label="Settings" visible={!!(user && (user.id === ownerUserId))}>
+      <Panel label="Details">
+        <label>Title:</label> <TextInput defaultValue={title} onChange={this.title_onChangeHandler} />
+        <label>Description:</label> <TextInput multiline defaultValue={description} onChange={this.description_onChangeHandler} />
+      </Panel>
+      <Panel label="Game Engine">
+        <GameEngineDropdown onChange={this.engine_onChangeHandler}
+                            value={selectedEngine}/>
+      </Panel>
+      <Panel label="Publishing">
+        {published ?
+          <label>
+            Your game is live! Version {publishedVersion || 'N/A'} was published {moment(publishedDate).fromNow()}. You are editing Version {version}.
+          </label> :
+          <label>Your game is not live.</label>
+        }
+        {dirty && <label>You must save before publishing!</label>}
+        {version === publishedVersion && <label>You are up to date! There is nothing to publish.</label>}
+        <Button label={`Publish Version ${version}`}
+                onClick={this.publish_onClickHandler}
+                enabled={!dirty && version !== publishedVersion}
+                classes="green" />
+        {published && <Button label="Unpublish" classes="red" onClick={this.unpublish_onClickHandler} />}
+      </Panel>
+      <Panel label="Screenshot">
+        <div className="screenshot">
+          <label>Taking a screenshot records the current contents of the canvas on the right. Use Pause and Resume to get the perfect picture.</label>
+          <Button label="Take Screenshot"
+                  onClick={this.screenshot_onClickHandler}
+                  classes="green"/>
+          {image ? <img src={image} /> : 'No screenshot yet'}
+        </div>
+      </Panel>
+    </Tab>;
+  }
+
+  render() {
+    const {i18NModel, fullScreenEditor, loading} = this.state;
+    const {game} = this.props;
+
+    let EngineCanvasComponent;
+
+    if (game) {
+      EngineCanvasComponent = game.engine.EngineCanvasComponent;
+    }
 
     return <div className="editor page">
       {this.renderHeader()}
@@ -339,41 +391,7 @@ export default class Editor extends RingaComponent {
             <Tab label="Assets" classes="assets">
               <Assets game={this.props.game} />
             </Tab>
-            <Tab label="Settings" visible={!!(user && (user.id === ownerUserId))}>
-              <Panel label="Details">
-                <label>Title:</label> <TextInput defaultValue={title} onChange={this.title_onChangeHandler} />
-                <label>Description:</label> <TextInput multiline defaultValue={description} onChange={this.description_onChangeHandler} />
-              </Panel>
-              <Panel label="Libraries">
-                <Checkbox label="Use Phaser Game Library"
-                          value={lib.indexOf('phaser') !== -1}
-                          onChange={this.phaser_onChangeHandler} />
-              </Panel>
-              <Panel label="Publishing">
-                {published ?
-                  <label>
-                    Your game is live! Version {publishedVersion || 'N/A'} was published {moment(publishedDate).fromNow()}. You are editing Version {version}.
-                  </label> :
-                  <label>Your game is not live.</label>
-                }
-                {dirty && <label>You must save before publishing!</label>}
-                {version === publishedVersion && <label>You are up to date! There is nothing to publish.</label>}
-                <Button label={`Publish Version ${version}`}
-                        onClick={this.publish_onClickHandler}
-                        enabled={!dirty && version !== publishedVersion}
-                        classes="green" />
-                {published && <Button label="Unpublish" classes="red" onClick={this.unpublish_onClickHandler} />}
-              </Panel>
-              <Panel label="Screenshot">
-                <div className="screenshot">
-                  <label>Taking a screenshot records the current contents of the canvas on the right. Use Pause and Resume to get the perfect picture.</label>
-                  <Button label="Take Screenshot"
-                          onClick={this.screenshot_onClickHandler}
-                          classes="green"/>
-                  {image ? <img src={image} /> : 'No screenshot yet'}
-                </div>
-              </Panel>
-            </Tab>
+            {this.renderSettingsTab()}
             <Tab label="Instructions" classes="instructions">
               {this.renderInstructions()}
             </Tab>
@@ -386,9 +404,8 @@ export default class Editor extends RingaComponent {
             </Tab>
           </TabNavigator>
         </div>
-        {!fullScreenEditor && <div className="right-pane">
-          <EngineCanvasComponent game={game}/>
-        </div>}
+        {EngineCanvasComponent ? <EngineCanvasComponent game={game} /> : undefined}
+        <Loader zIndex={20000} show={loading} />
       </div>
     </div>;
   }
@@ -417,8 +434,10 @@ export default class Editor extends RingaComponent {
 
       this.props.game.history = $lastPromiseResult.history;
 
+      this.setState({loading: true});
+
       this.props.game.initializeAssets().then(() => {
-        this.forceUpdate();
+        this.setState({loading: false});
       });
 
       history.push(`/games/playground/${$lastPromiseResult.id}`);
@@ -608,17 +627,22 @@ export default class Editor extends RingaComponent {
     });
   }
 
-  phaser_onChangeHandler({checked}) {
+  engine_onChangeHandler(engine) {
     const {game} = this.props;
 
-    if (checked) {
-      game.addPhaser();
-    } else {
-      game.removePhaser();
-    }
+    Alert.show('Changing your game will switch everything to a different API and may cause things to stop functioning. Are you sure you want to switch game engines? You can always switch back.',
+      Alert.YES_NO, {}, this.rootDomNode).then(result => {
+        if (result.id === 'yes') {
 
-    game.dirty = true;
-
-    this.forceUpdate();
+          this.setState({
+            loading: true
+          });
+          game.changeEngine(engine).then(() => {
+            this.setState({
+              loading: false
+            });
+          });
+        }
+    });
   }
 }

@@ -3,13 +3,12 @@
 /*============================================*\
  * Imports
 \*============================================*/
-import Document from './Document';
-import DocumentEvents from './events/DocumentEvents';
+import Document from '../../shared/core/Document';
+import DocumentEvents from '../../shared/core/events/DocumentEvents';
 import GraphicComponent from './GraphicComponent';
 import GraphicRendererEvents from './events/GraphicRendererEvents';
 import MouseEvents from './events/MouseEvents';
 import Event from './util/Event';
-import Rect from './util/Rect';
 
 /*============================================*\
  * Constants
