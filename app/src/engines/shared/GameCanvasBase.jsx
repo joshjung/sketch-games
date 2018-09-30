@@ -43,7 +43,7 @@ export default class GameCanvasBase extends RingaComponent {
 
     // Force a resize event to trigger the canvas to place itself properly if needed
     setTimeout(() => {
-      nextProps.game.renderer.resizeHandler();
+      this.resizeHandler();
     }, 50);
   }
 
@@ -86,6 +86,11 @@ export default class GameCanvasBase extends RingaComponent {
   // Events
   //-----------------------------------
   gameChangeHandler(game) {
+    this.game = game;
     // Noop but can be overridden obvs
+  }
+
+  resizeHandler() {
+    // Noop
   }
 }

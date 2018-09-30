@@ -31,7 +31,7 @@ baseConfig.module.rules.push({
 
 const finalConfig = Object.assign({
   mode: 'development',
-  devtool: 'cheap-module-eval-source-map',
+  devtool: 'eval',
   output: {
     path: path.join(ROOT_PATH, 'dist'),
     filename: '[name].js',

@@ -5,7 +5,7 @@ export default {
   EngineCanvasComponent: PhaserGameCanvas,
   initialize: (game) => {},
   destroy: (game) => {
-    // TODO actually destroy shit
+    game.notify('destroy');
   },
   title: 'Phaser CE',
   version: '2.11.0',

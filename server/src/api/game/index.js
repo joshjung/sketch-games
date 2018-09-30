@@ -37,6 +37,7 @@ const { title,
   originalGameId,
   clonedFromGameId,
   lib,
+  engineId,
   highscores,
   playcount } = schema.tree;
 
@@ -67,7 +68,8 @@ router.post('/',
     originalGameId,
     clonedFromGameId,
     history,
-    lib
+    lib,
+    engineId
   }),
   create);
 
@@ -115,7 +117,8 @@ router.put('/:id',
     gameLoopFnText,
     ownerUserId,
     instructions,
-    lib
+    lib,
+    engineId
   }),
   update);
 

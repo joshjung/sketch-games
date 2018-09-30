@@ -16,6 +16,10 @@ const gameSchema = new Schema({
   image: {
     type: String // Stored as base64 toDateUrl format from canvas
   },
+  engineId: {
+    type: String,
+    default: 'jungle'
+  },
   gameLoopFnText: {
     type: String
   },
@@ -215,7 +219,8 @@ gameSchema.methods = {
       'clonedFromGameId',
       'highscores',
       'playCount',
-      'lib'
+      'lib',
+      'engineId'
     ];
 
     if (addFields) {

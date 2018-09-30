@@ -38,7 +38,8 @@ export default class GameModel extends Model {
     this.addProperty('state', GameModel.STATE_NOT_STARTED);
     this.addProperty('backgroundColor', 0x000000);
     this.addProperty('gameContainer');
-    this.addProperty('exposedState', {});
+    this.addProperty('exposedState', {}); // This is wiped everytime the game is reset
+    this.addProperty('exposedPermanentState', {}); // This is preserved across resets
     this.addProperty('paused', false);
     this.addProperty('ownerUserId', undefined);
     this.addProperty('owner', undefined);
@@ -59,6 +60,10 @@ export default class GameModel extends Model {
     this.addProperty('assets', []);
     this.addProperty('lib', []); // A string list of node_modules that can be loaded. Right now only 'phaser' is allowed.
     this.addProperty('engineId', 'jungle');
+    this.addProperty('engineSettings', {
+      width: 800,
+      height: 600
+    });
 
     this._libs = []; // This is where the LOADED libraries get stored.
 
@@ -135,7 +140,8 @@ export default class GameModel extends Model {
       'publishedInstructions',
       'publishedDescription',
       'publishedGameLoopFnText',
-      'lib'
+      'lib',
+      'engineId'
     ];
   }
 
@@ -270,7 +276,9 @@ export default class GameModel extends Model {
     return Promise.all([
       this.initializeAssets(),
       this.initializeLibs()
-    ]);
+    ]).then(() => {
+      this.notify('initialize');
+    });
   }
 
   publish() {
@@ -302,6 +310,8 @@ export default class GameModel extends Model {
     this.paused = false;
     this.startTime = new Date().getTime();
     this.timePlayed = 0;
+
+    this.notify('restart');
   }
 
   reset() {

@@ -3,7 +3,7 @@ import * as MathAPI from './M';
 import * as GameAPI from './G';
 import * as AssetAPI from './A';
 
-export function buildAndCallGameLoop({game, elapsed, ctx, keyboard, mouse}) {
+export function callGameCode({game, elapsed, ctx, keyboard, mouse}) {
   const E = elapsed;
 
   const R = {
@@ -17,7 +17,7 @@ export function buildAndCallGameLoop({game, elapsed, ctx, keyboard, mouse}) {
 
   const C = ctx;
 
-  const G = Object.assign(game.exposedState, {
+  const G = Object.assign(game.exposedState, game.exposedPermanentState, {
     restart: GameAPI.restart.bind(this, game),
     recordScore: GameAPI.recordScore.bind(this, game),
     paused: game.paused

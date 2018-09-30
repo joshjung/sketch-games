@@ -4,14 +4,16 @@ import GraphicRenderer from './core/GraphicRenderer';
 
 import APIController from '../../controllers/APIController';
 
+import {calculateCanvasPositionAndSize} from "../shared/core/CanvasSizeUtil";
+
 import GameCanvasBase from '../shared/GameCanvasBase';
 
-class GameCanvasRenderer extends GraphicRenderer {
+class JungleGameCanvasRenderer extends GraphicRenderer {
   constructor(gameCanvasComponent, game, canvas, options) {
     super(canvas, options);
 
-    this.game = game;
     this.gameCanvasComponent = gameCanvasComponent;
+    this.game = game;
   }
 
   _onFrameHandler(timestamp) {
@@ -33,56 +35,33 @@ class GameCanvasRenderer extends GraphicRenderer {
   resizeHandler() {
     super.resizeHandler();
 
-    // On mobile, force the canvas width to be such that there is always room for the controls.
-    // TODO: this should only happen if the game needs button controls!
     const {canvas} = this;
 
-    const ww = window.innerWidth;
-    const wh = window.innerHeight;
+    const container = this.canvas.parentNode;
 
-    // Reset the width / height to whatever CSS says is correct
-    canvas.style.width = '';
-    this.setCanvasHeight();
+    if (container) {
+      const containerBounds = container.getBoundingClientRect();
 
-    // VERTICAL MOBILE
-    if (ww < wh && ww < 768) {
-      const maxHeightOfCanvas = wh - 320; // Leave room for the controls
-      const calcHeightOfCanvas = ww * (canvas.height / canvas.width);
+      if (containerBounds.width !== 0 || containerBounds.height !== 0) {
+        const finalRect = calculateCanvasPositionAndSize({
+          gameWidth: this.game.engineSettings.width,
+          gameHeight: this.game.engineSettings.height,
+        }, {
+          containerTop: containerBounds.top,
+          containerWidth: containerBounds.width,
+          containerHeight: containerBounds.height
+        }, {
+          showControlsIfMobile: true
+        });
 
-      if (calcHeightOfCanvas > maxHeightOfCanvas) {
-        const targetWidthOfCanvas = maxHeightOfCanvas * (canvas.width / canvas.height);
-
-        canvas.style.width = `${targetWidthOfCanvas}px`;
-      }
-    } else {
-      // DESKTOP
-      const rect = canvas.getBoundingClientRect();
-      const {top, height} = rect;
-      const mhoc = wh - top - 40; // Give 50 pixels of padding for bottom of screen
-
-      if (height > mhoc) {
-        const targetWidthOfCanvas = mhoc * (canvas.width / canvas.height);
-
-        canvas.style.width = `${targetWidthOfCanvas}px`;
+        canvas.style.width = `${finalRect.width}px`;
+        canvas.style.height = `${finalRect.height}px`;
       }
     }
-
-    this.setCanvasHeight();
-  }
-
-  setCanvasHeight() {
-    const {canvas} = this;
-    const canvasScreenWidth = canvas.clientWidth;
-    const canvasPixelWidth = canvas.width;
-    const canvasPixelHeight = canvas.height;
-    const widthHeightRatio = canvasPixelHeight / canvasPixelWidth;
-    const targetCanvasScreenHeight = canvasScreenWidth * widthHeightRatio;
-
-    canvas.style.height = `${targetCanvasScreenHeight}px`;
   }
 }
 
-export default class GameCanvas extends GameCanvasBase {
+export default class JungleGameCanvas extends GameCanvasBase {
   //-----------------------------------
   // Lifecycle
   //-----------------------------------
@@ -90,7 +69,7 @@ export default class GameCanvas extends GameCanvasBase {
     super.componentDidMount();
 
     if (!this.props.game.renderer) {
-      this.renderer = new GameCanvasRenderer(this, this.props.game, this.refs.canvas, {
+      this.renderer = new JungleGameCanvasRenderer(this, this.props.game, this.refs.canvas, {
         debug: false,
         canvasAutoClear: true,
         resetPixelSizeToCanvas: false,
@@ -156,5 +135,13 @@ export default class GameCanvas extends GameCanvasBase {
   //-----------------------------------
   gameChangeHandler(game) {
     this.addGameContainer(game.gameContainer);
+  }
+
+  resizeHandler() {
+    const {game} = this.props;
+
+    if (game.renderer) {
+      game.renderer.resizeHandler();
+    }
   }
 }

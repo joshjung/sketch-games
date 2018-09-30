@@ -8,7 +8,7 @@ export default {
     game.gameContainer = new JungleGameContainer(game);
   },
   destroy: (game) => {
-    // TODO actually destroy shit
+    game.notify('destroy');
   },
   title: 'Jungle',
   description: 'The lightweight, barebones game engine for the beginner or those wanting to learn.',

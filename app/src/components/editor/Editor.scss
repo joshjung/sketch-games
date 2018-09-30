@@ -173,7 +173,7 @@
   .workspace {
     display: flex;
     flex-direction: row;
-    flex: 1 1 auto;
+    flex: 0 1 auto;
     height: 100%;
     width: 100%;
 
@@ -272,21 +272,15 @@
       }
     }
 
-    .right-pane {
+    .canvas {
+      display: flex;
       width: 100%;
-      min-width: 300px;
-      margin-left: 20px;
+      overflow: hidden;
+      justify-content: center;
 
-      .canvas {
-        display: flex;
+      canvas {
+        flex: 0 0 auto;
         width: 100%;
-        overflow: hidden;
-        justify-content: center;
-
-        canvas {
-          flex: 1 1 auto;
-          width: 100%;
-        }
       }
     }
 

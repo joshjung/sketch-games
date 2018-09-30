@@ -630,17 +630,21 @@ export default class Editor extends RingaComponent {
   engine_onChangeHandler(engine) {
     const {game} = this.props;
 
-    Alert.show('Changing your game will switch everything to a different API and may cause things to stop functioning. Are you sure you want to switch game engines? You can always switch back.',
+    Alert.show('Changing your game will switch everything to a different API and will require a rewrite of most of your code. Are you sure you want to switch game engines? You can always switch back.',
       Alert.YES_NO, {}, this.rootDomNode).then(result => {
         if (result.id === 'yes') {
-
           this.setState({
             loading: true
           });
+
           game.changeEngine(engine).then(() => {
             this.setState({
               loading: false
             });
+
+            setTimeout(() => {
+              game.notify('reset');
+            }, 100);
           });
         }
     });

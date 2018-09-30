@@ -3,7 +3,7 @@ import GraphicContainer from './core/GraphicContainer';
 import Keyboard from '../shared/core/input/Keyboard';
 import Mouse from '../shared/core/input/Mouse';
 
-import {buildAndCallGameLoop} from '../shared/api/gameLoopCaller';
+import {callGameCode} from '../shared/api/gameLoopCaller';
 
 export default class GameContainer extends GraphicContainer {
   //-----------------------------------
@@ -34,7 +34,7 @@ export default class GameContainer extends GraphicContainer {
       this.mouse = new Mouse(this.renderer.canvas);
     }
 
-    buildAndCallGameLoop({
+    callGameCode({
       game: this.game,
       elapsed,
       ctx: this.renderer.ctx,
