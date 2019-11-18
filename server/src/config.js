@@ -10,13 +10,11 @@ const requireProcessEnv = (name) => {
 }
 
 /* istanbul ignore next */
-if (process.env.NODE_ENV !== 'production') {
-  const dotenv = require('dotenv-safe')
-  dotenv.load({
-    path: path.join(__dirname, '../.env'),
-    sample: path.join(__dirname, '../.env.example')
-  })
-}
+const dotenv = require('dotenv-safe')
+dotenv.load({
+  path: path.join(__dirname, '../.env'),
+  sample: path.join(__dirname, '../.env.example')
+});
 
 const config = {
   all: {
@@ -69,7 +67,7 @@ const config = {
   }
 }
 
-const e = Object.assign(config.all, config[config.all.env]);
+const e = Object.assign({}, config.all, config[config.all.env]);
 
 console.log('Startup with Settings', JSON.stringify(e));
 module.exports = e;
