@@ -2,5 +2,5 @@
 echo "Building..."
 npm run prod
 echo "Deploying to Jung Digital RingaJS server..."
-rsync -r ./dist/* www-ssh@18.224.247.201:/var/www/gamepen.joshjung.com/dist
+rsync -e "ssh -i ~/.ssh/jung_digital_aws_1.pem" ./dist/* ubuntu@18.224.247.201:/var/www/gamepen.joshjung.com/dist
 echo "Done deploying to stage. See result at http://www.gamepen.io"

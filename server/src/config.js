@@ -43,7 +43,7 @@ const config = {
   },
   test: {
     mongo: {
-      uri: 'mongodb://localhost/super-mini-games-server-test',
+      uri: 'mongodb://localhost/gamepen-test',
       options: {
         debug: false
       }
@@ -51,7 +51,7 @@ const config = {
   },
   development: {
     mongo: {
-      uri: 'mongodb://localhost/super-mini-games-server-dev',
+      uri: 'mongodb://localhost/gamepen-dev',
       options: {}
     }
   },
@@ -59,7 +59,7 @@ const config = {
     ip: process.env.IP || undefined,
     port: process.env.HTTP_PORT || 8080,
     mongo: {
-      uri: process.env.MONGO_DB_URI || 'mongodb://localhost/super-mini-games-server',
+      uri: process.env.MONGO_DB_URI || 'mongodb://localhost/gamepen',
       options: {
         debug: true
       }
