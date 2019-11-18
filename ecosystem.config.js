@@ -3,9 +3,8 @@ module.exports = {
     name: "GamePen Server",
     script: "./server/src/index.js",
     env: {
-      SENDGRID_KEY: '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',
-      MASTER_KEY: 'somemasterkey',
-      JWT_SECRET: 'somejwtsecret'
+      HTTP_PORT: 11002,
+      MONGO_DB_URI: 'mongodb://ec2-13-59-48-224.us-east-2.compute.amazonaws.com:10017'
     }
   }]
 }
