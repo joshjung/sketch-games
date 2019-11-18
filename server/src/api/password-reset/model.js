@@ -18,6 +18,8 @@ const passwordResetSchema = new Schema({
     default: Date.now,
     expires: 3600
   }
+}, {
+  usePushEach: true // https://github.com/Automattic/mongoose/issues/5574
 })
 
 passwordResetSchema.methods = {

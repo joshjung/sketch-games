@@ -46,8 +46,9 @@ const userSchema = new Schema({
     default: 'user'
   }
 }, {
-  timestamps: true
-})
+  timestamps: true,
+  usePushEach: true // https://github.com/Automattic/mongoose/issues/5574
+});
 
 userSchema.path('email').set(function (email) {
   if (!this.picture || this.picture.indexOf('https://gravatar.com') === 0) {
