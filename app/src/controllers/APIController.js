@@ -24,6 +24,7 @@ export default class APIController extends Controller {
       ($lastPromiseResult, $detail) => {
         if ($lastPromiseResult && $lastPromiseResult.token) {
           appModel.token = $lastPromiseResult.token;
+          appModel.user = $lastPromiseResult.user;
           setCookie('smg_auth_token', appModel.token);
           $detail.success = true;
           this.dispatch(APIController.ME);
