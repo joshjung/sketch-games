@@ -62,7 +62,7 @@ export default class GamesPage extends RingaComponent {
 
     let content;
 
-    if (!loading) {
+    if (!loading || !user) {
       content = renderedGames.length ? <List items={renderedGames}
                                              labelField="title"
                                              onChange={this.list_onChangeHandler}
@@ -112,6 +112,8 @@ export default class GamesPage extends RingaComponent {
 
   getFilteredGames() {
     const { games = [], filter, user } = this.state;
+
+    if (!user) return [];
 
     switch (filter) {
       case 'all':
