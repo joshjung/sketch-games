@@ -55,8 +55,8 @@ module.exports = new Promise(resolve => {
       __BUILD__: JSON.stringify(build),
       __BUILD_EPOCH__: new Date().getTime(),
       RINGA_CURRENT_WHITELIST: JSON.stringify(require('./uglifyMangleWhitelist.json')),
-      PASSWORD_RESET_REDIRECT_URI: "'https://www.gamepen.io/account/password/validate-reset'",
-      API_ROOT: `'https://gamepen.joshjung.com/api'`,
+      PASSWORD_RESET_REDIRECT_URI: "'https://sketch.games/account/password/validate-reset'",
+      API_ROOT: `'https://sketch.games/api'`,
       'process.env': {
         NODE_ENV: '"production"'
       }

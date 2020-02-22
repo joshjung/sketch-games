@@ -2,6 +2,10 @@
   "name": "ringa-app-template",
   "version": "0.1.2",
   "description": "Ringa JS React Application Template",
+  "engine": {
+    "node": "9.5.0",
+    "engineStrict": true
+  },
   "scripts": {
     "reinstallNPM": "rm -rf node_modules && npm i",
     "clean": "rm -rf dist",

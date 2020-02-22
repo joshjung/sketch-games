@@ -1,6 +1,17 @@
 #!/bin/bash
-echo "Building..."
-npm run prod
-echo "Deploying to Jung Digital RingaJS server..."
-rsync -e "ssh -i ~/.ssh/jung_digital_aws_1.pem" ./dist/* ubuntu@18.224.247.201:/var/www/gamepen.joshjung.com/dist
-echo "Done deploying to stage. See result at http://www.gamepen.io"
+echo "Deploying cert to server..."
+rsync -r ./certs/* ubuntu@18.191.239.40:/etc/certs/
+
+echo "Deploying nginx.conf to server..."
+rsync -r ./deploy/nginx/nginx.conf ubuntu@18.191.239.40:/etc/nginx
+
+echo "Deploying prod build to AWS sketch.games server..."
+rsync -r ./dist/* ubuntu@18.191.239.40:/var/www/sketch.games/dist
+
+echo "Deploying ecosystem.config.js..."
+rsync -r ./deploy/* ubuntu@18.191.239.40:/home/ubuntu/deploy
+ssh -t "ubuntu@18.191.239.40" 'bash -i -c "chmod +x /home/ubuntu/deploy/restart.sh"'
+
+echo "Done deploying to stage. See result at http://sketch.games"
+
+ssh -t "ubuntu@18.191.239.40" 'bash -i -c ". /home/ubuntu/deploy/restart.sh"'

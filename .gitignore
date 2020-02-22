@@ -59,4 +59,13 @@ typings/
 dist
 .DS_Store
 .idea
+
 gamepen.iml
+
+# certs
+*.crt
+*.p7b
+*.csr
+*.key
+*.ca-bundle
+sketch_games.zip
