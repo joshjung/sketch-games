@@ -56,7 +56,7 @@
     "mongoose": "^4.12.4",
     "mongoose-create-unique": "^0.4.4",
     "mongoose-keywords": "^0.3.2",
-    "morgan": "^1.7.0",
+    "morgan": "^1.9.1",
     "multiparty": "^4.1.4",
     "passport": "^0.4.0",
     "passport-http": "^0.3.0",

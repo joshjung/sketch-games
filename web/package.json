@@ -1,7 +1,7 @@
 {
-  "name": "ringa-app-template",
+  "name": "sketch-games-web",
   "version": "0.1.2",
-  "description": "Ringa JS React Application Template",
+  "description": "Sketch.games website",
   "scripts": {
     "reinstallNPM": "rm -rf node_modules && npm i",
     "clean": "rm -rf dist",

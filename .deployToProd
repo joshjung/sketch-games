@@ -4,3 +4,4 @@ npm run prod
 echo "Deploying to Jung Digital RingaJS server..."
 rsync -r ./dist/* www-ssh@18.224.247.201:/var/www/gamepen.joshjung.com/dist
 echo "Done deploying to stage. See result at http://www.gamepen.io"
+d
